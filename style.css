@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.camera-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #000;
+
+}
+
+#videoPreview {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background-color: #000;
+}
+
+.controls {
+    margin-top: 20px;
+    text-align: center;
+    color: #4CAF50;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:active {
+    background-color: #45a049;
+}
+
+.error-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ff4444;
+    color: white;
+    max-width: 80%;
+    text-align: center;
+    display: none;
+}
+
+/* Face positioning guide */
+#faceGuideOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.face-outline {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    border: 2px dashed #ffffff;
+    border-radius: 50%;
+}
+
+.positioning-tips {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* User section styles */
+.user-section {
+    margin-top: 30px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.note-item .delete-note-btn {
+    background-color: red;
+    color: white;
+    border-radius: 50%;  /* Forme ronde */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    font-size: 0;  /* Cacher le texte */
+}
+
+.note-item .delete-note-btn::before,
+.note-item .delete-note-btn::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 2px;
+    background-color: white;
+}
+
+.note-item .delete-note-btn::before {
+    transform: rotate(45deg);
+}
+
+.note-item .delete-note-btn::after {
+    transform: rotate(-45deg);
+}
+
+.note-item .delete-note-btn:hover {
+    background-color: darkred;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}
+
+.notes-container {
+    margin-top: 20px;
+}
+
+.notes-list {
+    margin: 15px 0;
+}
+
+.notes-list .note-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    border-left: 4px solid #4CAF50;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    align-items: center;
+}
+
+.notes-list .note-item .delete-note-btn {
+    margin-left: auto;  /* Force le bouton à droite */
+}
+
+.note-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+.note-controls {
+    margin-top: 15px;
+    text-align: right;
+}
+
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 800px;
+    }
+    
+    .face-outline {
+        width: 300px;
+        height: 300px;
+    }
+}

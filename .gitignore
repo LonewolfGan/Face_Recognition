@@ -1,0 +1,54 @@
+# Dépendances
+node_modules/
+
+# Fichiers de configuration d'environnement
+.env
+.env.local
+.env.*.local
+
+# Fichiers de build
+dist/
+build/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers de logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers d'IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Fichiers temporaires
+*.log
+*.tmp
+
+# Fichiers de cache
+.cache/
+.npm/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Fichiers de test de couverture
+coverage/
+
+# Fichiers de configuration locale
+config.local.js
+settings.local.json
+
+# Environnements virtuels Python
+face_env/
+venv/
+env/
+.venv/
+ENV/
