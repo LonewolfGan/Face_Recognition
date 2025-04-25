@@ -52,3 +52,7 @@ venv/
 env/
 .venv/
 ENV/
+
+# Fichiers Personnels
+system.txt
+tricks.txt
