@@ -1,3 +1,9 @@
+# Set environment variables before importing TensorFlow
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress all TensorFlow logging
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Disable oneDNN custom operations
+
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from deepface import DeepFace
@@ -10,6 +16,15 @@ import faiss
 from flask import request
 import traceback
 from utils import preprocess_batch, load_embeddings, process_embedding
+# Set environment variables before importing TensorFlow
+import warnings
+import tensorflow as tf
+import logging
+
+# Suppress TensorFlow warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+warnings.filterwarnings('ignore', category=FutureWarning)
+tf.get_logger().setLevel(logging.ERROR)
 
 
 app = Flask(__name__)

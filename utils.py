@@ -23,10 +23,10 @@ def process_embedding(emb, fid, embedding_to_index, faiss_index):
         print(f"Erreur: {str(e)}")
         return False      
 
-def is_image_noisy_or_blurry(image, threshold=100):
+""" def is_image_noisy_or_blurry(image, threshold=100):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     variance = cv2.Laplacian(gray, cv2.CV_64F).var()
-    return variance < threshold
+    return variance < threshold """
 
 def preprocess_base64_image(base64_str, target_size=(112, 112)):
     """
@@ -36,25 +36,25 @@ def preprocess_base64_image(base64_str, target_size=(112, 112)):
     try:
         if ',' in base64_str:
             base64_str = base64_str.split(',')[1]
-        image_bytes = base64.b64decode(base64_str)
-        nparr = np.frombuffer(image_bytes, np.uint8)
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        image = cv2.resize(image, target_size, interpolation=cv2.INTER_AREA)
+            image_bytes = base64.b64decode(base64_str)
+            nparr = np.frombuffer(image_bytes, np.uint8)
+            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            image = cv2.resize(image, target_size, interpolation=cv2.INTER_AREA)
 
-        # Corriger l’éclairage avec CLAHE
+        """ # Corriger l’éclairage avec CLAHE
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         equalized = clahe.apply(gray)
-        image = cv2.cvtColor(equalized, cv2.COLOR_GRAY2BGR)
+        image = cv2.cvtColor(equalized, cv2.COLOR_GRAY2BGR) """
 
-        # Si image floue, appliquer un flou gaussien doux
+        """  # Si image floue, appliquer un flou gaussien doux
         if is_image_noisy_or_blurry(image, threshold=100):
             print("Image bruitée/floue → flou gaussien appliqué")
-            image = cv2.GaussianBlur(image, (3, 3), 0)
+            image = cv2.GaussianBlur(image, (3, 3), 0) """
 
-        # Accentuation des contours
+        """ # Accentuation des contours
         kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
-        image = cv2.filter2D(image, -1, kernel)
+        image = cv2.filter2D(image, -1, kernel) """
 
         return image.astype(np.uint8)
 

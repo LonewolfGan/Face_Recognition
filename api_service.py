@@ -6,7 +6,6 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Disable oneDNN custom operations
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 import requests
-import json
 import warnings
 import tensorflow as tf
 import os

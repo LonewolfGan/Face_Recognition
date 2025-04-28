@@ -1,3 +1,8 @@
+# Set environment variables before importing TensorFlow
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress all TensorFlow logging
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Disable oneDNN custom operations
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from deepface import DeepFace
@@ -7,9 +12,18 @@ import os
 import pickle
 from flask import request
 import traceback
-import sys
 from utils import preprocess_base64_image, load_embeddings
 import time
+
+import warnings
+import tensorflow as tf
+import logging
+
+
+# Suppress TensorFlow warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+warnings.filterwarnings('ignore', category=FutureWarning)
+tf.get_logger().setLevel(logging.ERROR)
 
 
 app = Flask(__name__)
@@ -42,6 +56,7 @@ def recognize_face():
             return jsonify({'status': 'error', 'message': 'Image requise'}), 400
         preprocess_start = time.time()
         image_data = data['image']
+        
         processed_image = preprocess_base64_image(image_data)
         cv2.imwrite(temp_path, processed_image)
         print(f"Prétraitement: {time.time() - preprocess_start:.2f}s")
@@ -82,7 +97,7 @@ def recognize_face():
         best_distance = best_scores[best_face_id]
         # Calculate total time from the start of preprocessing
         print(f"Temps total: {time.time() - preprocess_start:.2f}s")
-        if best_distance < 8.6:
+        if best_distance < 0.6:
             print(f'Visage reconnu avec ID: {best_face_id}, distance: {best_distance}')
             return jsonify({
                 'status': 'success', 
