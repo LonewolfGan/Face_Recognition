@@ -1,0 +1,19 @@
+/* Styles pour OfflineBanner */
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: var(--warning);
+  color: var(--text-light);
+  text-align: center;
+  padding: 10px 0;
+  font-weight: 600;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(var(--dark-rgb), 0.07);
+  letter-spacing: 1px;
+}
+
+.offline-banner.synchronizing {
+  background: var(--accent);
+}

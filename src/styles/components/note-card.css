@@ -1,0 +1,71 @@
+/* Styles pour NoteCard */
+.note-card {
+  background: var(--card);
+  color: var(--text);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.07);
+  padding: 24px 18px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s;
+}
+
+.note-card:hover {
+  box-shadow: 0 6px 24px rgba(var(--accent-rgb), 0.13);
+}
+
+.note-card .note-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+
+.note-card .note-content {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.note-card .note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.note-card .delete-note-btn {
+  background-color: var(--accent);
+  color: var(--card);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  font-size: 0;
+}
+
+.note-card .delete-note-btn::before,
+.note-card .delete-note-btn::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  background-color: white;
+}
+
+.note-card .delete-note-btn::before {
+  transform: rotate(45deg);
+}
+
+.note-card .delete-note-btn::after {
+  transform: rotate(-45deg);
+}

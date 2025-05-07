@@ -9,7 +9,7 @@ import requests
 import warnings
 import tensorflow as tf
 import os
-from db import close_db, get_user_by_face_id, add_user, get_notes_by_user, create_note, update_note, delete_note, get_note,set_password, verify_password
+from db import close_db, get_user_by_face_id, add_user, get_notes_by_user, create_note, update_note, delete_note, get_note, set_password, verify_password
 import logging
 
 # Suppress TensorFlow warnings

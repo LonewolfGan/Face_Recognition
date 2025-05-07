@@ -1,0 +1,70 @@
+/* Importation des polices Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Définitions des styles de texte */
+body {
+  font-family: 'Inter', 'Poppins', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.75rem;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+h5 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+h6 {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-small {
+  font-size: 0.875rem;
+}
+
+.text-large {
+  font-size: 1.125rem;
+}
+
+.text-bold {
+  font-weight: 600;
+}

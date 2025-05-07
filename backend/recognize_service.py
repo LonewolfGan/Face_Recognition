@@ -97,7 +97,7 @@ def recognize_face():
         best_distance = best_scores[best_face_id]
         # Calculate total time from the start of preprocessing
         print(f"Temps total: {time.time() - preprocess_start:.2f}s")
-        if best_distance < 0.6:
+        if best_distance < 0.9:
             print(f'Visage reconnu avec ID: {best_face_id}, distance: {best_distance}')
             return jsonify({
                 'status': 'success', 
@@ -117,9 +117,13 @@ def recognize_face():
         print(f"Erreur: {str(e)}")
         print(traceback.format_exc())
         return jsonify({'status': 'error', 'message': str(e)}), 500
+        # with open(EMBEDDINGS_FILE, 'wb') as f:
+        #     pickle.dump(embeddings_map, f)
+        # faiss.write_index(faiss_index, EMBEDDINGS_INDEX_PATH)
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
+            
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=False)
