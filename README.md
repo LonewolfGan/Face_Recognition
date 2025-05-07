@@ -7,7 +7,6 @@ Une application complète avec reconnaissance faciale, authentification et gesti
 - Authentification par reconnaissance faciale
 - Authentification alternative par mot de passe
 - Gestion de notes avec éditeur de texte riche
-- Mode hors ligne avec synchronisation automatique
 - Thème clair/sombre
 - Interface responsive
 
@@ -19,13 +18,47 @@ Une application complète avec reconnaissance faciale, authentification et gesti
 
 ## Prérequis
 
-- Node.js 18+
-- Python 3.9+
-- Webcam fonctionnelle pour la reconnaissance faciale
+### Système
+- **Node.js 18+** ([Téléchargement](https://nodejs.org/))
+- **Python 3.9+** ([Téléchargement](https://www.python.org/downloads/))
+- **Webcam fonctionnelle**
+- **Outils de compilation** (pour les dépendances Python) :
+  ```bash
+  # Windows
+  winget install -e --id Kitware.CMake
+  winget install -e --id LLVM.LLVM
+  
+  # Linux (Debian/Ubuntu)
+  sudo apt-get install build-essential cmake
+  ```
+
+### Environnement virtuel Python
+```bash
+# Création de l'environnement
+python -m venv face_env
+```
 
 ## Installation
 
-### Backend
+### Dépendances Backend
+1. Activer l'environnement virtuel :
+```bash
+# Windows
+.\face_env\Scripts\activate
+
+# Linux/Mac
+source face_env/bin/activate
+```
+2. Installer les dépendances :
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### Dépendances Frontend
+```bash
+npm install
+```
 
 ```bash
 # Naviguer vers le dossier backend
@@ -59,6 +92,55 @@ npm install
 # Démarrer le serveur de développement
 npm run dev
 ```
+
+# Lancement de l'application
+
+Pour démarrer rapidement l'application, suivez ces étapes dans l'ordre :
+
+## 1. Prérequis système
+- **Node.js 18+** ([Téléchargement](https://nodejs.org/))
+- **Python 3.9+** ([Téléchargement](https://www.python.org/downloads/))
+- **Webcam fonctionnelle**
+
+## 2. Création et activation de l'environnement virtuel Python
+Dans le dossier racine du projet :
+```bash
+python -m venv face_env
+```
+- **Windows** :
+  ```bash
+  .\face_env\Scripts\activate
+  ```
+- **Linux/Mac** :
+  ```bash
+  source face_env/bin/activate
+  ```
+
+## 3. Installation des dépendances Backend
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+## 4. Installation des dépendances Frontend
+Dans le dossier racine du projet :
+```bash
+npm install
+```
+
+## 5. Lancement global de l'application
+Utilisez le script fourni pour démarrer à la fois le backend et le frontend :
+```bash
+start_app.bat
+```
+
+## 6. Accès à l'application
+Ouvrez votre navigateur à l'adresse suivante :
+[http://localhost:5173](http://localhost:5173)
+
+---
+
+Pour plus de détails ou d'autres méthodes de déploiement (Docker, serveur), consultez la section "Déploiement" ci-dessous.
 
 ## Déploiement
 
