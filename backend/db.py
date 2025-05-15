@@ -293,3 +293,19 @@ def verify_password(password):
 # Initialisation de la base de données si le fichier n'existe pas
 if not os.path.exists(DATABASE_PATH):
     init_db()
+
+
+def get_first_user():
+    """
+    Récupère le premier utilisateur de la base de données.
+    Returns:
+        dict: Données du premier utilisateur ou None si aucun utilisateur n'est trouvé
+    """
+    conn = get_db()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users LIMIT 1")
+    user = cursor.fetchone()
+    if user:
+        return dict(user)
+    return None

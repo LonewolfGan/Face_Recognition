@@ -99,6 +99,17 @@ def add_face():
         faiss.write_index(faiss_index, EMBEDDINGS_INDEX_PATH)
         
         print(f"Visage ajouté avec succès: {face_id}")
+        # Appel à la route de reload du service de reconnaissance
+        try:
+            import requests
+            reload_url = "http://localhost:5002/reload_embeddings"
+            reload_response = requests.post(reload_url)
+            if reload_response.status_code == 200:
+                print("Embeddings rechargés côté reconnaissance.")
+            else:
+                print(f"Erreur lors du rechargement des embeddings: {reload_response.text}")
+        except Exception as reload_exc:
+            print(f"Erreur lors de l'appel à /reload_embeddings: {str(reload_exc)}")
         return jsonify({
             'status': 'success', 
             'message': f'Visage de {name} ajouté avec succès',

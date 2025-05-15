@@ -71,12 +71,17 @@ def login_user():
         # Vérifier si c'est une connexion par mot de passe
         if 'password' in data:
             if verify_password(data['password']):
-                # Ici, vous pourriez retourner un utilisateur "admin" ou similaire
-                return jsonify({
-                    'status': 'success',
-                    'message': 'Connexion réussie par mot de passe',
-                    'user': {'user_id': 'admin', 'name': 'Administrateur'}
-                })
+                # Récupérer le seul utilisateur existant dans la base
+                from db import get_first_user
+                user = get_first_user()
+                if user:
+                    return jsonify({
+                        'status': 'success',
+                        'message': 'Connexion réussie par mot de passe',
+                        'user': user
+                    })
+                else:
+                    return jsonify({'status': 'error', 'message': 'Aucun utilisateur trouvé'}), 404
             else:
                 return jsonify({'status': 'error', 'message': 'Mot de passe incorrect'}), 401
         

@@ -97,7 +97,7 @@ def recognize_face():
         best_distance = best_scores[best_face_id]
         # Calculate total time from the start of preprocessing
         print(f"Temps total: {time.time() - preprocess_start:.2f}s")
-        if best_distance < 0.9:
+        if best_distance < 2:
             print(f'Visage reconnu avec ID: {best_face_id}, distance: {best_distance}')
             return jsonify({
                 'status': 'success', 
@@ -124,6 +124,17 @@ def recognize_face():
         if os.path.exists(temp_path):
             os.remove(temp_path)
             
+
+@app.route('/reload_embeddings', methods=['POST'])
+def reload_embeddings():
+    global embeddings_map, faiss_index, embedding_to_index
+    try:
+        embeddings_map, faiss_index, embedding_to_index = load_embeddings(embeddings_file=EMBEDDINGS_FILE, embeddings_index_path=EMBEDDINGS_INDEX_PATH)
+        print(f"Embeddings rechargés: {len(embeddings_map)} visages, {faiss_index.ntotal} embeddings")
+        return jsonify({'status': 'success', 'message': 'Embeddings rechargés avec succès'})
+    except Exception as e:
+        print(f"Erreur lors du rechargement des embeddings: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=False)
