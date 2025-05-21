@@ -4,9 +4,7 @@ import uuid
 import datetime
 import bcrypt
 from flask import g     # g sert à stocker des données pendant le cycle requête/réponse
-
-# Configuration
-DATABASE_PATH = 'users.db'
+from config import DATABASE_PATH
 
 def get_db():
     """
@@ -306,6 +304,28 @@ def get_first_user():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users LIMIT 1")
     user = cursor.fetchone()
+    if user:
+        return dict(user)
+    return None
+
+def get_user(user_id):
+    """
+    Récupère un utilisateur par son user_id.
+    
+    Args:
+        user_id (str): Identifiant unique de l'utilisateur
+        
+    Returns:
+        dict: Données de l'utilisateur ou None si non trouvé
+    """
+    conn = get_db()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+    user = cursor.fetchone()
+    
+    
     if user:
         return dict(user)
     return None

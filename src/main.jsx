@@ -6,9 +6,12 @@ import "./index.css";
 import "@fontsource/inter";
 import "@fontsource/poppins";
 import "./styles/themes/variables.css";
+import { ToastProvider } from "./context/ToastContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   </React.StrictMode>
 );

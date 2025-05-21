@@ -9,7 +9,7 @@ import requests
 import warnings
 import tensorflow as tf
 import os
-from db import close_db, get_user_by_face_id, add_user, get_notes_by_user, create_note, update_note, delete_note, get_note, set_password, verify_password
+from db import close_db, get_user_by_face_id, add_user, get_notes_by_user, create_note, update_note, delete_note, get_note, set_password, verify_password, get_user
 import logging
 
 # Suppress TensorFlow warnings
@@ -185,6 +185,34 @@ def delete_note_route(note_id):
         
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    try:
+        data = request.json
+        if not data or 'user_id' not in data or 'password' not in data:
+            return jsonify({'status': 'error', 'message': 'ID utilisateur et mot de passe requis'}), 400
+        
+        # Mettre à jour le mot de passe dans la base de données
+        success = set_password(data['password'])
+        if not success:
+            return jsonify({'status': 'error', 'message': 'Échec de la mise à jour du mot de passe'}), 500
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Mot de passe mis à jour avec succès'
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/get_face_id', methods=['GET'])
+def get_face_id():
+    user_id = request.args.get('user_id')
+    user = get_user(user_id)
+    if user:
+        return jsonify({'face_id': user['face_id']})
+    return jsonify({'status': 'error', 'message': 'User not found'}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

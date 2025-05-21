@@ -6,123 +6,122 @@ import "../styles/components/card.css";
 import "../styles/components/main-btn.css";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { useToastContext } from "../context/ToastContext";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [error, setError] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState(false); // Nouvel état pour le succès
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showFaceFailModal, setShowFaceFailModal] = useState(false);
   const [password, setPassword] = useState("");
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const navigate = useNavigate(); // Initialiser useNavigate
-  const { login } = useAuth(); // Utiliser le hook useAuth pour accéder à la fonction login
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const toast = useToastContext();
 
   const API_URL = "http://localhost:5000";
   const LOGIN_ENDPOINT = "/login";
 
-// Fonction pour gérer la connexion par mot de passe
-const handlePasswordLogin = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
-  try {
-    const response = await axios.post(`${API_URL}${LOGIN_ENDPOINT}`, {
-      password,
-    });
-    const result = response.data;
-    if (result.status === "success") {
-      // Utiliser la fonction login du contexte au lieu de localStorage
-      login(result.user);
-      setLoginSuccess(true);
-    } else {
-      setError(result.message || "Échec de la connexion.");
+  const handlePasswordLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const response = await axios.post(`${API_URL}${LOGIN_ENDPOINT}`, {
+        password,
+      });
+      const result = response.data;
+      if (result.status === "success") {
+        login(result.user);
+        setLoginSuccess(true);
+      } else {
+        toast.error(result.message || "Échec de la connexion.");
+        setError(result.message || "Échec de la connexion.");
+      }
+    } catch (error) {
+      toast.error("Erreur lors de la connexion : " + (error.response?.data?.message || error.message));
+      setError("Erreur lors de la connexion : " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    setError("Erreur lors de la connexion : " + (error.response?.data?.message || error.message));
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-// Fonction pour gérer la connexion par reconnaissance faciale
-const handleFaceLogin = () => {
-  setShowCamera(true);
-  setError("");
-};
+  const handleFaceLogin = () => {
+    setShowCamera(true);
+    setError("");
+  };
 
-// useEffect pour gérer l'accès à la caméra et la capture après affichage de la vidéo
-useEffect(() => {
-  let stream = null;
-  const captureAndLogin = async () => {
-    if (showCamera) {
-      setLoading(true);
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          if (videoRef.current) {
-            stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            videoRef.current.srcObject = stream;
-          } else {
-            throw new Error("Video element not ready.");
+  useEffect(() => {
+    let stream = null;
+    const captureAndLogin = async () => {
+      if (showCamera) {
+        setLoading(true);
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            if (videoRef.current) {
+              stream = await navigator.mediaDevices.getUserMedia({ video: true });
+              videoRef.current.srcObject = stream;
+            } else {
+              throw new Error("Video element not ready.");
+            }
           }
-        }
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        if (videoRef.current && canvasRef.current) {
-          const context = canvasRef.current.getContext("2d");
-          context.drawImage(videoRef.current, 0, 0, 320, 240);
-          const imageData = canvasRef.current.toDataURL("image/jpeg");
-          if (videoRef.current.srcObject) {
-            videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-            videoRef.current.srcObject = null;
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          if (videoRef.current && canvasRef.current) {
+            const context = canvasRef.current.getContext("2d");
+            context.drawImage(videoRef.current, 0, 0, 320, 240);
+            const imageData = canvasRef.current.toDataURL("image/jpeg");
+            if (videoRef.current.srcObject) {
+              videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+              videoRef.current.srcObject = null;
+            }
+            const response = await axios.post(`${API_URL}${LOGIN_ENDPOINT}`, {
+              image: imageData,
+            });
+            const result = response.data;
+            if (result.status === "success") {
+              login(result.user);
+              setLoginSuccess(true);
+            } else if (result.status === "face_failed") {
+              setShowCamera(false);
+              setLoading(false);
+              setShowFaceFailModal(true);
+              return;
+            } else {
+              toast.error(result.message || "Échec de la connexion.");
+              setError(result.message || "Échec de la connexion.");
+            }
           }
-          const response = await axios.post(`${API_URL}${LOGIN_ENDPOINT}`, {
-            image: imageData,
-          });
-          const result = response.data;
-          if (result.status === "success") {
-            // Utiliser la fonction login du contexte au lieu de localStorage
-            login(result.user);
-            setLoginSuccess(true);
-          } else if (result.status === "face_failed") {
+        } catch (error) {
+          console.error("Erreur complète lors de la connexion faciale:", error);
+          if (error.response && error.response.status === 401) {
             setShowCamera(false);
             setLoading(false);
             setShowFaceFailModal(true);
             return;
           } else {
-            setError(result.message || "Échec de la connexion.");
+            toast.error("Erreur lors de la connexion faciale : " + (error.response?.data?.message || error.message));
+            setError("Erreur lors de la connexion faciale : " + (error.response?.data?.message || error.message));
           }
-        }
-      } catch (error) {
-        console.error("Erreur complète lors de la connexion faciale:", error);
-        if (error.response && error.response.status === 401) {
+        } finally {
           setShowCamera(false);
           setLoading(false);
-          setShowFaceFailModal(true);
-          return;
-        } else {
-          setError("Erreur lors de la connexion faciale : " + (error.response?.data?.message || error.message));
         }
-      } finally {
-        setShowCamera(false);
-        setLoading(false);
       }
+    };
+    if (showCamera) {
+      captureAndLogin();
     }
-  };
-  if (showCamera) {
-    captureAndLogin();
-  }
-  return () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
-    }
-  };
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [showCamera]);
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [showCamera]);
 
-  // --- NOUVEAU useEffect pour gérer la redirection après succès ---
   useEffect(() => {
     let navigationTimer = null;
     if (loginSuccess) {
@@ -141,7 +140,6 @@ useEffect(() => {
       <div className="card" style={{ maxWidth: 380, textAlign: "center" }}>
         <h2>Connexion</h2>
 
-        {/* --- Zone d'affichage dynamique --- */}
         <div
           style={{
             margin: "20px auto",
@@ -162,14 +160,12 @@ useEffect(() => {
               ? "4px dotted var(--bg)"
               : "none",
             position:
-              "relative" /* Ajout pour positionner le texte si besoin */,
+              "relative"
           }}
         >
           {loginSuccess ? (
-            // Affichage de l'icône de succès
             <IoCheckmarkDoneCircleOutline size={120} color="var(--accent)" />
           ) : showCamera ? (
-            // Affichage de la vidéo
             <>
               <video
                 ref={videoRef}
@@ -189,25 +185,16 @@ useEffect(() => {
             </>
           ) : (
             !loading && (
-              // Affichage de l'icône par défaut
               <div className="icon-container">
                 <LuScanFace style={{ width: "80px", height: "80px" }} />
               </div>
             )
           )}
-          {/* Indicateur de chargement pendant le traitement après capture (si pas succès) */}
-          {/* Ce texte est OK ici car il s'affiche quand la caméra N'EST PAS visible */}
           {loading && !showCamera && !loginSuccess && (
             <p style={{ fontStyle: "italic" }}>Traitement...</p>
           )}
-          {/* Texte "Capture en cours..." déplacé HORS de cette div */}
-          {/* {loading && showCamera && (
-                <p style={{fontStyle: 'italic'}}>Capture en cours...</p>
-           )} */}
         </div>
-        {/* --- Fin Zone d'affichage dynamique --- */}
 
-        {/* Modal personnalisé pour l'échec de la reconnaissance faciale */}
         {showFaceFailModal && (
           <div style={{
             position: "fixed",
@@ -244,20 +231,12 @@ useEffect(() => {
             </div>
           </div>
         )}
-        {/* Texte "Capture en cours..." placé ICI, sous la zone dynamique */}
         {loading && showCamera && (
           <p style={{ fontStyle: "italic", marginTop: "5px" }}>
             Capture en cours...
           </p>
         )}
 
-        {/* Affichage de l'erreur */}
-        {error && !loginSuccess && (
-          <p style={{ color: "var(--error, red)", marginTop: 10 }}>{error}</p>
-        )}
-
-        {/* Bouton unique pour INITIERR la connexion faciale */}
-        {/* Masquer le bouton et le lien si la connexion est réussie */}
         {!loginSuccess && !showPasswordForm && (
           <>
             <button
@@ -281,7 +260,6 @@ useEffect(() => {
             </div>
           </>
         )}
-        {/* Formulaire de mot de passe après échec de la reconnaissance faciale */}
         {showPasswordForm && !loginSuccess && (
           <form onSubmit={handlePasswordLogin} style={{ marginTop: 20 }}>
             <input

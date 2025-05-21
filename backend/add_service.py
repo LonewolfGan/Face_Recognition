@@ -53,11 +53,12 @@ def add_face():
         if 'images' not in data or not isinstance(data['images'], list):
             return jsonify({'status': 'error', 'message': 'Liste d\'images requise'}), 400
         images = data['images']
-        #name = data.get('name', 'Unknown')
-        name = data['name']
+        
+        # Utiliser user_id comme nom ou une valeur par défaut si non fourni
+        name = data.get('name', data.get('user_id', 'Unknown'))
         print(f"Nom: {name}")
         print(f"Nombre d'images reçues: {len(images)}")
-        face_id = str(uuid.uuid4())
+        face_id = data.get('face_id', str(uuid.uuid4()))
         processed_images = preprocess_batch(images)
         if not processed_images:
             return jsonify({'status': 'error', 'message': 'Aucune image valide fournie'}), 400

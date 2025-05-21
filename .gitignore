@@ -56,4 +56,7 @@ ENV/
 # Fichiers Personnels
 system.txt
 tricks.txt
+backend\embeddings.index
+backend\embeddings.pkl
+backend\users.db
 rapport/
