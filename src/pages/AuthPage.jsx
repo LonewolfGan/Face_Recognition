@@ -32,6 +32,7 @@ export default function AuthPage() {
   const [showCapture, setShowCapture] = useState(false);
   const [captureProgress, setCaptureProgress] = useState(0);
   const [success, setSuccess] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -87,86 +88,117 @@ export default function AuthPage() {
     }
 
     setShowCapture(true);
-    setTimeout(() => startCaptureProcess(), 500);
   };
 
-  const startCaptureProcess = async () => {
-    setLoading(true);
-    setCaptureProgress(0);
-    setSuccess(false);
+  // Effet unique pour gérer la caméra et la capture
+  useEffect(() => {
+    let stream = null;
+    let captureInterval = null;
 
-    try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        if (videoRef.current) {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-          });
-          videoRef.current.srcObject = stream;
-        } else {
-          throw new Error("Video element not ready.");
-        }
-      }
-
-      let capturedImages = [];
-      for (let i = 0; i < 5; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        if (videoRef.current && canvasRef.current) {
-          const context = canvasRef.current.getContext("2d");
-          context.drawImage(videoRef.current, 0, 0, 320, 240);
-          const dataUrl = canvasRef.current.toDataURL("image/jpeg");
-          capturedImages.push(dataUrl);
-          setCaptureProgress(i + 1);
-        } else {
-          throw new Error("Video or Canvas element not ready during capture.");
-        }
-      }
-
-      if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-        videoRef.current.srcObject = null;
-      }
+    const startCapture = async () => {
+      if (!showCapture || loading) return;
 
       try {
-        const response = await axios.post(`${API_URL}${REGISTER_ENDPOINT}`, {
-          name,
-          password: signupPassword,
-          images: capturedImages,
-        });
-        const result = await response.data;
-        console.log("Resultat de l'enregistrement:", result);
-
-        if (result.status === "success") {
-          login({
-            user_id: result.user_id,
-            name: name,
-            face_id: result.face_id,
-          });
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("L'API mediaDevices n'est pas disponible sur ce navigateur.");
         }
-        setSuccess(true);
-        setTimeout(() => {
-          setShowCapture(false);
-          navigate("/notes");
-        }, 1200);
-      } catch (error) {
-        console.error("Erreur lors de l'inscription:", error);
-        toast.error(`Erreur lors de l'inscription: ${error.response?.data?.message || error.message}`);
-        throw error;
-      }
-    } catch (err) {
-      console.error("Erreur lors de la capture:", err);
-      toast.error("Erreur lors de l'inscription: " + err.message);
 
-      if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play();
+          
+          // Démarrer la capture après 1 seconde
+          setTimeout(() => {
+            let capturedImages = [];
+            let captureCount = 0;
+
+            captureInterval = setInterval(async () => {
+              if (captureCount >= 5) {
+                clearInterval(captureInterval);
+                
+                // Envoyer les images au serveur
+                try {
+                  const response = await axios.post(`${API_URL}${REGISTER_ENDPOINT}`, {
+                    name,
+                    password: signupPassword,
+                    images: capturedImages,
+                  });
+
+                  const result = await response.data;
+                  console.log("Resultat de l'enregistrement:", result);
+
+                  if (result.status === "success") {
+                    login({
+                      user_id: result.user_id,
+                      name: name,
+                      face_id: result.face_id,
+                    });
+                    setSuccess(true);
+                    
+                    // Arrêter la caméra et naviguer
+                    if (stream) {
+                      stream.getTracks().forEach(track => track.stop());
+                    }
+                    if (videoRef.current) {
+                      videoRef.current.srcObject = null;
+                    }
+                    setShowCapture(false);
+                    navigate("/notes");
+                  }
+                } catch (err) {
+                  console.error("Erreur lors de l'envoi des images:", err);
+                  toast.error("Erreur lors de l'inscription: " + err.message);
+                  setShowCapture(false);
+                }
+                return;
+              }
+
+              if (videoRef.current && canvasRef.current) {
+                const context = canvasRef.current.getContext("2d");
+                context.drawImage(videoRef.current, 0, 0, 320, 240);
+                const dataUrl = canvasRef.current.toDataURL("image/jpeg");
+                capturedImages.push(dataUrl);
+                captureCount++;
+                setCaptureProgress(captureCount);
+              }
+            }, 2000); // Capture toutes les 2 secondes
+          }, 1000);
+        }
+      } catch (err) {
+        console.error("Erreur lors de l'initialisation de la vidéo:", err);
+        toast.error("Erreur lors de l'initialisation de la caméra: " + err.message);
+        setShowCapture(false);
+      }
+    };
+
+    if (showCapture) {
+      startCapture();
+    }
+
+    return () => {
+      if (captureInterval) {
+        clearInterval(captureInterval);
+      }
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      if (videoRef.current) {
         videoRef.current.srcObject = null;
       }
+    };
+  }, [showCapture, loading, name, signupPassword, login, navigate, toast]);
 
-      setSuccess(false);
-      setShowCapture(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Effet pour nettoyer la caméra quand le composant est démonté
+  useEffect(() => {
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, []);
 
   // Effets pour la capture et la connexion
   useEffect(() => {
@@ -279,7 +311,10 @@ export default function AuthPage() {
                 paddingBottom: "15px"
               }}>
                 <button
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => {
+                    setIsLogin(true);
+                    navigate("/login");
+                  }}
                   style={{
                     background: "none",
                     border: "none",
@@ -292,7 +327,10 @@ export default function AuthPage() {
                   Connexion
                 </button>
                 <button
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => {
+                    setIsLogin(false);
+                    navigate("/signup");
+                  }}
                   style={{
                     background: "none",
                     border: "none",
@@ -405,7 +443,10 @@ export default function AuthPage() {
                 paddingBottom: "15px"
               }}>
                 <button
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => {
+                    setIsLogin(true);
+                    navigate("/login");
+                  }}
                   style={{
                     background: "none",
                     border: "none",
@@ -418,7 +459,10 @@ export default function AuthPage() {
                   Connexion
                 </button>
                 <button
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => {
+                    setIsLogin(false);
+                    navigate("/signup");
+                  }}
                   style={{
                     background: "none",
                     border: "none",
@@ -432,40 +476,132 @@ export default function AuthPage() {
                 </button>
               </div>
               <>
-                <form
-                  onSubmit={handleFullSignup}
-                  style={{ display: "flex", flexDirection: "column", gap: 18, margin: "30px auto" }}
-                >
-                  <label
-                    style={{ fontWeight: 500, marginBottom: 4, color: "var(--text)" }}
+                {!showCapture ? (
+                  <form
+                    onSubmit={handleFullSignup}
+                    style={{ display: "flex", flexDirection: "column", gap: 18, margin: "30px auto" }}
                   >
-                    Nom
-                    <input
-                      type="text"
-                      placeholder="Entrez votre nom"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      style={{ marginTop: 4 }}
-                    />
-                  </label>
-                  <label
-                    style={{ fontWeight: 500, marginBottom: 4, color: "var(--text)" }}
-                  >
-                    Mot de passe
-                    <input
-                      type="password"
-                      placeholder="Mot de passe sécurisé"
-                      value={signupPassword}
-                      onChange={(e) => setSignupPassword(e.target.value)}
-                      required
-                      style={{ marginTop: 4 }}
-                    />
-                  </label>
-                  <button type="submit" disabled={loading} style={{ marginTop: 30 }}>
-                    {loading ? "Préparation..." : "S'inscrire (capture visage)"}
-                  </button>
-                </form>
+                    <label
+                      style={{ fontWeight: 500, marginBottom: 4, color: "var(--text)" }}
+                    >
+                      Nom
+                      <input
+                        type="text"
+                        placeholder="Entrez votre nom"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        style={{ marginTop: 4 }}
+                      />
+                    </label>
+                    <label
+                      style={{ fontWeight: 500, marginBottom: 4, color: "var(--text)" }}
+                    >
+                      Mot de passe
+                      <input
+                        type="password"
+                        placeholder="Mot de passe sécurisé"
+                        value={signupPassword}
+                        onChange={(e) => setSignupPassword(e.target.value)}
+                        required
+                        style={{ marginTop: 4 }}
+                      />
+                    </label>
+                    <button type="submit" disabled={loading} style={{ marginTop: 30 }}>
+                      {loading ? "Préparation..." : "S'inscrire (capture visage)"}
+                    </button>
+                  </form>
+                ) : (
+                  <div style={{ padding: "20px 0" }}>
+                    <h3
+                      style={{
+                        color: "var(--text)",
+                        textAlign: "center",
+                        marginBottom: 10,
+                      }}
+                    >
+                      Enregistrement du visage
+                    </h3>
+                    <div
+                      style={{
+                        position: "relative",
+                        width: 320,
+                        height: 240,
+                        margin: "10px auto",
+                      }}
+                    >
+                      {!success ? (
+                        <video
+                          ref={videoRef}
+                          width="320"
+                          height="240"
+                          autoPlay
+                          style={{
+                            borderRadius: 12,
+                            display: "block",
+                            background: "var(--bg)",
+                            border: "4px dotted var(--text)",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: 320,
+                            height: 240,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderRadius: 12,
+                            border: "4px dotted var(--bg)",
+                            background: "var(--bg)",
+                          }}
+                        >
+                          <IoCheckmarkDoneCircleOutline size={120} color="#22c55e" />
+                        </div>
+                      )}
+                      <canvas
+                        ref={canvasRef}
+                        width="320"
+                        height="240"
+                        style={{ display: "none" }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        width: "80%",
+                        height: 10,
+                        background: "var(--bg)",
+                        borderRadius: 6,
+                        margin: "18px auto 0 auto",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${(captureProgress / 5) * 100}%`,
+                          height: "100%",
+                          background: "linear-gradient(90deg, var(--accent) 60%, #6366f1 100%)",
+                          borderRadius: 6,
+                          transition: "width 0.5s",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        margin: "14px 0 0 0",
+                        fontWeight: 500,
+                        textAlign: "center",
+                        fontSize: "1.05rem",
+                      }}
+                    >
+                      {loading && !success
+                        ? "Positionnez votre visage dans le cadre"
+                        : success
+                        ? "Enregistrement réussi !"
+                        : ""}
+                    </div>
+                  </div>
+                )}
               </>
             </div>
           </div>
@@ -544,4 +680,4 @@ export default function AuthPage() {
       )}
     </div>
   );
-} 
+}

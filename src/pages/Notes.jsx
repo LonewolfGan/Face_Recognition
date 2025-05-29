@@ -11,6 +11,8 @@ import { useToastContext } from '../context/ToastContext';
 import { ADD_FACE_URL, CONFIG } from '../config';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import DeleteNoteModal from '../components/DeleteNoteModal'; // Importer le nouveau composant modal
+import backgroundPatternLight from "../assets/background-pattern.svg";
+import backgroundPatternDark from "../assets/background-pattern-dark.svg";
 
 // Configuration de l'API
 const API_URL = 'http://localhost:5000';
@@ -275,22 +277,15 @@ export default function Notes() {
   }, []);
 
   return (
-    <div style={{
-      width: '100vw',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'var(--bg)'
-    }}>
+    <div className="notes-page-background">
       <div style={{
         backgroundColor: 'var(--card)',
         borderRadius: '10px',
         padding: '30px',
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        width: '100%',
-        maxWidth: '800px',
-        margin: '0 auto'
+        width: '95%',
+        maxWidth: '900px',
+        margin: '0 10px'
       }}>
         <div style={{
           display: 'flex',

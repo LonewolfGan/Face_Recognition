@@ -30,6 +30,17 @@ export const ThemeProvider = ({ children }) => {
 
   // Appliquer le thème actuel
   useEffect(() => {
+    // Précharger les images de fond
+    const lightBgImage = new Image();
+    lightBgImage.src = '/src/assets/background-pattern.svg';
+    
+    const darkBgImage = new Image();
+    darkBgImage.src = '/src/assets/background-pattern-dark.svg';
+    
+    // Précharger l'image de fond de la landing page
+    const landingBgImage = new Image();
+    landingBgImage.src = '/src/assets/face-recognition-bg.jpg';
+    
     const theme = isDarkMode ? darkTheme : lightTheme;
     applyTheme(theme);
     

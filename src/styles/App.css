@@ -3,12 +3,24 @@
 .background {
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, var(--bg) 0%, #e0e7ff 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Epilogue', sans-serif;
+  position: relative;
+}
+
+
+
+
+
+.background > * {
+  position: relative;
+  z-index: 1;
 }
 
 .card {
@@ -691,4 +703,25 @@ body.dark .toast-close {
 .logo-text-link span:last-child {
   color: var(--text-light) !important;
   margin-left: 5px;
+}
+
+/* Style pour le background de la page Notes */
+.notes-page-background {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Images de fond pour la page Notes (modes clair et sombre) */
+.notes-page-background {
+  background-image: url('../assets/background-pattern.svg');
+}
+
+body.dark .notes-page-background {
+  background-image: url('../assets/background-pattern-dark.svg');
 }

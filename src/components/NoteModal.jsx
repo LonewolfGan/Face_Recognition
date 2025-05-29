@@ -17,10 +17,10 @@ const modalOverlayStyle = {
 };
 
 const modalContainerStyle = {
-  background: "#fff",
+  background: "var(--card)",
   borderRadius: 12,
-  minWidth: 700,
-  maxWidth: "95vw",
+  width: "95%",
+  maxWidth: "700px",
   minHeight: 500,
   maxHeight: "95vh",
   display: "flex",
@@ -30,8 +30,8 @@ const modalContainerStyle = {
 };
 
 const titleBarStyle = {
-  background: "#4f46e5",
-  color: "white",
+  background: "var(--card)",
+  color: "var(--text)",
   padding: "8px 16px",
   display: "flex",
   justifyContent: "space-between",
@@ -43,7 +43,7 @@ const titleBarStyle = {
 const closeButtonStyle = {
   background: "none",
   border: "none",
-  color: "white",
+  color: "var(--text)",
   fontSize: 24,
   cursor: "pointer",
   lineHeight: 1,
@@ -52,15 +52,15 @@ const closeButtonStyle = {
 
 const titleInputContainerStyle = {
   padding: "8px 16px",
-  borderBottom: "1px solid #eee",
-  background: "#f8f9ff",
+  borderBottom: "1px solid var(--bg)",
+  background: "var(--bg)",
 };
 
 const titleLabelStyle = {
   marginRight: 10,
   fontWeight: "bold",
   fontSize: 15,
-  color: "#222",
+  color: "var(--text)",
 };
 
 const titleInputStyle = {
@@ -68,7 +68,8 @@ const titleInputStyle = {
   padding: "8px 12px",
   borderRadius: 4,
   fontSize: 14,
-  background: "#fff",
+  background: "var(--card)",
+  color: "var(--text)",
 };
 
 const editorZoneStyle = {
@@ -82,39 +83,39 @@ const editorZoneStyle = {
 
 const quillStyle = {
   flex: 1,
-  border: "1px solid #ddd",
+  border: "1px solid var(--bg)",
   borderRadius: 4,
-  overflow: "auto", // permet le scroll si le texte dépasse
+  overflow: "auto",
   minHeight: "200px",
-  maxHeight: "350px", // limite la hauteur max, ajoute une barre de scroll si besoin
+  maxHeight: "350px",
   margin: "5px 0",
-  background: "#fcfcff",
-  color: "#111"
+  background: "var(--card)",
+  color: "var(--text)",
 };
 
 const statusBarStyle = {
   padding: "8px 16px",
-  borderTop: "1px solid #eee",
+  borderTop: "1px solid var(--bg)",
   fontSize: 12,
-  color: "#666",
+  color: "var(--text-muted)",
   display: "flex",
   justifyContent: "space-between",
-  background: "#f8f9ff",
+  background: "var(--bg)",
 };
 
 const buttonBarStyle = {
   padding: "12px 16px",
   display: "flex",
   justifyContent: "flex-end",
-  borderTop: "1px solid #eee",
-  background: "#f8f9ff",
+  borderTop: "1px solid var(--bg)",
+  background: "var(--bg)",
   gap: 10,
 };
 
 const cancelButtonStyle = {
-  color: "#222",
-  background: "#f5f5f5",
-  border: "1px solid #ddd",
+  color: "var(--text)",
+  background: "var(--bg)",
+  border: "1px solid var(--text-muted)",
   borderRadius: 4,
   padding: "8px 20px",
   cursor: "pointer",
@@ -123,8 +124,8 @@ const cancelButtonStyle = {
 };
 
 const saveButtonStyle = {
-  background: "#4f46e5",
-  color: "white",
+  background: "var(--accent)",
+  color: "var(--text-light)",
   border: "none",
   borderRadius: 4,
   padding: "8px 20px",
@@ -132,7 +133,7 @@ const saveButtonStyle = {
   cursor: "pointer",
   fontWeight: "bold",
   fontSize: 15,
-  boxShadow: "0 2px 8px rgba(79,70,229,0.08)",
+  boxShadow: "0 2px 8px rgba(var(--accent-rgb),0.08)",
   transition: "background 0.15s",
 };
 

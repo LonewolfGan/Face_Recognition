@@ -35,12 +35,47 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Epilogue', sans-serif;
+  transition: background-image 0.3s ease;
+  background-color: var(--bg);
+}
+
+/* Préchargement des images de fond */
+:root::before, :root::after, :root::first-line {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  content: '';
+}
+
+:root::before {
+  background-image: url('../assets/background-pattern.svg');
+}
+
+:root::after {
+  background-image: url('../assets/background-pattern-dark.svg');
+}
+
+:root::first-line {
+  background-image: url('../assets/face-recognition-bg.jpg');
+}
+
+/* Appliquer le fond SVG uniquement aux pages qui ne sont pas la landing page */
+body:not(.landing-page-active) {
+  background-image: url('../assets/background-pattern.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+body.dark:not(.landing-page-active) {
+  background-image: url('../assets/background-pattern-dark.svg');
 }
 
 .background {
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, var(--bg) 0%, #e0e7ff 100%);
   color: var(--text);
   display: flex;
   align-items: center;

@@ -1,0 +1,452 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1000 599.9942970895553" preserveAspectRatio="xMaxYMax slice">
+    <g transform="scale(1.7821595139694575)">
+        <rect x="0" y="0" width="617.2228333333334" height="336.66700000000003" fill="#111827"
+            stroke="none" stroke-width="1" />
+        <polygon points="0,0 56.11,56.11 0,56.11" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="56.11" y="0" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="112.22233333333334" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="140.28,0 140.28,28.06 112.22,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="140.28,0 168.34,0 140.28,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="112.22,28.06 140.28,28.06 140.28,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="140.28,28.06 168.34,56.12 140.28,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="168.33350000000002" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="196.39000000000001,0 196.39000000000001,28.06 168.33,28.06"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="196.39,0 224.45,0 196.39,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="168.33,28.06 196.39000000000001,28.06 196.39000000000001,56.12"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="196.39,28.06 224.45,56.12 196.39,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="224.44466666666668" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="252.5,0 252.5,28.06 224.44,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="252.5,0 280.56,0 252.5,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="224.44,28.06 252.5,28.06 252.5,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="252.5,28.06 280.56,56.12 252.5,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="280.55583333333334" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path d="M 280.56 0 A 28.06 28.06 0 0 1 308.62 28.06 L 280.56 28.06L280.56 0"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path d="M 308.61 28.06 A 28.06 28.06 0 0 1  336.67 0 L 336.67 28.06L308.61 28.06"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 280.56 56.12 A 28.06 28.06 0 0 0 308.62 28.06 L 280.56 28.06L280.56 56.12"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 308.61 28.06 A 28.06 28.06 0 0 0 336.67 56.12 L 336.67 28.06L308.61 28.06"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="336.66700000000003" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="364.73,0 364.73,28.06 336.67,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="364.72,0 392.78000000000003,0 364.72,28.06" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="336.67,28.06 364.73,28.06 364.73,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="364.72,28.06 392.78000000000003,56.12 364.72,56.12" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <rect x="392.77816666666666" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="420.84,0 420.84,28.06 392.78,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="420.83,0 448.89,0 420.83,28.06" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="392.78,28.06 420.84,28.06 420.84,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="420.83,28.06 448.89,56.12 420.83,56.12" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="448.89" y="0" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="505.00050000000005" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <circle cx="519.03" cy="14.03" r="14.03" fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="533.06" y="0" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <circle cx="519.03" cy="42.089999999999996" r="14.03" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="533.06" y="28.06" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="561.1116666666667" y="0" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path d="M 561.11 0 A 28.06 28.06 0 0 1 589.17 28.06 L 561.11 28.06L561.11 0"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 589.17 28.06 A 28.06 28.06 0 0 1  617.2299999999999 0 L 617.2299999999999 28.06L589.17 28.06"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 561.11 56.12 A 28.06 28.06 0 0 0 589.17 28.06 L 561.11 28.06L561.11 56.12"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 589.17 28.06 A 28.06 28.06 0 0 0 617.2299999999999 56.12 L 617.2299999999999 28.06L589.17 28.06"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="0" y="56.11" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="56.11116666666667" y="56.11116666666667" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="84.17,56.11 84.17,84.17 56.11,84.17" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="84.17,56.11 112.23,56.11 84.17,84.17" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="56.11,84.17 84.17,84.17 84.17,112.23" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="84.17,84.17 112.23,112.23 84.17,112.23" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <path
+            d="M 112.22 112.22 A 56.11 56.11 0 0 1  168.32999999999998 56.11 L 112.22 112.22 A 56.11 56.11 0 0 0 168.32999999999998 56.11"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="168.33350000000002" y="56.11116666666667" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="196.39000000000001,56.11 196.39000000000001,84.17 168.33,84.17"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="196.39,56.11 224.45,84.17 196.39,84.17" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="168.33,84.17 196.39000000000001,84.17 168.33,112.23" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="196.39,84.17 224.45,84.17 224.45,112.23" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="224.44,56.11 280.55,56.11 280.55,112.22" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="280.56" y="56.11" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="336.67" y="56.11" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="392.77816666666666" y="56.11116666666667" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 392.78 56.11 A 28.06 28.06 0 0 1 420.84 84.17 L 392.78 84.17L392.78 56.11"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 420.83 84.17 A 28.06 28.06 0 0 1  448.89 56.11 L 448.89 84.17L420.83 84.17"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 392.78 112.23 A 28.06 28.06 0 0 0 420.84 84.17 L 392.78 84.17L392.78 112.23"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 420.83 84.17 A 28.06 28.06 0 0 0 448.89 112.23 L 448.89 84.17L420.83 84.17"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path d="M 448.89 56.11 A 56.11 56.11 0 0 1 505 112.22 L 448.89 112.22L448.89 56.11"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="505" y="56.11" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="561.11" y="56.11" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="0,112.22 56.11,112.22 0,168.32999999999998" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <rect x="56.11" y="112.22" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="112.22233333333334" y="112.22233333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 112.22 112.22 A 28.06 28.06 0 0 1 140.28 140.28 L 112.22 140.28L112.22 112.22"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 140.28 140.28 A 28.06 28.06 0 0 1  168.34 112.22 L 168.34 140.28L140.28 140.28"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 112.22 168.34 A 28.06 28.06 0 0 0 140.28 140.28 L 112.22 140.28L112.22 168.34"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 140.28 140.28 A 28.06 28.06 0 0 0 168.34 168.34 L 168.34 140.28L140.28 140.28"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="168.33350000000002" y="112.22233333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 168.33 140.28 A 28.06 28.06 0 0 0 196.39000000000001 112.22 L 168.33 112.22L168.33 140.28"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 196.39 112.22 A 28.06 28.06 0 0 0 224.45 140.28 L 224.45 112.22L196.39 112.22"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 168.33 140.28 A 28.06 28.06 0 0 1 196.39000000000001 168.34 L 168.33 168.34L168.33 140.28"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 196.39 168.34 A 28.06 28.06 0 0 1  224.45 140.28 L 224.45 168.34L196.39 168.34"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="224.44466666666668" y="112.22233333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="252.5,112.22 252.5,140.28 224.44,140.28" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="252.5,112.22 280.56,140.28 252.5,140.28" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="224.44,140.28 252.5,140.28 252.5,168.34" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="252.5,140.28 280.56,140.28 252.5,168.34" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="280.56,112.22 336.67,112.22 280.56,168.32999999999998" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon
+            points="392.78000000000003,112.22 392.78000000000003,168.32999999999998 336.67,168.32999999999998"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="392.77816666666666" y="112.22233333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="420.84,112.22 420.84,140.28 392.78,140.28" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="420.83,112.22 448.89,112.22 420.83,140.28" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="392.78,140.28 420.84,140.28 420.84,168.34" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="420.83,140.28 448.89,168.34 420.83,168.34" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="448.88933333333335" y="112.22233333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 448.89 112.22 A 28.06 28.06 0 0 0 476.95 140.28 L 476.95 112.22L448.89 112.22"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 476.94 140.28 A 28.06 28.06 0 0 0 505 112.22 L 476.94 112.22L476.94 140.28"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 448.89 168.34 A 28.06 28.06 0 0 1  476.95 140.28 L 476.95 168.34L448.89 168.34"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 476.94 140.28 A 28.06 28.06 0 0 1 505 168.34 L 476.94 168.34L476.94 140.28"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="505.00050000000005" y="112.22233333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <circle cx="519.03" cy="126.25" r="14.03" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="533.06" y="112.22" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <circle cx="519.03" cy="154.31" r="14.03" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="533.06" y="140.28" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <path
+            d="M 561.11 168.32999999999998 A 56.11 56.11 0 0 1  617.22 112.22 L 617.22 168.32999999999998L561.11 168.32999999999998"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="56.11,168.33 56.11,224.44 0,224.44" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="56.11" y="168.33" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="112.22233333333334" y="168.33350000000002" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 112.22 196.39000000000001 A 28.06 28.06 0 0 1 140.28 168.33 L 140.28 175.345 A 21.044999999999998 21.044999999999998 0 0 0 119.235 196.39000000000001"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 140.28 168.33 A 28.06 28.06 0 0 1 168.34 196.39000000000001 L 161.325 196.39000000000001 A 21.044999999999998 21.044999999999998 0 0 0 140.28 175.345"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 112.22 196.39 A 28.06 28.06 0 0 0 140.28 224.45 L 140.28 217.43499999999997 A 21.044999999999998 21.044999999999998 0 0 1 119.235 196.39"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 140.28 224.45 A 28.06 28.06 0 0 0 168.34 196.39 L 161.325 196.39 A 21.044999999999998 21.044999999999998 0 0 1 140.28 217.43499999999997"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="168.33" y="168.33" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="224.44" y="168.33" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="280.55583333333334" y="168.33350000000002" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 280.56 196.39000000000001 A 28.06 28.06 0 0 1  308.62 168.33 L 308.62 196.39000000000001L280.56 196.39000000000001"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 308.61 168.33 A 28.06 28.06 0 0 1 336.67 196.39000000000001 L 308.61 196.39000000000001L308.61 168.33"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 280.56 196.39 A 28.06 28.06 0 0 0 308.62 224.45 L 308.62 196.39L280.56 196.39"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 308.61 224.45 A 28.06 28.06 0 0 0 336.67 196.39 L 308.61 196.39L308.61 224.45"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="392.78000000000003,168.33 392.78000000000003,224.44 336.67,224.44"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="392.77816666666666" y="168.33350000000002" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 392.78 196.39000000000001 A 28.06 28.06 0 0 1 420.84 168.33 L 420.84 175.345 A 21.044999999999998 21.044999999999998 0 0 0 399.79499999999996 196.39000000000001"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 420.83 168.33 A 28.06 28.06 0 0 1 448.89 196.39000000000001 L 441.875 196.39000000000001 A 21.044999999999998 21.044999999999998 0 0 0 420.83 175.345"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 392.78 196.39 A 28.06 28.06 0 0 0 420.84 224.45 L 420.84 217.43499999999997 A 21.044999999999998 21.044999999999998 0 0 1 399.79499999999996 196.39"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 420.83 224.45 A 28.06 28.06 0 0 0 448.89 196.39 L 441.875 196.39 A 21.044999999999998 21.044999999999998 0 0 1 420.83 217.43499999999997"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="448.89,168.33 505,224.44 448.89,224.44" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="505" y="168.33" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="561.11" y="168.33" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="0" y="224.44466666666668" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="28.06,224.44 28.06,252.5 0,252.5" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="28.06,224.44 56.12,252.5 28.06,252.5" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="0,252.5 28.06,252.5 28.06,280.56" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="28.06,252.5 56.12,252.5 28.06,280.56" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="56.11116666666667" y="224.44466666666668" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <circle cx="70.14" cy="238.47" r="14.03" fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="84.17" y="224.44" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <circle cx="70.14" cy="266.53" r="14.03" fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="84.17" y="252.5" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="112.22233333333334" y="224.44466666666668" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <circle cx="126.25" cy="238.47" r="14.03" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="140.28" y="224.44" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <circle cx="126.25" cy="266.53" r="14.03" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="140.28" y="252.5" width="28.06" height="28.06" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="168.33" y="224.44" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="224.44466666666668" y="224.44466666666668" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 224.44 252.5 A 28.06 28.06 0 0 1 252.5 224.44 L 252.5 231.45499999999998 A 21.044999999999998 21.044999999999998 0 0 0 231.45499999999998 252.5"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 252.5 224.44 A 28.06 28.06 0 0 1 280.56 252.5 L 273.545 252.5 A 21.044999999999998 21.044999999999998 0 0 0 252.5 231.45499999999998"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 224.44 252.5 A 28.06 28.06 0 0 0 252.5 280.56 L 252.5 273.545 A 21.044999999999998 21.044999999999998 0 0 1 231.45499999999998 252.5"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 252.5 280.56 A 28.06 28.06 0 0 0 280.56 252.5 L 273.545 252.5 A 21.044999999999998 21.044999999999998 0 0 1 252.5 273.545"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="280.56" y="224.44" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="336.66700000000003" y="224.44466666666668" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 336.67 252.5 A 28.06 28.06 0 0 1  364.73 224.44 L 364.73 252.5L336.67 252.5"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 364.72 224.44 A 28.06 28.06 0 0 1 392.78000000000003 252.5 L 364.72 252.5L364.72 224.44"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 336.67 252.5 A 28.06 28.06 0 0 0 364.73 280.56 L 364.73 252.5L336.67 252.5"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 364.72 280.56 A 28.06 28.06 0 0 0 392.78000000000003 252.5 L 364.72 252.5L364.72 280.56"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 392.78 224.44 A 56.11 56.11 0 0 1  448.89 280.55 L 392.78 224.44 A 56.11 56.11 0 0 0 448.89 280.55"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="448.89" y="224.44" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="505.00050000000005" y="224.44466666666668" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="533.06,224.44 533.06,252.5 505,252.5" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="533.06,224.44 561.1199999999999,252.5 533.06,252.5" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="505,252.5 533.06,252.5 533.06,280.56" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="533.06,252.5 561.1199999999999,252.5 533.06,280.56" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="561.11,224.44 617.22,224.44 561.11,280.55" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <rect x="0" y="280.55583333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="28.06,280.56 28.06,308.62 0,308.62" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="28.06,280.56 56.12,308.62 28.06,308.62" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="0,308.61 28.06,308.61 0,336.67" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="28.06,308.61 56.12,308.61 56.12,336.67" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="56.11116666666667" y="280.55583333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 56.11 308.62 A 28.06 28.06 0 0 1  84.17 280.56 L 84.17 308.62L56.11 308.62"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 84.17 280.56 A 28.06 28.06 0 0 1 112.23 308.62 L 84.17 308.62L84.17 280.56"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 56.11 308.61 A 28.06 28.06 0 0 0 84.17 336.67 L 84.17 308.61L56.11 308.61"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 84.17 336.67 A 28.06 28.06 0 0 0 112.23 308.61 L 84.17 308.61L84.17 336.67"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="112.22233333333334" y="280.55583333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 112.22 308.62 A 28.06 28.06 0 0 0 140.28 280.56 L 112.22 280.56L112.22 308.62"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 140.28 280.56 A 28.06 28.06 0 0 0 168.34 308.62 L 168.34 280.56L140.28 280.56"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 112.22 308.61 A 28.06 28.06 0 0 1 140.28 336.67 L 112.22 336.67L112.22 308.61"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 140.28 336.67 A 28.06 28.06 0 0 1  168.34 308.61 L 168.34 336.67L140.28 336.67"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 168.33 280.56 A 56.11 56.11 0 0 1 224.44 336.67 L 168.33 336.67L168.33 280.56"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="224.44466666666668" y="280.55583333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="252.5,280.56 252.5,308.62 224.44,308.62" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="252.5,280.56 280.56,308.62 252.5,308.62" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="224.44,308.61 252.5,308.61 252.5,336.67" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="252.5,308.61 280.56,308.61 252.5,336.67" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <polygon points="280.56,280.56 336.67,280.56 280.56,336.67" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <rect x="336.66700000000003" y="280.55583333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <polygon points="364.73,280.56 364.73,308.62 336.67,308.62" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="364.72,280.56 392.78000000000003,280.56 364.72,308.62" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="336.67,308.61 364.73,308.61 364.73,336.67" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <polygon points="364.72,308.61 392.78000000000003,336.67 364.72,336.67" fill="none"
+            stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 392.78 336.67 A 56.11 56.11 0 0 0 448.89 280.56 L 392.78 280.56L392.78 336.67"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <rect x="448.88933333333335" y="280.55583333333334" width="56.11116666666667"
+            height="56.11116666666667" fill="#1e293b" stroke="none" stroke-width="1" />
+        <path
+            d="M 448.89 308.62 A 28.06 28.06 0 0 1 476.95 280.56 L 476.95 287.575 A 21.044999999999998 21.044999999999998 0 0 0 455.905 308.62"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 476.94 280.56 A 28.06 28.06 0 0 1 505 308.62 L 497.985 308.62 A 21.044999999999998 21.044999999999998 0 0 0 476.94 287.575"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 448.89 308.61 A 28.06 28.06 0 0 0 476.95 336.67 L 476.95 329.65500000000003 A 21.044999999999998 21.044999999999998 0 0 1 455.905 308.61"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <path
+            d="M 476.94 336.67 A 28.06 28.06 0 0 0 505 308.61 L 497.985 308.61 A 21.044999999999998 21.044999999999998 0 0 1 476.94 329.65500000000003"
+            fill="none" stroke="#9ca3af" stroke-width="1" />
+        <polygon points="505,280.56 561.11,280.56 561.11,336.67" fill="none" stroke="#9ca3af"
+            stroke-width="1" />
+        <rect x="561.11" y="280.56" width="56.11" height="56.11" fill="#1e293b" stroke="#9ca3af"
+            stroke-width="1" />
+    </g>
+</svg>
