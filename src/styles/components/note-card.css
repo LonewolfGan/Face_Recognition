@@ -2,14 +2,15 @@
 .note-card {
   background: var(--card);
   color: var(--text);
-  border-radius: 20px;
+  border-radius: clamp(12px, 2vw, 20px);
   box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.07);
-  padding: 24px 18px;
-  margin-bottom: 18px;
+  padding: clamp(16px, 3vw, 24px) clamp(12px, 2vw, 18px);
+  margin-bottom: clamp(12px, 2vw, 18px);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: clamp(8px, 1.5vw, 10px);
   transition: box-shadow 0.2s;
+  width: 100%;
 }
 
 .note-card:hover {
@@ -17,23 +18,24 @@
 }
 
 .note-card .note-title {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: clamp(4px, 1vw, 6px);
   color: var(--accent);
 }
 
 .note-card .note-content {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2vw, 1rem);
   color: var(--text);
-  margin-bottom: 10px;
+  margin-bottom: clamp(8px, 1.5vw, 10px);
+  line-height: 1.5;
 }
 
 .note-card .note-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: clamp(0.75rem, 1.8vw, 0.9rem);
   color: var(--text);
   opacity: 0.7;
 }
@@ -42,8 +44,8 @@
   background-color: var(--accent);
   color: var(--card);
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: clamp(24px, 4vw, 30px);
+  height: clamp(24px, 4vw, 30px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,13 +53,14 @@
   cursor: pointer;
   position: relative;
   font-size: 0;
+  padding: 0;
 }
 
 .note-card .delete-note-btn::before,
 .note-card .delete-note-btn::after {
   content: '';
   position: absolute;
-  width: 15px;
+  width: clamp(12px, 2vw, 15px);
   height: 2px;
   background-color: white;
 }
@@ -68,4 +71,29 @@
 
 .note-card .delete-note-btn::after {
   transform: rotate(-45deg);
+}
+
+@media (max-width: 480px) {
+  .note-card {
+    padding: 16px 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  .note-card .note-title {
+    font-size: 1rem;
+  }
+
+  .note-card .note-content {
+    font-size: 0.875rem;
+  }
+
+  .note-card .note-footer {
+    font-size: 0.75rem;
+  }
+
+  .note-card .delete-note-btn {
+    width: 24px;
+    height: 24px;
+  }
 }

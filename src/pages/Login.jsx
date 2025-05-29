@@ -15,6 +15,7 @@ export default function Login() {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showFaceFailModal, setShowFaceFailModal] = useState(false);
+  const [noFacesRegistered, setNoFacesRegistered] = useState(false);
   const [password, setPassword] = useState("");
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -81,13 +82,22 @@ export default function Login() {
               image: imageData,
             });
             const result = response.data;
+            console.log("Réponse du serveur:", result);
+            
             if (result.status === "success") {
               login(result.user);
               setLoginSuccess(true);
             } else if (result.status === "face_failed") {
-              setShowCamera(false);
-              setLoading(false);
-              setShowFaceFailModal(true);
+              // Vérifier si c'est le cas "Aucun visage enregistré"
+              if (result.message?.includes("Aucun visage enregistré")) {
+                setShowCamera(false);
+                setLoading(false);
+                setNoFacesRegistered(true);
+              } else {
+                setShowCamera(false);
+                setLoading(false);
+                setShowFaceFailModal(true);
+              }
               return;
             } else {
               toast.error(result.message || "Échec de la connexion.");
@@ -95,16 +105,10 @@ export default function Login() {
             }
           }
         } catch (error) {
-          console.error("Erreur complète lors de la connexion faciale:", error);
-          if (error.response && error.response.status === 401) {
-            setShowCamera(false);
-            setLoading(false);
-            setShowFaceFailModal(true);
-            return;
-          } else {
-            toast.error("Erreur lors de la connexion faciale : " + (error.response?.data?.message || error.message));
-            setError("Erreur lors de la connexion faciale : " + (error.response?.data?.message || error.message));
-          }
+          console.error("Erreur lors de la connexion faciale:", error);
+          const errorMessage = error.response?.data?.message || error.message;
+          toast.error("Erreur lors de la connexion faciale : " + errorMessage);
+          setError("Erreur lors de la connexion faciale : " + errorMessage);
         } finally {
           setShowCamera(false);
           setLoading(false);
@@ -139,6 +143,30 @@ export default function Login() {
     <div className="background">
       <div className="card" style={{ maxWidth: 380, textAlign: "center" }}>
         <h2>Connexion</h2>
+
+        {noFacesRegistered && (
+          <div style={{
+            background: "var(--accent-light)",
+            padding: "16px",
+            borderRadius: "12px",
+            margin: "20px 0",
+            border: "1px solid var(--accent)"
+          }}>
+            <p style={{ color: "var(--accent)", marginBottom: "12px" }}>
+              Aucun visage n'est enregistré dans la base de données.
+            </p>
+            <p style={{ fontSize: "0.9rem", marginBottom: "16px" }}>
+              Veuillez d'abord vous inscrire pour enregistrer votre visage.
+            </p>
+            <Link
+              to="/signup"
+              className="main-btn"
+              style={{ display: "inline-block", textDecoration: "none" }}
+            >
+              S'inscrire
+            </Link>
+          </div>
+        )}
 
         <div
           style={{

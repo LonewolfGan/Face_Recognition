@@ -1,0 +1,45 @@
+.card-3d-wrap {
+  position: relative;
+  width: 440px;
+  max-width: 90%;
+  height: 600px;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d; 
+  perspective: 800px;
+  margin: auto;
+}
+
+.card-3d-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-front, .card-back {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* Quand on clique sur le bouton d'inscription */
+.card-3d-wrapper.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Assurer que les cartes internes ont la même taille et contiennent tout leur contenu */
+.card-3d-wrap .card {
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+} 

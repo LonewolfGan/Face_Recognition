@@ -96,7 +96,7 @@ def login_user():
         if recognize_response.status_code != 200 or recognize_data.get('status') != 'success':
             return jsonify({
                 'status': 'face_failed',
-                'message': 'Visage non reconnu. Voulez-vous essayer avec un mot de passe ?'
+                'message': recognize_data.get('message', 'Visage non reconnu')
             }), 401
         
         # Récupérer l'utilisateur à partir de l'ID du visage

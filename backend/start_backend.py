@@ -16,10 +16,13 @@ def start_services():
     """Démarre tous les services backend en parallèle"""
     logger.info("Démarrage des services de reconnaissance faciale...")
     
+    # Obtenir le chemin du dossier backend
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    
     # Chemins des services
-    add_service = "add_service.py"
-    recognize_service = "recognize_service.py"
-    api_service = "api_service.py"
+    add_service = os.path.join(backend_dir, "add_service.py")
+    recognize_service = os.path.join(backend_dir, "recognize_service.py")
+    api_service = os.path.join(backend_dir, "api_service.py")
     
     # Démarrer les processus
     processes = [
