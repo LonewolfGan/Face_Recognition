@@ -47,11 +47,25 @@ def init_db():
     )
     ''')
     
+    # Création de la table folders
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS folders (
+        folder_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        parent_id INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (user_id),
+        FOREIGN KEY (parent_id) REFERENCES folders (folder_id)
+    )
+    ''')
+    
     # Création de la table notes
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS notes (
         note_id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
+        folder_id INTEGER REFERENCES folders(folder_id),
         title TEXT NOT NULL,
         content TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -67,6 +81,13 @@ def init_db():
         value TEXT NOT NULL
     )
     ''')
+    
+    # Ajouter la colonne folder_id à la table notes si elle n'existe pas
+    try:
+        cursor.execute('ALTER TABLE notes ADD COLUMN folder_id INTEGER REFERENCES folders(folder_id)')
+    except sqlite3.OperationalError:
+        # La colonne existe déjà, on ignore l'erreur
+        pass
     
     conn.commit()
     print("Base de données initialisée avec succès.")
@@ -117,51 +138,44 @@ def get_user_by_face_id(face_id):
     return None
 
 # Fonctions pour la gestion des notes
-def create_note(user_id, title, content):
-    """
-    Crée une nouvelle note pour un utilisateur.
-    
-    Args:
-        user_id (str): Identifiant de l'utilisateur
-        title (str): Titre de la note
-        content (str): Contenu de la note
-        
-    Returns:
-        str: note_id de la note créée
-    """
-    conn = get_db()
-    cursor = conn.cursor()
-    
+def create_note(user_id, title, content='', folder_id=None):
+    """Crée une nouvelle note pour un utilisateur."""
+    db = get_db()
+    cursor = db.cursor()
     note_id = str(uuid.uuid4())
     now = datetime.datetime.now().isoformat()
     
-    cursor.execute(
-        "INSERT INTO notes (note_id, user_id, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (note_id, user_id, title, content, now, now)
-    )
-    
-    conn.commit()
-    
+    cursor.execute('''
+        INSERT INTO notes (note_id, user_id, title, content, folder_id, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', (note_id, user_id, title, content, folder_id, now, now))
+    db.commit()
     return note_id
 
-def get_notes_by_user(user_id):
-    """
-    Récupère toutes les notes d'un utilisateur.
+def get_notes_by_user(user_id, folder_id=None):
+    """Récupère toutes les notes d'un utilisateur."""
+    db = get_db()
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
     
-    Args:
-        user_id (str): Identifiant de l'utilisateur
-        
-    Returns:
-        list: Liste des notes de l'utilisateur
-    """
-    conn = get_db()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    if folder_id is not None:
+        cursor.execute('''
+            SELECT n.*, f.name as folder_name
+            FROM notes n
+            LEFT JOIN folders f ON n.folder_id = f.folder_id
+            WHERE n.user_id = ? AND n.folder_id = ?
+            ORDER BY n.updated_at DESC
+        ''', (user_id, folder_id))
+    else:
+        cursor.execute('''
+            SELECT n.*, f.name as folder_name
+            FROM notes n
+            LEFT JOIN folders f ON n.folder_id = f.folder_id
+            WHERE n.user_id = ?
+            ORDER BY n.updated_at DESC
+        ''', (user_id,))
     
-    cursor.execute("SELECT * FROM notes WHERE user_id = ? ORDER BY updated_at DESC", (user_id,))
     notes = cursor.fetchall()
-    
-    
     return [dict(note) for note in notes]
 
 def get_note(note_id, user_id):
@@ -187,33 +201,17 @@ def get_note(note_id, user_id):
         return dict(note)
     return None
 
-def update_note(note_id, user_id, title, content):
-    """
-    Met à jour une note existante.
-    
-    Args:
-        note_id (str): Identifiant de la note
-        user_id (str): Identifiant de l'utilisateur (pour vérification)
-        title (str): Nouveau titre
-        content (str): Nouveau contenu
-        
-    Returns:
-        bool: True si la mise à jour a réussi, False sinon
-    """
-    conn = get_db()
-    cursor = conn.cursor()
-    
-    now = datetime.datetime.now().isoformat()
-    
-    cursor.execute(
-        "UPDATE notes SET title = ?, content = ?, updated_at = ? WHERE note_id = ? AND user_id = ?",
-        (title, content, now, note_id, user_id)
-    )
-    
-    success = cursor.rowcount > 0
-    conn.commit()
-    
-    return success
+def update_note(note_id, user_id, title, content='', folder_id=None):
+    """Met à jour une note existante."""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('''
+        UPDATE notes
+        SET title = ?, content = ?, folder_id = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE note_id = ? AND user_id = ?
+    ''', (title, content, folder_id, note_id, user_id))
+    db.commit()
+    return cursor.rowcount > 0
 
 def delete_note(note_id, user_id):
     """
@@ -329,3 +327,143 @@ def get_user(user_id):
     if user:
         return dict(user)
     return None
+
+# Fonctions pour la gestion des dossiers
+def create_folder(user_id, name, parent_id=None):
+    """
+    Crée un nouveau dossier pour un utilisateur.
+    
+    Args:
+        user_id (str): Identifiant de l'utilisateur
+        name (str): Nom du dossier
+        parent_id (str, optional): Identifiant du dossier parent
+        
+    Returns:
+        int: folder_id du dossier créé
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    now = datetime.datetime.now().isoformat()
+    
+    cursor.execute(
+        "INSERT INTO folders (user_id, name, parent_id, created_at) VALUES (?, ?, ?, ?)",
+        (user_id, name, parent_id, now)
+    )
+    
+    folder_id = cursor.lastrowid
+    conn.commit()
+    return folder_id
+
+def get_folders_by_user(user_id):
+    """
+    Récupère tous les dossiers d'un utilisateur.
+    
+    Args:
+        user_id (str): Identifiant de l'utilisateur
+        
+    Returns:
+        list: Liste des dossiers de l'utilisateur
+    """
+    conn = get_db()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM folders WHERE user_id = ? ORDER BY name", (user_id,))
+    folders = cursor.fetchall()
+    
+    return [dict(folder) for folder in folders]
+
+def get_folder(folder_id, user_id):
+    """
+    Récupère un dossier spécifique d'un utilisateur.
+    
+    Args:
+        folder_id (str): Identifiant du dossier
+        user_id (str): Identifiant de l'utilisateur (pour vérification)
+        
+    Returns:
+        dict: Données du dossier ou None si non trouvé
+    """
+    conn = get_db()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM folders WHERE folder_id = ? AND user_id = ?", (folder_id, user_id))
+    folder = cursor.fetchone()
+    
+    if folder:
+        return dict(folder)
+    return None
+
+def update_folder(folder_id, user_id, name, parent_id=None):
+    """
+    Met à jour un dossier existant.
+    
+    Args:
+        folder_id (str): Identifiant du dossier
+        user_id (str): Identifiant de l'utilisateur (pour vérification)
+        name (str): Nouveau nom
+        parent_id (str, optional): Nouveau dossier parent
+        
+    Returns:
+        bool: True si la mise à jour a réussi, False sinon
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    cursor.execute(
+        "UPDATE folders SET name = ?, parent_id = ? WHERE folder_id = ? AND user_id = ?",
+        (name, parent_id, folder_id, user_id)
+    )
+    
+    success = cursor.rowcount > 0
+    conn.commit()
+    
+    return success
+
+def delete_folder(folder_id, user_id):
+    """
+    Supprime un dossier et toutes les notes qu'il contient.
+    Args:
+        folder_id (str): Identifiant du dossier
+        user_id (str): Identifiant de l'utilisateur (pour vérification)
+    Returns:
+        bool: True si la suppression a réussi, False sinon
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # Supprimer toutes les notes du dossier
+    cursor.execute("DELETE FROM notes WHERE folder_id = ? AND user_id = ?", (folder_id, user_id))
+
+    # Supprimer le dossier
+    cursor.execute("DELETE FROM folders WHERE folder_id = ? AND user_id = ?", (folder_id, user_id))
+
+    success = cursor.rowcount > 0
+    conn.commit()
+
+    return success
+
+def get_notes_by_folder(folder_id, user_id):
+    """
+    Récupère toutes les notes d'un dossier spécifique.
+    
+    Args:
+        folder_id (str): Identifiant du dossier
+        user_id (str): Identifiant de l'utilisateur (pour vérification)
+        
+    Returns:
+        list: Liste des notes du dossier
+    """
+    conn = get_db()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute(
+        "SELECT * FROM notes WHERE folder_id = ? AND user_id = ? ORDER BY updated_at DESC",
+        (folder_id, user_id)
+    )
+    notes = cursor.fetchall()
+    
+    return [dict(note) for note in notes]

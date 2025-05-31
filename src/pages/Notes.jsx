@@ -1,23 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NoteModal from '../components/NoteModal';
+import FolderSidebar from '../components/FolderSidebar';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../styles/components/note-card.css";
 import "../styles/components/user-section.css";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdAdd, MdSettings, MdOutlineLightMode, MdOutlineDarkMode, MdMenu } from "react-icons/md";
 import { useAuth } from "../context/AuthContext";
 import WebcamCapture from '../components/WebcamCapture';
 import { useToastContext } from '../context/ToastContext';
 import { ADD_FACE_URL, CONFIG } from '../config';
 import ChangePasswordModal from '../components/ChangePasswordModal';
-import DeleteNoteModal from '../components/DeleteNoteModal'; // Importer le nouveau composant modal
-import backgroundPatternLight from "../assets/background-pattern.svg";
-import backgroundPatternDark from "../assets/background-pattern-dark.svg";
+import DeleteNoteModal from '../components/DeleteNoteModal';
+import { useTheme } from '../theme';
 
 // Configuration de l'API
 const API_URL = 'http://localhost:5000';
 const NOTES_ENDPOINT = "/notes";
-
 
 export default function Notes() {
   const [notes, setNotes] = useState([]);
@@ -26,16 +25,23 @@ export default function Notes() {
   const [showModal, setShowModal] = useState(false);
   const [editingNote, setEditingNote] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [showWebcam, setShowWebcam] = useState(false); // État pour le composant WebcamCapture
-  const settingsRef = useRef(null); // Référence pour le menu déroulant
+  const [showWebcam, setShowWebcam] = useState(false);
+  const settingsRef = useRef(null);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
-  const navigate = useNavigate(); // Hook pour la navigation
-  const { currentUser } = useAuth(); // Récupérer l'utilisateur depuis le contexte d'authentification
-  const toast = useToastContext(); // Utiliser le contexte de toast pour les notifications
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false); // État pour la modal de changement de mot de passe
-  const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false); // État pour la modal de suppression de note
-  const [noteToDelete, setNoteToDelete] = useState(null); // Note à supprimer
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const toast = useToastContext();
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [showDeleteNoteModal, setShowDeleteNoteModal] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState(null);
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
+  const [selectedFolderName, setSelectedFolderName] = useState('');
+  const [modalFolderId, setModalFolderId] = useState(null);
+  const { isDarkMode, toggleTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(window.innerWidth >= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [fade, setFade] = useState(false);
 
   // Gestionnaire pour fermer le menu quand on clique ailleurs
   useEffect(() => {
@@ -156,12 +162,14 @@ export default function Notes() {
     }
   }, [currentUser, navigate]);
   
-  // Charger les notes au montage ou changement d'utilisateur
+  // Charger les notes au montage, changement d'utilisateur ou de dossier
   useEffect(() => {
     if (currentUser?.user_id) {
+      setFade(false);
+      setTimeout(() => setFade(true), 10); // Déclenche l'animation
       loadUserNotes();
     }
-  }, [currentUser]);
+  }, [currentUser, selectedFolderId]);
 
   async function loadUserNotes() {
     if (!currentUser?.user_id) return;
@@ -170,7 +178,11 @@ export default function Notes() {
     setError('');
     
     try {
-      const response = await axios.get(`${API_URL}/notes?user_id=${currentUser.user_id}`);
+      const endpoint = selectedFolderId 
+        ? `${API_URL}/folders/${selectedFolderId}/notes?user_id=${currentUser.user_id}`
+        : `${API_URL}/notes?user_id=${currentUser.user_id}`;
+      
+      const response = await axios.get(endpoint);
       setNotes(response.data.notes || []);
     } catch (err) {
       console.error('Erreur de chargement des notes:', err);
@@ -185,6 +197,8 @@ export default function Notes() {
     setEditingNote(note);
     setNoteTitle(note ? note.title : '');
     setNoteContent(note ? note.content : '');
+    setModalFolderId(selectedFolderId);
+    console.log('handleOpenModal - selectedFolderId:', selectedFolderId);
     setShowModal(true);
   }
 
@@ -197,6 +211,7 @@ export default function Notes() {
 
   async function handleSaveNote(noteData) {
     console.log("handleSaveNote appelé avec :", noteData);
+    console.log('handleSaveNote - modalFolderId:', modalFolderId, 'selectedFolderId:', selectedFolderId);
     if (!noteData.title.trim()) {
       alert('Le titre est obligatoire');
       return Promise.reject(new Error('Titre obligatoire'));
@@ -207,20 +222,27 @@ export default function Notes() {
     try {
       if (editingNote) {
         // Mise à jour d'une note existante
+        // Utiliser le folder_id de la note d'origine
+        const folderIdToSave = editingNote.folder_id; // Utilise l'ID du dossier d'origine
+
+        console.log('handleSaveNote - Envoi PUT avec folder_id:', folderIdToSave);
+
         await axios.put(`${API_URL}/notes/${editingNote.note_id}`, {
           user_id: currentUser.user_id,
           title: noteData.title,
-          content: noteData.content
+          content: noteData.content,
+          folder_id: folderIdToSave
         });
       } else {
         // Création d'une nouvelle note
+        // Utiliser le folder_id sélectionné actuellement
         await axios.post(`${API_URL}/notes`, {
           user_id: currentUser.user_id,
           title: noteData.title,
-          content: noteData.content
+          content: noteData.content,
+          folder_id: modalFolderId || null
         });
       }
-      
       // Recharger les notes après la sauvegarde
       await loadUserNotes();
       handleCloseModal();
@@ -276,16 +298,61 @@ export default function Notes() {
     };
   }, []);
 
+  useEffect(() => {
+    document.body.classList.toggle("dark", isDarkMode);
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Quand on sélectionne un dossier, on met à jour le nom aussi
+  function handleFolderSelect(folderId) {
+    setSelectedFolderId(folderId);
+    if (!folderId) {
+      setSelectedFolderName('');
+      return;
+    }
+    // Chercher le nom du dossier dans la liste des dossiers du sidebar
+    // On va utiliser une requête API pour récupérer le nom du dossier
+    axios.get(`${API_URL}/folders?user_id=${currentUser.user_id}`)
+      .then(res => {
+        const folder = res.data.folders.find(f => f.folder_id === folderId);
+        setSelectedFolderName(folder ? folder.name : '');
+      });
+  }
+
   return (
-    <div className="notes-page-background">
+    <div style={{
+      display: 'flex',
+      height: '100vh',
+      width: '100vw',
+      backgroundColor: 'var(--bg)'
+    }}>
+      <FolderSidebar
+        currentUser={currentUser}
+        onFolderSelect={handleFolderSelect}
+        selectedFolderId={selectedFolderId}
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+      />
+      
       <div style={{
-        backgroundColor: 'var(--card)',
-        borderRadius: '10px',
+        flex: 1,
         padding: '30px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        width: '95%',
-        maxWidth: '900px',
-        margin: '0 10px'
+        overflowY: 'auto',
+        width: '100%',
+        position: 'relative'
       }}>
         <div style={{
           display: 'flex',
@@ -295,40 +362,172 @@ export default function Notes() {
           paddingBottom: '15px',
           borderBottom: '1px solid var(--bg)'
         }}>
-          <h2 style={{ margin: 0, fontWeight: 'bold' }}>{currentUser?.name || 'Administrateur'}</h2>
-          <div className="settings-dropdown" ref={settingsRef}>
-            <button 
-              className="settings-button"
-              onClick={() => setShowSettings(!showSettings)}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
-            </button>
-            {showSettings && (
-              <div className="settings-menu">
-                <button onClick={handleLogout} className="settings-item">
-                  <span>Déconnexion</span>
-                </button>
-                <button onClick={() => handleAddFace()} className="settings-item">
-                  Ajouter un visage
-                </button>
-                <button onClick={handleChangePassword} className="settings-item">
-                  Changer le mot de passe
-                </button>
-              </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            {isMobile && (
+              <button
+                onClick={() => setIsOpen(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--text)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '8px'
+                }}
+              >
+                <MdMenu size={24} />
+              </button>
             )}
+            <h2 style={{ margin: 0, fontWeight: 'bold' }}>{currentUser?.name || 'Administrateur'}</h2>
+          </div>
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            alignItems: 'center'
+          }}>
+            <button
+              style={{
+                background: "var(--accent)",
+                color: "var(--card)",
+                border: "none",
+                borderRadius: 8,
+                padding: "8px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onClick={() => toggleTheme()}
+            >
+              {isDarkMode ? (
+                <MdOutlineLightMode size="1.5em" />
+              ) : (
+                <MdOutlineDarkMode size="1.5em" />
+              )}
+            </button>
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setShowSettings(!showSettings)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--text)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}
+              >
+                <MdSettings size={24} />
+              </button>
+              {showSettings && (
+                <div style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '100%',
+                  backgroundColor: 'var(--card)',
+                  border: '1px solid var(--bg)',
+                  borderRadius: '8px',
+                  padding: '10px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '5px',
+                  minWidth: '150px',
+                  zIndex: '100'
+                }}>
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--text)',
+                      textAlign: 'left',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      ':hover': {
+                        backgroundColor: 'var(--bg)'
+                      }
+                    }}
+                  >
+                    Déconnexion
+                  </button>
+                  <button
+                    onClick={() => handleAddFace()}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--text)',
+                      textAlign: 'left',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      ':hover': {
+                        backgroundColor: 'var(--bg)'
+                      }
+                    }}
+                  >
+                    Ajouter un visage
+                  </button>
+                  <button
+                    onClick={handleChangePassword}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--text)',
+                      textAlign: 'left',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      ':hover': {
+                        backgroundColor: 'var(--bg)'
+                      }
+                    }}
+                  >
+                    Changer le mot de passe
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         <div style={{ marginTop: '20px' }}>
-          <h3 style={{ marginBottom: '20px', fontWeight: 'bold'}}>Mes Notes</h3>
-          {loading && <p style={{ textAlign: 'center' }}>Chargement...</p>}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '20px'
+          }}>
+            <h3 style={{ margin: 0, fontWeight: 'bold', color: 'var(--text)'}}>
+              {selectedFolderId ? selectedFolderName : 'Toutes les notes'}
+            </h3>
+            <button 
+              onClick={() => handleOpenModal()}
+              style={{
+                backgroundColor: '#6366f1',
+                color: 'white',
+                border: 'none',
+                borderRadius: '25px',
+                padding: '8px 20px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <MdAdd size={20} />
+              Ajouter une note
+            </button>
+          </div>
+          {loading && <p style={{ textAlign: 'center', color: 'var(--text)' }}>Chargement...</p>}
           
-          <div style={{ margin: '15px 0' }}>
+          <div style={{ margin: '15px 0', opacity: fade ? 1 : 0, transition: 'opacity 0.4s' }}>
             {!loading && notes.length === 0 && (
-              <p style={{ textAlign: 'center', color: '#666' }}>Aucune note pour le moment.</p>
+              <p style={{ textAlign: 'center', color: 'var(--text)' }}>Aucune note pour le moment.</p>
             )}
             
             {notes.map(note => (
@@ -341,50 +540,49 @@ export default function Notes() {
                 padding: '15px',
                 marginBottom: '10px',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                position: 'relative'
               }} onClick={() => handleOpenModal(note)}>
-                <div style={{ fontWeight: 'bold', color: 'var(--text)' }}>
+                <div style={{ fontWeight: 'bold', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 10 }}>
                   {note.title}
+                  {note.folder_id && note.folder_name && (
+                    <span style={{
+                      background: 'var(--accent)',
+                      color: '#fff',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      padding: '2px 10px',
+                      marginLeft: 8,
+                      letterSpacing: 0.2,
+                      display: 'inline-block',
+                      verticalAlign: 'middle',
+                    }}>
+                      {note.folder_name}
+                    </span>
+                  )}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginLeft: 16 }}>
-                      <button
-                        title="Supprimer la note"
-                        onClick={(event) => { 
-                          event.stopPropagation();
-                          handleDeleteNote(note.note_id)}}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: 4,
-                          color: "#e53935",
-                          display: "flex",
-                          alignItems: "center"
-                        }}
-                      >
-                        <MdDelete size={24} />
-                      </button>
-                    </div>
+                  <button
+                    title="Supprimer la note"
+                    onClick={(event) => { 
+                      event.stopPropagation();
+                      handleDeleteNote(note.note_id)}}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 4,
+                      color: "#e53935",
+                      display: "flex",
+                      alignItems: "center"
+                    }}
+                  >
+                    <MdDelete size={24} />
+                  </button>
+                </div>
               </div>
             ))}
-          </div>
-          
-          <div style={{ marginTop: '20px', textAlign: 'right' }}>
-            <button 
-              onClick={() => handleOpenModal()}
-              style={{
-                backgroundColor: '#6366f1',
-                color: 'white',
-                border: 'none',
-                borderRadius: '25px',
-                padding: '10px 25px',
-                fontSize: '16px',
-                cursor: 'pointer',
-                fontWeight: '500'
-              }}
-            >
-              Ajouter une note
-            </button>
           </div>
         </div>
       </div>
@@ -396,6 +594,7 @@ export default function Notes() {
           onClose={handleCloseModal}
           onSave={handleSaveNote}
           currentUser={currentUser}
+          currentFolderId={modalFolderId}
         />
       )}
       

@@ -15,6 +15,7 @@
   --text-light-rgb: 255, 255, 255;
   --hover: #f3f4f6;
   --accent-dark: #4338ca;
+  --border: #e5e7eb;
 }
 
 .dark {
@@ -34,4 +35,5 @@
   --text-light-rgb: 243, 244, 246;
   --hover: #374151;
   --accent-dark: #4338ca;
+  --border: #4b5563;
 }

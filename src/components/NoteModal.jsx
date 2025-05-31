@@ -2,42 +2,46 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import "../styles/components/quill-editor.css";
+import axios from 'axios';
 
 const modalOverlayStyle = {
   position: "fixed",
   top: 0,
   left: 0,
-  width: "100vw",
-  height: "100vh",
-  background: "rgba(0,0,0,0.8)",
+  right: 0,
+  bottom: 0,
+  background: "rgba(0,0,0,0.5)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   zIndex: 1000,
+  transition: "background 0.3s"
 };
 
 const modalContainerStyle = {
   background: "var(--card)",
-  borderRadius: 12,
+  color: "var(--text)",
+  borderRadius: 16,
   width: "95%",
   maxWidth: "700px",
-  minHeight: 500,
+  minHeight: 400,
   maxHeight: "95vh",
   display: "flex",
   flexDirection: "column",
-  boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+  boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
   overflow: "hidden",
+  animation: "fadeInModal 0.3s"
 };
 
 const titleBarStyle = {
   background: "var(--card)",
   color: "var(--text)",
-  padding: "8px 16px",
+  padding: "18px 24px 8px 24px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  borderTopLeftRadius: 12,
-  borderTopRightRadius: 12,
+  borderTopLeftRadius: 16,
+  borderTopRightRadius: 16,
 };
 
 const closeButtonStyle = {
@@ -51,7 +55,7 @@ const closeButtonStyle = {
 };
 
 const titleInputContainerStyle = {
-  padding: "8px 16px",
+  padding: "8px 24px 8px 24px",
   borderBottom: "1px solid var(--bg)",
   background: "var(--bg)",
 };
@@ -70,13 +74,14 @@ const titleInputStyle = {
   fontSize: 14,
   background: "var(--card)",
   color: "var(--text)",
+  border: "1px solid var(--bg)"
 };
 
 const editorZoneStyle = {
   flex: 1,
   display: "flex",
   flexDirection: "column",
-  padding: "0 16px 16px 16px",
+  padding: "0 24px 16px 24px",
   overflow: "hidden",
   margin: "5px 0",
 };
@@ -94,7 +99,7 @@ const quillStyle = {
 };
 
 const statusBarStyle = {
-  padding: "8px 16px",
+  padding: "8px 24px",
   borderTop: "1px solid var(--bg)",
   fontSize: 12,
   color: "var(--text-muted)",
@@ -104,37 +109,38 @@ const statusBarStyle = {
 };
 
 const buttonBarStyle = {
-  padding: "12px 16px",
+  padding: "16px 24px",
   display: "flex",
   justifyContent: "flex-end",
   borderTop: "1px solid var(--bg)",
   background: "var(--bg)",
-  gap: 10,
+  gap: 16,
 };
 
 const cancelButtonStyle = {
   color: "var(--text)",
   background: "var(--bg)",
-  border: "1px solid var(--text-muted)",
-  borderRadius: 4,
-  padding: "8px 20px",
+  border: "1px solid var(--bg)",
+  borderRadius: 8,
+  padding: "10px 22px",
   cursor: "pointer",
   fontSize: 15,
-  transition: "background 0.15s",
+  fontWeight: 500,
+  transition: "background 0.15s, color 0.15s, border 0.15s",
 };
 
 const saveButtonStyle = {
   background: "var(--accent)",
-  color: "var(--text-light)",
+  color: "#fff",
   border: "none",
-  borderRadius: 4,
-  padding: "8px 20px",
+  borderRadius: 8,
+  padding: "10px 22px",
   marginLeft: 10,
   cursor: "pointer",
   fontWeight: "bold",
   fontSize: 15,
   boxShadow: "0 2px 8px rgba(var(--accent-rgb),0.08)",
-  transition: "background 0.15s",
+  transition: "background 0.15s"
 };
 
 const toolbarOptions = [
@@ -155,16 +161,22 @@ const toolbarOptions = [
 
 const modules = { toolbar: toolbarOptions };
 
-export default function NoteModal({ note, onClose, onSave, currentUser }) {
-  const [title, setTitle] = useState(note ? note.title : "");
-  const [content, setContent] = useState(note ? note.content : "");
+const API_URL = 'http://localhost:5000';
+
+export default function NoteModal({ note, onClose, onSave, currentUser, currentFolderId }) {
+  const [title, setTitle] = useState(note?.title || '');
+  const [content, setContent] = useState(note?.content || '');
   const [charCount, setCharCount] = useState(0);
   const [lastModified, setLastModified] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+  const [folders, setFolders] = useState([]);
+  const [selectedFolderId, setSelectedFolderId] = useState(note?.folder_id || currentFolderId || null);
   const titleInputRef = useRef(null);
 
   useEffect(() => {
     setCharCount((content.replace(/<[^>]*>/g, "") || "").length);
     setLastModified(new Date());
+    loadFolders();
   }, [content]);
 
   useEffect(() => {
@@ -184,6 +196,15 @@ export default function NoteModal({ note, onClose, onSave, currentUser }) {
     // eslint-disable-next-line
   }, []);
 
+  async function loadFolders() {
+    try {
+      const response = await axios.get(`${API_URL}/folders?user_id=${currentUser.user_id}`);
+      setFolders(response.data.folders || []);
+    } catch (err) {
+      console.error('Erreur de chargement des dossiers:', err);
+    }
+  }
+
   const handleSave = () => {    
     // Validation du titre
     if (!title.trim()) {
@@ -192,6 +213,7 @@ export default function NoteModal({ note, onClose, onSave, currentUser }) {
       return;
     }
     
+    setLoading(true);
     try {
       // Préparation des données de la note
       const noteData = {
@@ -199,6 +221,7 @@ export default function NoteModal({ note, onClose, onSave, currentUser }) {
         title: title.trim(),
         content,
         user_id: currentUser?.user_id,
+        folder_id: selectedFolderId,
       };
             
       // Appel de la fonction de sauvegarde
@@ -225,6 +248,8 @@ export default function NoteModal({ note, onClose, onSave, currentUser }) {
       // Gestion des erreurs synchrones
       console.error("Erreur capturée dans handleSave :", error);
       alert("Erreur lors de l'enregistrement de la note");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -278,10 +303,16 @@ export default function NoteModal({ note, onClose, onSave, currentUser }) {
             Annuler
           </button>
           <button style={saveButtonStyle} onClick={handleSave}>
-            {note ? "Enregistrer" : "Créer"}
+            {loading ? 'Enregistrement...' : 'Enregistrer'}
           </button>
         </div>
       </div>
+      <style>{`
+        @keyframes fadeInModal {
+          from { opacity: 0; transform: scale(0.97); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
     </div>
   );
 }

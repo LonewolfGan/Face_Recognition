@@ -9,7 +9,12 @@ import requests
 import warnings
 import tensorflow as tf
 import os
-from db import close_db, get_user_by_face_id, add_user, get_notes_by_user, create_note, update_note, delete_note, get_note, set_password, verify_password, get_user
+from db import (
+    close_db, get_user_by_face_id, add_user, get_notes_by_user, create_note, 
+    update_note, delete_note, get_note, set_password, verify_password, get_user,
+    create_folder, get_folders_by_user, get_folder, update_folder, delete_folder,
+    get_notes_by_folder, init_db
+)
 import logging
 
 # Suppress TensorFlow warnings
@@ -22,6 +27,8 @@ CORS(app)
 # Configure CORS with more permissive settings
 CORS(app, resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
 
+# Initialiser la base de données
+init_db()
 
 # Configuration
 ADD_FACE_SERVICE_URL = 'http://localhost:5001/add_face'
@@ -138,7 +145,12 @@ def add_note():
         if not data or 'user_id' not in data or 'title' not in data:
             return jsonify({'status': 'error', 'message': 'Données incomplètes'}), 400
         
-        note_id = create_note(data['user_id'], data['title'], data.get('content', ''))
+        note_id = create_note(
+            data['user_id'],
+            data['title'],
+            data.get('content', ''),
+            data.get('folder_id')
+        )
         return jsonify({
             'status': 'success',
             'message': 'Note créée avec succès',
@@ -154,8 +166,11 @@ def update_note_route(note_id):
         data = request.json
         if not data or 'user_id' not in data or 'title' not in data:
             return jsonify({'status': 'error', 'message': 'Données incomplètes'}), 400
-        
-        success = update_note(note_id, data['user_id'], data['title'], data.get('content', ''))
+
+        # Extraire également le folder_id du corps de la requête
+        folder_id = data.get('folder_id')
+
+        success = update_note(note_id, data['user_id'], data['title'], data.get('content', ''), folder_id)
         if not success:
             return jsonify({'status': 'error', 'message': 'Note non trouvée ou non autorisée'}), 404
         
@@ -213,6 +228,123 @@ def get_face_id():
     if user:
         return jsonify({'face_id': user['face_id']})
     return jsonify({'status': 'error', 'message': 'User not found'}), 404
+
+@app.route('/folders', methods=['POST'])
+def create_folder_route():
+    try:
+        data = request.json
+        if not data or 'user_id' not in data or 'name' not in data:
+            return jsonify({'status': 'error', 'message': 'Données incomplètes'}), 400
+        
+        folder_id = create_folder(
+            data['user_id'], 
+            data['name'], 
+            data.get('parent_id')
+        )
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Dossier créé avec succès',
+            'folder_id': folder_id
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/folders', methods=['GET'])
+def get_folders():
+    try:
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({'status': 'error', 'message': 'ID utilisateur requis'}), 400
+        
+        folders = get_folders_by_user(user_id)
+        return jsonify({
+            'status': 'success',
+            'folders': folders
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/folders/<folder_id>', methods=['GET'])
+def get_folder_route(folder_id):
+    try:
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({'status': 'error', 'message': 'ID utilisateur requis'}), 400
+        
+        folder = get_folder(folder_id, user_id)
+        if not folder:
+            return jsonify({'status': 'error', 'message': 'Dossier non trouvé'}), 404
+        
+        return jsonify({
+            'status': 'success',
+            'folder': folder
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/folders/<folder_id>', methods=['PUT'])
+def update_folder_route(folder_id):
+    try:
+        data = request.json
+        if not data or 'user_id' not in data or 'name' not in data:
+            return jsonify({'status': 'error', 'message': 'Données incomplètes'}), 400
+        
+        success = update_folder(
+            folder_id,
+            data['user_id'],
+            data['name'],
+            data.get('parent_id')
+        )
+        
+        if not success:
+            return jsonify({'status': 'error', 'message': 'Dossier non trouvé ou non autorisé'}), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Dossier mis à jour avec succès'
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/folders/<folder_id>', methods=['DELETE'])
+def delete_folder_route(folder_id):
+    try:
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({'status': 'error', 'message': 'ID utilisateur requis'}), 400
+        
+        success = delete_folder(folder_id, user_id)
+        if not success:
+            return jsonify({'status': 'error', 'message': 'Dossier non trouvé ou non autorisé'}), 404
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Dossier supprimé avec succès'
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/folders/<folder_id>/notes', methods=['GET'])
+def get_folder_notes(folder_id):
+    try:
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({'status': 'error', 'message': 'ID utilisateur requis'}), 400
+        
+        notes = get_notes_by_folder(folder_id, user_id)
+        return jsonify({
+            'status': 'success',
+            'notes': notes
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

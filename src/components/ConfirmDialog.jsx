@@ -15,27 +15,37 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      zIndex: 1100
+      zIndex: 1100,
+      transition: "background 0.3s"
     }}>
       <div style={{
-        backgroundColor: "white",
-        borderRadius: "8px",
-        padding: "20px",
+        backgroundColor: "var(--card)",
+        color: "var(--text)",
+        borderRadius: "16px",
+        padding: "28px 24px 20px 24px",
         width: "90%",
         maxWidth: "400px",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
+        boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        animation: "fadeInModal 0.3s"
       }}>
-        <h3 style={{ margin: "0 0 15px 0" }}>{title}</h3>
-        <p style={{ margin: "0 0 20px 0" }}>{message}</p>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+        <h3 style={{ margin: "0 0 18px 0", fontWeight: 700, fontSize: 20, textAlign: 'center', color: 'var(--text)' }}>{title}</h3>
+        <p style={{ margin: "0 0 28px 0", fontSize: 16, textAlign: 'center', color: 'var(--text)' }}>{message}</p>
+        <div style={{ display: "flex", justifyContent: "center", gap: "16px", width: '100%' }}>
           <button 
             onClick={onCancel}
             style={{
-              padding: "8px 16px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              backgroundColor: "transparent",
-              cursor: "pointer"
+              padding: "10px 22px",
+              border: "1px solid var(--bg)",
+              borderRadius: "8px",
+              backgroundColor: "var(--bg)",
+              color: "#fff",
+              cursor: "pointer",
+              fontWeight: 500,
+              fontSize: 15,
+              transition: "background 0.2s, color 0.2s, border 0.2s"
             }}
           >
             Annuler
@@ -43,18 +53,28 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
           <button 
             onClick={onConfirm}
             style={{
-              padding: "8px 16px",
+              padding: "10px 22px",
               border: "none",
-              borderRadius: "4px",
-              backgroundColor: "#ef4444",
-              color: "white",
-              cursor: "pointer"
+              borderRadius: "8px",
+              backgroundColor: "var(--accent)",
+              color: "#fff",
+              cursor: "pointer",
+              fontWeight: 600,
+              fontSize: 15,
+              boxShadow: "0 2px 8px rgba(99,102,241,0.08)",
+              transition: "background 0.2s"
             }}
           >
             Confirmer
           </button>
         </div>
       </div>
+      <style>{`
+        @keyframes fadeInModal {
+          from { opacity: 0; transform: scale(0.97); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
     </div>
   );
 };
