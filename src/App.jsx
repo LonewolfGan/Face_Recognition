@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./styles/App.css";
 import "./styles/base.css";
 import "./styles/themes/variables.css";
 import "./styles/responsive.css";
 import "./styles/global.css";
 import { LuScanFace } from "react-icons/lu";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import Notes from "./pages/Notes";
 import { motion } from "framer-motion";
@@ -15,20 +15,12 @@ import backgroundPatternLight from "./assets/background-pattern.svg";
 import backgroundPatternDark from "./assets/background-pattern-dark.svg";
 import { useTheme } from "./theme";
 
-// Composant LandingPage séparé pour gérer l'ajout/suppression de la classe au body
+// Composant LandingPage séparé
 function LandingPage({ isDarkMode }) {
-  useEffect(() => {
-    // Ajouter la classe au body quand on entre sur la landing page
-    document.body.classList.add('landing-page-active');
-    
-    // Nettoyer en supprimant la classe quand on quitte la landing page
-    return () => {
-      document.body.classList.remove('landing-page-active');
-    };
-  }, []);
+  const navigate = useNavigate();
 
   return (
-    <div className="landing-page" style={{position: "relative", overflow: "hidden"}}>
+    <div className={`landing-page ${isDarkMode ? 'dark' : ''}`} style={{position: "relative", overflow: "hidden"}}>
       <div className="landing-overlay"></div>
       <motion.div 
         className="landing-content"
@@ -59,10 +51,10 @@ function LandingPage({ isDarkMode }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
           >
-            <button className="landing-btn primary" onClick={() => window.location.href='/signup'}>
+            <button className="landing-btn primary" onClick={() => navigate('/signup')}>
               S'inscrire
             </button>
-            <button className="landing-btn secondary" onClick={() => window.location.href='/login'}>
+            <button className="landing-btn secondary" onClick={() => navigate('/login')}>
               Se connecter
             </button>
           </motion.div>

@@ -8,10 +8,12 @@ import "../styles/components/auth-page.css";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useToastContext } from "../context/ToastContext";
+import { useTheme } from "../theme";
 
 export default function AuthPage() {
   const location = useLocation();
   const [isLogin, setIsLogin] = useState(location.pathname === "/login");
+  const { isDarkMode } = useTheme();
   
   // États du Login
   const [loading, setLoading] = useState(false);
@@ -301,7 +303,7 @@ export default function AuthPage() {
       <div className="card-3d-wrap">
         <div className={`card-3d-wrapper ${!isLogin ? 'flipped' : ''}`}>
           <div className="card-front">
-            <div className="card" style={{ maxWidth: 380, height: "100%", textAlign: "center" }}>
+            <div className="card">
               <div style={{
                 display: "flex",
                 justifyContent: "center",
@@ -433,7 +435,7 @@ export default function AuthPage() {
             </div>
           </div>
           <div className="card-back">
-            <div className="card" style={{ maxWidth: 380, height: "100%", textAlign: "center" }}>
+            <div className="card">
               <div style={{
                 display: "flex",
                 justifyContent: "center",
