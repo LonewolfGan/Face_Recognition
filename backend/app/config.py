@@ -29,7 +29,7 @@ class DevelopmentConfig(BaseConfig):
 
     DEBUG: bool = True
     DATA_DIR: str = os.getenv("DATA_DIR", "data/")
-    CORS_ORIGINS: list = ["http://localhost:5173", "http://localhost:5174"]
+    CORS_ORIGINS: list = ["*"]
     RATE_LIMITING_ENABLED: bool = True
 
     def __init__(self):

@@ -1,5 +1,5 @@
 // Configuration des URLs d'API
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 const ADD_FACE_URL = `${API_URL.replace(':5000', ':5001')}/add_face`;
 const RECOGNIZE_URL = `${API_URL.replace(':5000', ':5002')}/recognize`;
 
