@@ -255,7 +255,7 @@ function BrandPanel({ isDarkMode }) {
 
   return (
     <div
-      className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden h-full min-h-screen"
+      className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden h-full min-h-screen border-r-[0px]"
       style={{
         background: isDarkMode
           ? "linear-gradient(145deg, #0f0620 0%, #1A0D30 50%, #0d1a2e 100%)"
