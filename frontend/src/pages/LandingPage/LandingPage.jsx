@@ -12,7 +12,6 @@ import {
 import {
   LuShieldCheck,
   LuArrowRight,
-  LuLock,
   LuScanFace,
   LuSun,
   LuMoon,
@@ -28,14 +27,14 @@ import {
   LuTwitter,
   LuLinkedin,
   LuCheck,
+  LuLock,
+  LuEye,
 } from "react-icons/lu";
 import { useTheme } from "../../theme";
 import { Button, Card, Badge } from "../../components/ui";
 
-/* ─── Easing premium (utilisé partout) ────────────────────────────────── */
 const EASE = [0.16, 1, 0.3, 1];
 
-/* ─── Variants réutilisables ──────────────────────────────────────────── */
 const sectionTitle = {
   initial: { opacity: 0, y: 32 },
   whileInView: { opacity: 1, y: 0 },
@@ -50,21 +49,6 @@ const cardReveal = (i) => ({
   transition: { duration: 0.5, delay: i * 0.08, ease: EASE },
 });
 
-const fromLeft = {
-  initial: { opacity: 0, x: -24 },
-  whileInView: { opacity: 1, x: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.65, ease: EASE },
-};
-
-const fromRight = {
-  initial: { opacity: 0, x: 24 },
-  whileInView: { opacity: 1, x: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.65, ease: EASE },
-};
-
-/* Backwards compat for any external import */
 const fadeInUp = {
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
@@ -72,9 +56,7 @@ const fadeInUp = {
   transition: { duration: 0.5, ease: EASE },
 };
 
-/* ───────────────────────────────────────────────────────────────────────
-   Theme Toggle
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Theme Toggle ───────────────────────────────────────────────────── */
 function ThemeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
   return (
@@ -85,20 +67,18 @@ function ThemeToggle() {
       whileHover={{ scale: 1.06 }}
       whileTap={{ scale: 0.94 }}
       transition={{ duration: 0.18, ease: "easeOut" }}
-      className="w-10 h-10 inline-flex items-center justify-center rounded-lg border border-neutral text-title hover:bg-section-alt transition-colors duration-200"
+      className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-neutral text-title hover:bg-section-alt transition-colors duration-200"
     >
       {isDarkMode ? (
-        <LuSun className="w-[18px] h-[18px]" />
+        <LuSun className="w-[16px] h-[16px]" />
       ) : (
-        <LuMoon className="w-[18px] h-[18px]" />
+        <LuMoon className="w-[16px] h-[16px]" />
       )}
     </motion.button>
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   Stats Counter — useInView + useSpring (stiffness 60, damping 20)
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Spring Counter ─────────────────────────────────────────────────── */
 function SpringCounter({ value, suffix = "", decimals = 0 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -121,9 +101,7 @@ function SpringCounter({ value, suffix = "", decimals = 0 }) {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   NAVBAR — useScroll + scroll-aware (>40 → blur + bg)
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── NAVBAR ─────────────────────────────────────────────────────────── */
 function Navbar({ onLogin, onSignup }) {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
@@ -146,24 +124,32 @@ function Navbar({ onLogin, onSignup }) {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
-      className={`fixed top-0 left-0 right-0 z-100 px-6 py-4 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-100 px-6 py-3.5 transition-all duration-300 ${
         scrolled || open ? "nav-scrolled" : "bg-transparent"
       } border-b ${scrolled || open ? "" : "border-transparent"}`}
     >
       <div className="max-w-[1180px] mx-auto flex items-center gap-8">
+        {/* Logo + Brand name */}
         <a
           href="#top"
-          className="inline-flex items-center"
+          className="inline-flex items-center gap-2.5 shrink-0"
           aria-label="PrivyNote — accueil"
         >
           <img
             src={isDarkMode ? '/logodark.png' : '/logolight.png'}
-            alt="PrivyNote"
-            style={{ height: 36, width: 'auto', objectFit: 'contain', maxWidth: 160 }}
+            alt=""
+            aria-hidden="true"
+            style={{ height: 32, width: 'auto', objectFit: 'contain' }}
           />
+          <span
+            className="text-[17px] font-bold text-title tracking-[-0.02em] leading-none"
+            style={{ fontFamily: '"Syne", sans-serif' }}
+          >
+            PrivyNote
+          </span>
         </a>
 
-        {/* Desktop menu */}
+        {/* Desktop nav */}
         <nav
           aria-label="Navigation principale"
           className="hidden md:flex items-center gap-7 ml-auto"
@@ -172,7 +158,7 @@ function Navbar({ onLogin, onSignup }) {
             <a
               key={l.href}
               href={l.href}
-              className="relative text-[15px] font-medium text-body hover:text-title transition-colors duration-200 pb-1
+              className="relative text-[14px] font-medium text-body hover:text-title transition-colors duration-200 pb-1
                          after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
                          after:bg-tech-violet after:scale-x-0 after:origin-left after:transition-transform after:duration-200
                          hover:after:scale-x-100"
@@ -183,15 +169,11 @@ function Navbar({ onLogin, onSignup }) {
         </nav>
 
         {/* Desktop actions */}
-        <div className="hidden md:flex items-center gap-2.5 ml-auto md:ml-0">
+        <div className="hidden md:flex items-center gap-2 ml-auto md:ml-0">
           <ThemeToggle />
-          <button
-            type="button"
-            onClick={onLogin}
-            className="text-[15px] font-medium text-body hover:text-title hover:bg-section-alt px-3.5 py-2 rounded-md transition-colors duration-200 cursor-pointer"
-          >
+          <Button variant="ghost" size="sm" onClick={onLogin}>
             Se connecter
-          </button>
+          </Button>
           <Button variant="primary" size="sm" onClick={onSignup} className="btn-shimmer">
             Commencer
           </Button>
@@ -203,9 +185,9 @@ function Navbar({ onLogin, onSignup }) {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={open}
-          className="md:hidden ml-auto w-10 h-10 inline-flex items-center justify-center rounded-md border border-neutral text-title cursor-pointer"
+          className="md:hidden ml-auto w-9 h-9 inline-flex items-center justify-center rounded-md border border-neutral text-title cursor-pointer"
         >
-          {open ? <LuX /> : <LuMenu />}
+          {open ? <LuX className="w-4 h-4" /> : <LuMenu className="w-4 h-4" />}
         </button>
       </div>
 
@@ -215,14 +197,14 @@ function Navbar({ onLogin, onSignup }) {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="md:hidden mt-4 pt-4 border-t border-neutral flex flex-col gap-2"
+          className="md:hidden mt-3 pt-4 border-t border-neutral flex flex-col gap-2"
         >
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="text-base font-medium text-body py-2.5 border-b divider-neutral border-b-1 last:border-b-0"
+              className="text-[15px] font-medium text-body py-2.5 border-b border-neutral last:border-b-0"
             >
               {l.label}
             </a>
@@ -252,25 +234,193 @@ function Navbar({ onLogin, onSignup }) {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   HERO — relief, mesh, headline blur reveal, floating mockup
-   ─────────────────────────────────────────────────────────────────────── */
-function HeroHeadline() {
-  // "Vos notes. Verrouillées par votre visage." — split en 2 lignes
-  // Chaque ligne révélée avec stagger 0.08s et blur(8px) → blur(0)
-  const lines = [
-    "Vos notes.",
-    "Verrouillées par votre visage.",
+/* ─── Biometric Face Scan Visual ────────────────────────────────────── */
+function BiometricVisual() {
+  const landmarks = [
+    [72, 88], [128, 88],
+    [100, 112],
+    [83, 138], [100, 148], [117, 138],
+    [60, 68], [140, 68],
+    [56, 100], [144, 100],
   ];
 
   return (
-    <h1 className="font-extrabold tracking-[-0.03em] leading-[1.1] text-[clamp(2.25rem,5.5vw,4rem)] text-title m-0 text-balance">
+    <motion.div
+      initial={{ opacity: 0, x: 28 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
+      aria-hidden="true"
+      className="hidden lg:flex items-center justify-end"
+    >
+      <div className="relative w-[360px] h-[400px]">
+        {/* Main card */}
+        <div
+          className="absolute inset-0 rounded-2xl overflow-hidden border border-neutral"
+          style={{
+            background: 'var(--surface-card)',
+            backdropFilter: 'blur(12px)',
+          }}
+        >
+          {/* Header bar */}
+          <div className="flex items-center gap-2.5 px-4 py-3 border-b border-neutral">
+            <LuScanFace className="w-[15px] h-[15px] text-tech-violet dark:text-biometric-glow shrink-0" />
+            <span className="text-[11px] font-semibold tracking-[0.1em] uppercase text-muted-token">
+              Reconnaissance biométrique
+            </span>
+            <div className="ml-auto flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-signal-teal" style={{ animation: 'pulse 2s infinite' }} />
+              <span className="text-[11px] text-signal-teal font-medium">Actif</span>
+            </div>
+          </div>
+
+          {/* Scan area */}
+          <div className="relative flex items-center justify-center" style={{ height: 300 }}>
+            {/* Corner brackets */}
+            {[
+              ['top-5 left-5', 'border-t-2 border-l-2'],
+              ['top-5 right-5', 'border-t-2 border-r-2'],
+              ['bottom-5 left-5', 'border-b-2 border-l-2'],
+              ['bottom-5 right-5', 'border-b-2 border-r-2'],
+            ].map(([pos, border], i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 1.3 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 + i * 0.07, duration: 0.4, ease: EASE }}
+                className={`absolute ${pos} w-6 h-6 ${border} border-tech-violet dark:border-biometric-glow rounded-sm`}
+              />
+            ))}
+
+            {/* Face SVG */}
+            <svg viewBox="0 0 200 210" className="w-[200px] h-[210px]" overflow="visible">
+              {/* Face outline */}
+              <motion.ellipse
+                cx="100" cy="105" rx="62" ry="78"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1"
+                className="text-tech-violet/25 dark:text-biometric-glow/25"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+              />
+              {/* Jaw line hint */}
+              <motion.path
+                d="M 55 130 Q 100 175 145 130"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1"
+                className="text-tech-violet/20 dark:text-biometric-glow/20"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.8, delay: 0.9 }}
+              />
+              {/* Landmark dots */}
+              {landmarks.map(([cx, cy], i) => (
+                <motion.circle
+                  key={i}
+                  cx={cx} cy={cy} r="2.5"
+                  fill="currentColor"
+                  className="text-tech-violet dark:text-biometric-glow"
+                  initial={{ opacity: 0, r: 0 }}
+                  animate={{ opacity: 1, r: 2.5 }}
+                  transition={{ delay: 1.0 + i * 0.06, duration: 0.25 }}
+                />
+              ))}
+              {/* Connection lines between landmarks */}
+              {[
+                [0, 1], [0, 6], [1, 7], [2, 3], [2, 5],
+                [3, 4], [4, 5],
+              ].map(([a, b], i) => (
+                <motion.line
+                  key={i}
+                  x1={landmarks[a][0]} y1={landmarks[a][1]}
+                  x2={landmarks[b][0]} y2={landmarks[b][1]}
+                  stroke="currentColor"
+                  strokeWidth="0.75"
+                  strokeDasharray="3 3"
+                  className="text-tech-violet/35 dark:text-biometric-glow/35"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.5 + i * 0.05, duration: 0.3 }}
+                />
+              ))}
+            </svg>
+
+            {/* Animated scan beam */}
+            <motion.div
+              className="absolute left-8 right-8 h-[1.5px] pointer-events-none"
+              style={{
+                background: 'linear-gradient(to right, transparent, rgba(0,221,187,0.7), transparent)',
+                boxShadow: '0 0 8px rgba(0,221,187,0.5)',
+              }}
+              animate={{ top: ['20%', '85%', '20%'] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+            />
+          </div>
+
+          {/* Status bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.0 }}
+            className="absolute bottom-0 left-0 right-0 flex items-center gap-2 px-4 py-3 border-t border-neutral"
+          >
+            <LuShieldCheck className="w-3.5 h-3.5 text-signal-teal shrink-0" />
+            <span className="text-[11px] font-semibold text-signal-teal">Identité vérifiée</span>
+            <span className="ml-auto text-[11px] text-muted-token tabular-nums">0,4s</span>
+          </motion.div>
+        </div>
+
+        {/* Floating note card */}
+        <motion.div
+          initial={{ opacity: 0, y: 12, x: 12 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{ delay: 2.3, duration: 0.5, ease: EASE }}
+          className="absolute -bottom-4 -right-6 rounded-xl border border-neutral px-4 py-3 flex items-center gap-2.5"
+          style={{ background: 'var(--surface-card)', backdropFilter: 'blur(8px)', minWidth: 180 }}
+        >
+          <LuLock className="w-3.5 h-3.5 text-tech-violet dark:text-biometric-glow shrink-0" />
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[11px] font-semibold text-title leading-none">Notes chiffrées</span>
+            <span className="text-[10px] text-muted-token">AES-256 · Local uniquement</span>
+          </div>
+        </motion.div>
+
+        {/* Floating users card */}
+        <motion.div
+          initial={{ opacity: 0, y: -12, x: -12 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{ delay: 2.5, duration: 0.5, ease: EASE }}
+          className="absolute -top-4 -left-6 rounded-xl border border-neutral px-3.5 py-2.5 flex items-center gap-2"
+          style={{ background: 'var(--surface-card)', backdropFilter: 'blur(8px)' }}
+        >
+          <LuEye className="w-3 h-3 text-muted-token shrink-0" />
+          <span className="text-[11px] text-muted-token">Données 100% locales</span>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── HERO ───────────────────────────────────────────────────────────── */
+function HeroHeadline() {
+  const lines = [
+    "Vos notes, ouvertes",
+    "d'un seul regard.",
+  ];
+
+  return (
+    <h1
+      className="font-extrabold tracking-[-0.03em] leading-[1.08] text-[clamp(2.4rem,5.5vw,4rem)] text-title m-0 text-balance"
+      style={{ fontFamily: '"Syne", sans-serif' }}
+    >
       {lines.map((line, i) => (
         <motion.span
           key={i}
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.7, ease: EASE, delay: i * 0.08 }}
+          transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
           className="block"
         >
           {line}
@@ -292,7 +442,6 @@ function Hero({ onSignup, onLogin }) {
       id="top"
       className="hero-radial-bg text-title pt-36 pb-24 px-6 min-h-screen flex items-center relative overflow-hidden"
     >
-      {/* Mesh grid en arrière-plan */}
       <div
         aria-hidden="true"
         className="absolute inset-0 hero-mesh pointer-events-none"
@@ -300,89 +449,70 @@ function Hero({ onSignup, onLogin }) {
 
       <div className="relative z-1 w-full max-w-[1180px] mx-auto grid lg:grid-cols-[1.1fr_1fr] gap-16 items-center">
         {/* Copy */}
-        <div className="flex flex-col gap-6 max-w-[580px]">
-          <motion.div {...e(0)} className="self-start">
-            <Badge variant="yellow">
-              <LuShieldCheck className="w-[14px] h-[14px]" />
-              Certifié ISO 27001
-            </Badge>
-          </motion.div>
-
+        <div className="flex flex-col gap-6 max-w-[560px]">
           <HeroHeadline />
 
           <motion.p
-            {...e(0.4)}
-            className="text-[1.125rem] leading-[1.75] text-body max-w-[520px] m-0"
+            {...e(0.35)}
+            className="text-[1.125rem] leading-[1.8] text-body max-w-[500px] m-0"
           >
-            Aucun mot de passe. Aucune trace. Authentification biométrique
-            locale et chiffrement de bout en bout.
+            Plus de mots de passe à mémoriser. PrivyNote reconnaît votre visage
+            en 0,4 seconde et garde vos notes hors de portée de tout le monde — y compris de nous.
           </motion.p>
 
-          <motion.div {...e(0.5)} className="flex flex-wrap gap-3.5 mt-2">
+          <motion.div {...e(0.5)} className="flex flex-wrap items-center gap-3 mt-1">
             <Button
               variant="primary"
               size="md"
               onClick={onSignup}
               className="btn-shimmer"
             >
-              Commencer gratuitement
-              <LuArrowRight />
+              Créer mon espace privé
+              <LuArrowRight className="w-4 h-4" />
             </Button>
             <Button variant="ghost" size="md" onClick={onLogin}>
               Se connecter
             </Button>
           </motion.div>
+
+          <motion.ul
+            {...e(0.65)}
+            className="flex flex-wrap items-center gap-x-5 gap-y-2 list-none m-0 p-0"
+          >
+            {["Gratuit pour commencer", "Aucune carte bancaire", "RGPD natif"].map((item) => (
+              <li key={item} className="inline-flex items-center gap-1.5">
+                <LuCheck className="w-3.5 h-3.5 text-signal-teal shrink-0" />
+                <span className="text-[13px] text-muted-token">{item}</span>
+              </li>
+            ))}
+          </motion.ul>
         </div>
 
-        {/* Right side visual — simple lock + security illustration, no fake-AI mockup */}
-        <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.65, ease: EASE, delay: 0.3 }}
-          aria-hidden="true"
-          className="hidden lg:flex items-center justify-end"
-        >
-          <div className="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
-            {/* Concentric rings */}
-            {[1, 0.75, 0.5].map((scale, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full border border-tech-violet/20 dark:border-biometric-glow/15"
-                style={{
-                  width: `${scale * 100}%`,
-                  height: `${scale * 100}%`,
-                  animationDelay: `${i * 0.4}s`,
-                }}
-              />
-            ))}
-            {/* Centre icon */}
-            <div className="relative w-24 h-24 rounded-full bg-tech-violet/10 dark:bg-biometric-glow/10 flex items-center justify-center border border-tech-violet/30 dark:border-biometric-glow/25">
-              <LuScanFace className="w-12 h-12 text-tech-violet dark:text-biometric-glow" strokeWidth={1.5} />
-            </div>
-          </div>
-        </motion.div>
+        {/* Right visual */}
+        <BiometricVisual />
       </div>
     </section>
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   SECTION HEAD (réutilisable, scroll reveal premium)
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Section Head ───────────────────────────────────────────────────── */
 function SectionHead({ eyebrow, title, sub }) {
   return (
     <motion.header
       {...sectionTitle}
       className="max-w-[720px] mx-auto mb-12 text-center flex flex-col items-center gap-3"
     >
-      <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-spicy-paprika">
+      <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-spicy-paprika">
         {eyebrow}
       </span>
-      <h2 className="text-[clamp(1.875rem,3.6vw,2.5rem)] font-bold tracking-[-0.02em] leading-[1.15] text-title m-0 text-balance">
+      <h2
+        className="text-[clamp(1.875rem,3.6vw,2.5rem)] font-bold tracking-[-0.02em] leading-[1.15] text-title m-0 text-balance"
+        style={{ fontFamily: '"Syne", sans-serif' }}
+      >
         {title}
       </h2>
       {sub && (
-        <p className="text-[1.0625rem] leading-[1.75] text-body m-0 max-w-[580px]">
+        <p className="text-[1.0625rem] leading-[1.75] text-body m-0 max-w-[560px]">
           {sub}
         </p>
       )}
@@ -390,9 +520,7 @@ function SectionHead({ eyebrow, title, sub }) {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   SOCIAL PROOF — counters spring
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Social Proof ───────────────────────────────────────────────────── */
 function SocialProof() {
   const stats = [
     { value: 50000, suffix: "+", label: "Utilisateurs actifs" },
@@ -408,20 +536,20 @@ function SocialProof() {
       <div className="max-w-[1180px] mx-auto flex flex-col items-center gap-10">
         <motion.p
           {...sectionTitle}
-          className="text-[13px] font-semibold uppercase tracking-[0.12em] text-muted-token m-0"
+          className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-token m-0"
         >
-          Adopté par des équipes qui prennent la confidentialité au sérieux
+          Adopté par des équipes qui prennent leur confidentialité au sérieux
         </motion.p>
 
         <motion.div
           {...sectionTitle}
           transition={{ ...sectionTitle.transition, delay: 0.08 }}
-          className="flex flex-wrap justify-center gap-x-12 gap-y-10"
+          className="flex flex-wrap justify-center gap-x-12 gap-y-8"
         >
           {logos.map((l) => (
             <span
               key={l}
-              className="text-[17px] font-bold tracking-[0.18em] uppercase text-title opacity-35"
+              className="text-[16px] font-bold tracking-[0.2em] uppercase text-title opacity-30"
             >
               {l}
             </span>
@@ -435,14 +563,15 @@ function SocialProof() {
         >
           {stats.map((s) => (
             <div key={s.label} className="flex flex-col gap-1.5 text-center">
-              <span className="text-[clamp(1.75rem,3vw,2.25rem)] font-bold tracking-[-0.02em] text-tech-violet dark:text-biometric-glow tabular-nums">
+              <span className="text-[clamp(1.75rem,3vw,2.25rem)] font-bold tracking-[-0.02em] text-tech-violet dark:text-biometric-glow tabular-nums"
+                style={{ fontFamily: '"Syne", sans-serif' }}>
                 <SpringCounter
                   value={s.value}
                   suffix={s.suffix}
                   decimals={s.decimals || 0}
                 />
               </span>
-              <span className="text-[15px] font-medium text-muted-token">
+              <span className="text-[14px] font-medium text-muted-token">
                 {s.label}
               </span>
             </div>
@@ -453,59 +582,51 @@ function SocialProof() {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   FEATURE CARD — relief premium, hover translateY + scale + shadow
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Feature Card ───────────────────────────────────────────────────── */
 function FeatureCard({ item, index }) {
   const Icon = item.icon;
   return (
     <motion.div
       {...cardReveal(index)}
       whileHover={{
-        y: -6,
-        scale: 1.015,
-        boxShadow: "0 24px 48px rgba(122, 53, 242, 0.18)",
+        y: -5,
+        scale: 1.012,
+        boxShadow: "0 20px 40px rgba(122, 53, 242, 0.14)",
       }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
+      transition={{ duration: 0.22, ease: "easeOut" }}
       className="rounded-xl group"
       style={{ willChange: "transform" }}
     >
       <Card className="h-full p-7 flex flex-col gap-3.5 transition-colors duration-200">
-        <motion.span
-          whileHover={{ scale: 1.15, rotate: 4 }}
-          transition={{ duration: 0.2 }}
-          className="w-10 h-10 inline-flex items-center justify-center rounded-lg bg-tech-violet/12 text-tech-violet dark:text-biometric-glow group-hover:text-biometric-glow transition-colors duration-200"
-        >
+        <div className="w-10 h-10 inline-flex items-center justify-center rounded-lg bg-tech-violet/10 text-tech-violet dark:text-biometric-glow">
           <Icon className="w-[18px] h-[18px]" />
-        </motion.span>
-        <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-title m-0">
+        </div>
+        <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-title m-0">
           {item.title}
         </h3>
-        <p className="text-[15px] leading-[1.7] text-body m-0">{item.desc}</p>
+        <p className="text-[14.5px] leading-[1.7] text-body m-0">{item.desc}</p>
       </Card>
     </motion.div>
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   FEATURES
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Features ───────────────────────────────────────────────────────── */
 function Features() {
   const items = [
     {
       icon: LuScanFace,
-      title: "Reconnaissance faciale en 0,4s",
-      desc: "Un regard suffit. Notre moteur biométrique vérifie vos traits localement et déverrouille votre espace en moins d'une demi-seconde.",
+      title: "Déverrouillage en 0,4 seconde",
+      desc: "Un regard suffit. Votre identité biométrique est vérifiée localement — aucun serveur, aucun délai.",
     },
     {
       icon: LuFolderLock,
-      title: "Dossiers privés organisés",
-      desc: "Journal, projets, secrets — chaque pensée à sa place, dans des dossiers protégés que vous seul pouvez ouvrir.",
+      title: "Dossiers privés et organisés",
+      desc: "Journal, projets, idées confidentielles — chaque note à sa place, dans des espaces que vous seul pouvez ouvrir.",
     },
     {
       icon: LuWifiOff,
-      title: "Mode hors-ligne intégral",
-      desc: "Écrivez où que vous soyez. Vos notes restent accessibles sans connexion et se synchronisent dès votre retour en ligne.",
+      title: "Fonctionne hors connexion",
+      desc: "Vos notes vous appartiennent, même sans internet. Tout reste disponible sur votre appareil, tout le temps.",
     },
   ];
 
@@ -514,10 +635,9 @@ function Features() {
       <div className="max-w-[1180px] mx-auto">
         <SectionHead
           eyebrow="Fonctionnalités"
-          title="Pensé pour écrire en confiance"
-          sub="Une interface sobre, des actions rapides, et la certitude que vos mots ne quitteront jamais votre périmètre."
+          title="Conçu pour écrire sans compromis"
+          sub="Une interface épurée, des actions rapides, et la garantie que vos pensées ne quitteront jamais votre appareil."
         />
-
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((it, i) => (
             <FeatureCard key={it.title} item={it} index={i} />
@@ -528,25 +648,23 @@ function Features() {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   HOW IT WORKS — texte gauche / steps droite cards reveal
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── How It Works ───────────────────────────────────────────────────── */
 function HowItWorks() {
   const steps = [
     {
       n: "1",
-      title: "Capturez votre visage",
-      desc: "Un court scan biométrique enregistre vos traits uniques, directement sur votre appareil.",
+      title: "Scannez votre visage",
+      desc: "Un scan biométrique de quelques secondes enregistre vos traits uniques, directement et uniquement sur votre appareil.",
     },
     {
       n: "2",
-      title: "Créez votre espace",
-      desc: "Aucun mot de passe à inventer. Votre identité devient votre signature biométrique chiffrée.",
+      title: "Votre visage devient votre clé",
+      desc: "Aucun mot de passe à créer. Votre signature faciale chiffrée remplace tous vos identifiants.",
     },
     {
       n: "3",
-      title: "Écrivez en sécurité",
-      desc: "Regardez la caméra, déverrouillez votre espace privé, et écrivez en toute liberté.",
+      title: "Écrivez en toute liberté",
+      desc: "Regardez la caméra, accédez à votre espace privé instantanément, et écrivez sans contrainte.",
     },
   ];
 
@@ -555,9 +673,8 @@ function HowItWorks() {
       <div className="max-w-[1180px] mx-auto">
         <SectionHead
           eyebrow="Comment ça marche"
-          title="Trois étapes pour une confidentialité totale"
+          title="Prêt en trois étapes"
         />
-
         <ol className="grid md:grid-cols-3 gap-10 list-none m-0 p-0">
           {steps.map((s, i) => (
             <motion.li
@@ -565,21 +682,24 @@ function HowItWorks() {
               {...cardReveal(i)}
               className="relative flex flex-col gap-4 pr-4"
             >
-              <div className="w-14 h-14 rounded-full bg-tech-violet inline-flex items-center justify-center">
-                <span className="text-[1.5rem] font-bold text-zinc-50 tracking-[-0.02em]">
+              <div className="w-12 h-12 rounded-full bg-tech-violet inline-flex items-center justify-center shrink-0">
+                <span
+                  className="text-[1.25rem] font-bold text-zinc-50"
+                  style={{ fontFamily: '"Syne", sans-serif' }}
+                >
                   {s.n}
                 </span>
               </div>
-              <h3 className="text-[1.125rem] font-semibold tracking-[-0.01em] text-title m-0">
+              <h3 className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-title m-0">
                 {s.title}
               </h3>
-              <p className="text-[15px] leading-[1.7] text-body m-0">
+              <p className="text-[14.5px] leading-[1.7] text-body m-0">
                 {s.desc}
               </p>
               {i < steps.length - 1 && (
                 <span
                   aria-hidden="true"
-                  className="hidden md:block absolute top-7 left-[calc(56px+0.875rem)] right-3.5 h-px"
+                  className="hidden md:block absolute top-6 left-[calc(48px+0.875rem)] right-3.5 h-px"
                   style={{
                     backgroundImage:
                       "linear-gradient(to right, var(--connector-color) 0, var(--connector-color) 6px, transparent 6px, transparent 12px)",
@@ -596,25 +716,23 @@ function HowItWorks() {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   SECURITY (features dark)
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Security ───────────────────────────────────────────────────────── */
 function Security() {
   const items = [
     {
       icon: LuServerOff,
-      title: "Aucun stockage cloud",
-      desc: "Votre empreinte faciale ne quitte jamais votre appareil. Rien n'est transmis, rien n'est stocké à distance.",
+      title: "Aucun stockage distant",
+      desc: "Votre empreinte faciale ne quitte jamais votre appareil. Rien n'est transmis, rien ne peut être compromis à distance.",
     },
     {
       icon: LuKeyRound,
       title: "Chiffrement AES-256",
-      desc: "Vos notes sont chiffrées au repos et en transit avec une norme militaire éprouvée.",
+      desc: "Vos notes sont chiffrées au repos et en transit avec la même norme utilisée par les gouvernements et les banques.",
     },
     {
       icon: LuFileCheck2,
-      title: "Audit open-source",
-      desc: "Le code de sécurité est public et auditable. La confidentialité ne se promet pas, elle se vérifie.",
+      title: "Code source public",
+      desc: "Notre code de sécurité est ouvert et auditable par tous. La confidentialité se prouve, elle ne se promet pas.",
     },
   ];
 
@@ -623,10 +741,9 @@ function Security() {
       <div className="max-w-[1180px] mx-auto">
         <SectionHead
           eyebrow="Sécurité"
-          title="Pensé pour protéger ce qui compte"
-          sub="Une architecture zéro-confiance où ni nos serveurs, ni nos ingénieurs ne peuvent accéder à vos contenus."
+          title="Une architecture zéro-confiance, de bout en bout"
+          sub="Nos serveurs ne peuvent pas lire vos notes. Nos ingénieurs non plus. C'est une garantie technique, pas une promesse marketing."
         />
-
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((it, i) => (
             <FeatureCard key={it.title} item={it} index={i} />
@@ -637,26 +754,24 @@ function Security() {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   TESTIMONIALS
-   ─────────────────────────────────────────────────────────────────────── */
+/* ─── Testimonials ───────────────────────────────────────────────────── */
 function Testimonials() {
   const items = [
     {
       quote:
-        "Enfin une appli de notes où je n'ai plus à inventer un mot de passe complexe. Tout est instantané, tout reste privé.",
+        "Je tenais un journal depuis des années avec des mots de passe que j'oubliais sans cesse. Avec PrivyNote, un regard suffit. C'est devenu un réflexe.",
       author: "Camille D.",
       role: "Journaliste indépendante",
     },
     {
       quote:
-        "Le déverrouillage par le visage est bluffant de fluidité. C'est devenu mon outil quotidien pour mes notes confidentielles.",
+        "Le déverrouillage par le visage est d'une fluidité déconcertante. Mes notes confidentielles client sont enfin vraiment en sécurité.",
       author: "Mehdi T.",
-      role: "Consultant stratégie",
+      role: "Consultant en stratégie",
     },
     {
       quote:
-        "Architecture limpide, code auditable, biométrie locale. Exactement ce qu'on attend d'un produit qui respecte la vie privée.",
+        "Architecture propre, code auditable, biométrie 100% locale. Tout ce qu'on attend d'un produit qui prend la vie privée au sérieux.",
       author: "Léa B.",
       role: "Responsable sécurité",
     },
@@ -667,18 +782,17 @@ function Testimonials() {
       <div className="max-w-[1180px] mx-auto">
         <SectionHead
           eyebrow="Témoignages"
-          title="Adopté par celles et ceux qui écrivent au calme"
+          title="Ceux qui écrivent sans se retourner"
         />
-
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((t, i) => (
             <motion.figure
               key={t.author}
               {...cardReveal(i)}
               whileHover={{
-                y: -6,
-                scale: 1.015,
-                boxShadow: "0 24px 48px rgba(122, 53, 242, 0.18)",
+                y: -5,
+                scale: 1.012,
+                boxShadow: "0 20px 40px rgba(122, 53, 242, 0.14)",
               }}
               className="m-0 rounded-xl"
               style={{ willChange: "transform" }}
@@ -686,16 +800,16 @@ function Testimonials() {
               <Card className="h-full p-7 flex flex-col gap-4 relative">
                 <LuQuote
                   aria-hidden="true"
-                  className="w-14 h-14 absolute top-5 right-5 text-tech-violet/15 dark:text-biometric-glow/20"
+                  className="w-12 h-12 absolute top-5 right-5 text-tech-violet/12 dark:text-biometric-glow/18"
                 />
-                <blockquote className="text-base leading-[1.7] text-title m-0 font-normal relative z-1">
+                <blockquote className="text-[15px] leading-[1.75] text-title m-0 font-normal relative z-1">
                   {t.quote}
                 </blockquote>
-                <figcaption className="flex flex-col gap-0.5 pt-2 border-t border-neutral mt-auto">
-                  <span className="text-[15px] font-semibold text-title">
+                <figcaption className="flex flex-col gap-0.5 pt-3 border-t border-neutral mt-auto">
+                  <span className="text-[14px] font-semibold text-title">
                     {t.author}
                   </span>
-                  <span className="text-sm text-muted-token">{t.role}</span>
+                  <span className="text-[13px] text-muted-token">{t.role}</span>
                 </figcaption>
               </Card>
             </motion.figure>
@@ -706,25 +820,7 @@ function Testimonials() {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   FINAL CTA — relief radial central + headline blur reveal
-   ─────────────────────────────────────────────────────────────────────── */
-function FinalCTAHeadline() {
-  return (
-    <h2 className="text-[clamp(1.875rem,4.2vw,2.75rem)] font-extrabold tracking-[-0.02em] leading-[1.15] m-0 text-balance text-zinc-50">
-      <motion.span
-        initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7, ease: EASE }}
-        className="block"
-      >
-        Prêt à sécuriser vos notes&nbsp;?
-      </motion.span>
-    </h2>
-  );
-}
-
+/* ─── Final CTA ──────────────────────────────────────────────────────── */
 function FinalCTA({ onSignup }) {
   return (
     <section className="px-6 py-24">
@@ -733,48 +829,60 @@ function FinalCTA({ onSignup }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.6, ease: EASE }}
-        className="final-cta-radial-bg max-w-[820px] mx-auto rounded-2xl px-8 py-16 md:px-14 md:py-20 text-center flex flex-col items-center gap-4"
+        className="final-cta-radial-bg max-w-[800px] mx-auto rounded-2xl px-8 py-16 md:px-14 md:py-20 text-center flex flex-col items-center gap-5"
       >
-        <FinalCTAHeadline />
+        <motion.h2
+          initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="text-[clamp(1.875rem,4.2vw,2.75rem)] font-extrabold tracking-[-0.025em] leading-[1.12] m-0 text-balance text-zinc-50"
+          style={{ fontFamily: '"Syne", sans-serif' }}
+        >
+          Vos notes méritent mieux qu'un mot de passe.
+        </motion.h2>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-          className="text-[1.0625rem] leading-[1.7] m-0 max-w-[520px] text-zinc-50/80"
+          className="text-[1.0625rem] leading-[1.75] m-0 max-w-[480px] text-zinc-50/75"
         >
-          Créez votre espace privé en moins de 30 secondes. Votre visage est la
-          seule clé dont vous aurez besoin.
+          Créez votre espace privé en moins de 30 secondes.
+          Votre visage est la seule clé dont vous aurez jamais besoin.
         </motion.p>
 
-        <motion.button
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}
-          type="button"
-          onClick={onSignup}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="btn-shimmer mt-3 inline-flex items-center gap-2 px-7 h-12 rounded-lg font-semibold text-[15px] cursor-pointer
-                     bg-tech-violet text-zinc-50 hover:bg-biometric-glow transition-colors duration-200"
+          className="mt-1"
         >
-          <span className="inline-flex items-center gap-2">
-            Commencer maintenant
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={onSignup}
+            className="btn-shimmer"
+          >
+            Créer mon espace privé
             <LuArrowRight className="w-4 h-4" />
-          </span>
-        </motion.button>
+          </Button>
+        </motion.div>
 
-        <ul className="flex flex-wrap items-center justify-center gap-5 mt-3 text-zinc-50/70 text-sm">
+        <ul className="flex flex-wrap items-center justify-center gap-5 text-zinc-50/65 text-[13px] list-none m-0 p-0">
           <li className="inline-flex items-center gap-1.5">
-            <LuCheck className="w-3.5 h-3.5 text-signal-teal" /> Sans carte bancaire
+            <LuCheck className="w-3.5 h-3.5 text-signal-teal shrink-0" />
+            Gratuit pour commencer
           </li>
           <li className="inline-flex items-center gap-1.5">
-            <LuCheck className="w-3.5 h-3.5 text-signal-teal" /> Open-source
+            <LuCheck className="w-3.5 h-3.5 text-signal-teal shrink-0" />
+            Open-source
           </li>
           <li className="inline-flex items-center gap-1.5">
-            <LuCheck className="w-3.5 h-3.5" /> RGPD natif
+            <LuCheck className="w-3.5 h-3.5 text-signal-teal shrink-0" />
+            RGPD natif
           </li>
         </ul>
       </motion.div>
@@ -782,67 +890,7 @@ function FinalCTA({ onSignup }) {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   FOOTER — toujours vault-bg-dark, structure inchangée
-   ─────────────────────────────────────────────────────────────────────── */
-function Footer() {
-  const { isDarkMode } = useTheme();
-  const cols = [
-    { title: "Produit",     links: ["Fonctionnalités", "Sécurité", "Tarifs", "Nouveautés"] },
-    { title: "Ressources",  links: ["Documentation", "API", "Statut", "Changelog"] },
-    { title: "Entreprise",  links: ["À propos", "Carrières", "Presse", "Contact"] },
-    { title: "Légal",       links: ["Confidentialité", "Conditions", "Cookies", "Licences"] },
-  ];
-
-  return (
-    <footer className="bg-vault border-t border-neutral px-6 pt-16 pb-7">
-      <div className="max-w-[1180px] mx-auto grid lg:grid-cols-[1.2fr_3fr] gap-12 pb-12 border-b border-neutral">
-        <div className="flex flex-col gap-3 max-w-[300px]">
-          <a href="#top" className="inline-flex items-center" aria-label="PrivyNote">
-            <img src="/logo.png" alt="PrivyNote" style={{ width: 28, height: 28, objectFit: 'contain' }} />
-          </a>
-          <p className="text-[15px] leading-[1.65] text-muted-token m-0">
-            Vos notes. Verrouillées par votre visage.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {cols.map((c) => (
-            <div key={c.title}>
-              <h4 className="text-[13px] uppercase tracking-[0.12em] text-title font-semibold mb-3.5 m-0">
-                {c.title}
-              </h4>
-              <ul className="list-none m-0 p-0 flex flex-col gap-2.5">
-                {c.links.map((l) => (
-                  <li key={l}>
-                    <a
-                      href="#"
-                      className="text-[15px] text-body no-underline hover:text-tech-violet dark:hover:text-biometric-glow transition-colors duration-200"
-                    >
-                      {l}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="max-w-[1180px] mx-auto pt-7 flex flex-wrap items-center justify-between gap-4">
-        <span className="text-sm text-muted-token">
-          © {new Date().getFullYear()} PrivyNote — Tous droits réservés.
-        </span>
-        <div aria-label="Réseaux sociaux" className="flex gap-2">
-          <FooterSocial label="GitHub" href="#"><LuGithub /></FooterSocial>
-          <FooterSocial label="Twitter" href="#"><LuTwitter /></FooterSocial>
-          <FooterSocial label="LinkedIn" href="#"><LuLinkedin /></FooterSocial>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
+/* ─── Footer ─────────────────────────────────────────────────────────── */
 function FooterSocial({ href, label, children }) {
   return (
     <a
@@ -855,9 +903,76 @@ function FooterSocial({ href, label, children }) {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   LandingPage
-   ─────────────────────────────────────────────────────────────────────── */
+function Footer() {
+  const { isDarkMode } = useTheme();
+  const cols = [
+    { title: "Produit",    links: ["Fonctionnalités", "Sécurité", "Tarifs", "Nouveautés"] },
+    { title: "Ressources", links: ["Documentation", "API", "Statut", "Changelog"] },
+    { title: "Entreprise", links: ["À propos", "Carrières", "Presse", "Contact"] },
+    { title: "Légal",      links: ["Confidentialité", "Conditions", "Cookies", "Licences"] },
+  ];
+
+  return (
+    <footer className="bg-vault border-t border-neutral px-6 pt-16 pb-7">
+      <div className="max-w-[1180px] mx-auto grid lg:grid-cols-[1.2fr_3fr] gap-12 pb-12 border-b border-neutral">
+        <div className="flex flex-col gap-3 max-w-[260px]">
+          <a href="#top" className="inline-flex items-center gap-2.5" aria-label="PrivyNote — accueil">
+            <img
+              src={isDarkMode ? '/logodark.png' : '/logolight.png'}
+              alt=""
+              aria-hidden="true"
+              style={{ height: 28, width: 'auto', objectFit: 'contain' }}
+            />
+            <span
+              className="text-[16px] font-bold text-title tracking-[-0.02em]"
+              style={{ fontFamily: '"Syne", sans-serif' }}
+            >
+              PrivyNote
+            </span>
+          </a>
+          <p className="text-[14px] leading-[1.7] text-muted-token m-0">
+            Vos notes, protégées par votre visage. Toujours locales, jamais compromises.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {cols.map((c) => (
+            <div key={c.title}>
+              <h4 className="text-[12px] uppercase tracking-[0.12em] text-title font-semibold mb-3.5 m-0">
+                {c.title}
+              </h4>
+              <ul className="list-none m-0 p-0 flex flex-col gap-2.5">
+                {c.links.map((l) => (
+                  <li key={l}>
+                    <a
+                      href="#"
+                      className="text-[14px] text-body no-underline hover:text-tech-violet dark:hover:text-biometric-glow transition-colors duration-200"
+                    >
+                      {l}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-[1180px] mx-auto pt-7 flex flex-wrap items-center justify-between gap-4">
+        <span className="text-[13px] text-muted-token">
+          © {new Date().getFullYear()} PrivyNote — Tous droits réservés.
+        </span>
+        <div aria-label="Réseaux sociaux" className="flex gap-2">
+          <FooterSocial label="GitHub" href="#"><LuGithub /></FooterSocial>
+          <FooterSocial label="Twitter" href="#"><LuTwitter /></FooterSocial>
+          <FooterSocial label="LinkedIn" href="#"><LuLinkedin /></FooterSocial>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ─── LandingPage ────────────────────────────────────────────────────── */
 function LandingPage() {
   const navigate = useNavigate();
   const onSignup = () => navigate("/signup");

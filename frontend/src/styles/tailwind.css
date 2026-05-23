@@ -57,6 +57,7 @@
   --color-spicy-paprika: #7A35F2;
 
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
