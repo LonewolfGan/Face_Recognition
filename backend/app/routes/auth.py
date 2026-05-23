@@ -222,9 +222,12 @@ def login():
 
         try:
             face_id, distance = face_service.recognize(data["image"])
-        except Exception:
+        except Exception as e:
             _log_auth_failure("face_recognition_failed", "/login")
-            return _error_response(401, "invalid_credentials", "Invalid credentials")
+            err_msg = str(e)
+            if "no_face_in_image" in err_msg:
+                return _error_response(401, "no_face_detected", "Aucun visage détecté dans l'image. Placez votre visage face à la caméra.")
+            return _error_response(401, "invalid_credentials", "Visage non reconnu")
 
         # Get user by face_id
         db = _get_db()

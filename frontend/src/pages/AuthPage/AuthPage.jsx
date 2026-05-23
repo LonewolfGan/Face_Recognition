@@ -501,8 +501,12 @@ export default function AuthPage() {
       }
     } catch (err) {
       if (err.response?.status === 401) {
+        const errorCode = err.response?.data?.error || "";
         const msg = err.response?.data?.message || "";
-        if (msg.includes("Aucun visage")) {
+        if (errorCode === "no_face_detected") {
+          setShowFaceFailModal(true);
+          setError("Aucun visage détecté. Placez votre visage face à la caméra.");
+        } else if (errorCode === "no_face_registered" || msg.toLowerCase().includes("aucun visage enregistré")) {
           setShowNoFacesModal(true);
         } else {
           setShowFaceFailModal(true);

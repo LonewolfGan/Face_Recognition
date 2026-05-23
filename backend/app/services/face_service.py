@@ -84,16 +84,34 @@ class FaceService:
                 # Write to a temporary file for DeepFace processing
                 temp_path = self._write_temp_image(processed_image)
 
-                embedding = DeepFace.represent(
+                result = DeepFace.represent(
                     img_path=temp_path,
                     model_name=self._model_name,
                     detector_backend=self._detector_backend,
-                    enforce_detection=False,
+                    enforce_detection=True,
                     align=True,
-                )[0]["embedding"]
+                )
 
-                embeddings.append(embedding)
+                if not result:
+                    logger.warning("Image %d: no face detected (empty result)", i + 1)
+                    continue
 
+                rep = result[0]
+                area = rep.get("facial_area", {})
+                w = area.get("w", 0)
+                h = area.get("h", 0)
+                img_w, img_h = processed_image.shape[1], processed_image.shape[0]
+                face_coverage = (w * h) / (img_w * img_h) if img_w and img_h else 0
+
+                if face_coverage < 0.03:
+                    logger.warning("Image %d: face area too small (%.2f%%), skipping", i + 1, face_coverage * 100)
+                    continue
+
+                embeddings.append(rep["embedding"])
+
+            except (ValueError, AttributeError) as e:
+                logger.warning("Image %d: no face detected — %s", i + 1, str(e))
+                continue
             except Exception as e:
                 logger.warning("Error processing image %d: %s", i + 1, str(e))
                 continue
@@ -102,7 +120,7 @@ class FaceService:
                     os.remove(temp_path)
 
         if not embeddings:
-            raise FaceProcessingError("No faces detected in the provided images")
+            raise FaceProcessingError("Aucun visage détecté dans les images fournies. Veuillez vous assurer que votre visage est bien visible.")
 
         # Store embeddings via the shared EmbeddingStore
         self._embedding_store.add_embeddings(face_id, embeddings)
@@ -140,17 +158,30 @@ class FaceService:
                 img_path=temp_path,
                 model_name=self._model_name,
                 detector_backend=self._detector_backend,
-                enforce_detection=False,
+                enforce_detection=True,
                 align=True,
             )
 
             if not representation:
-                raise FaceProcessingError("No face detected in the image")
+                raise FaceProcessingError("no_face_in_image")
 
-            captured_embedding = representation[0]["embedding"]
+            rep = representation[0]
+            area = rep.get("facial_area", {})
+            w = area.get("w", 0)
+            h = area.get("h", 0)
+            img = cv2.imread(temp_path)
+            if img is not None:
+                img_w, img_h = img.shape[1], img.shape[0]
+                face_coverage = (w * h) / (img_w * img_h) if img_w and img_h else 1
+                if face_coverage < 0.03:
+                    raise FaceProcessingError("no_face_in_image")
+
+            captured_embedding = rep["embedding"]
 
         except FaceProcessingError:
             raise
+        except (ValueError, AttributeError):
+            raise FaceProcessingError("no_face_in_image")
         except Exception as e:
             raise FaceProcessingError(f"Error generating embedding: {str(e)}")
         finally:
