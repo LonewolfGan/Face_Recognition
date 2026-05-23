@@ -1,0 +1,30 @@
+.text-logo {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-2xl);
+  color: var(--accent);
+  text-decoration: none;
+  line-height: var(--line-height-tight);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.text-logo__img {
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .text-logo__img {
+    width: 110px;
+  }
+}
+
+@media (max-width: 768px) {
+  .text-logo {
+    font-size: var(--font-size-xl);
+  }
+}

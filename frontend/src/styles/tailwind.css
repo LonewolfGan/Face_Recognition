@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+/* Explicit source declarations — guarantees utilities for our JSX */
+@source "../../src/**/*.{js,jsx,ts,tsx,html}";
+@source "../**/*.{js,jsx}";
+
+/* ==========================================================================
+   PrivyNote — Design System v4
+   Palette (10 tokens — aucune autre couleur autorisée)
+     vault-bg-dark    #1A0D30   → fond hero / footer / sections dark / dark mode
+     tech-violet      #7A35F2   → CTA boutons fond, liens actifs, accents forts
+     biometric-glow   #9B70E5   → icônes, états hover, accents secondaires
+     facial-light     #D1BCF9   → texte muted sur fond dark, surfaces fines
+     signal-teal      #00DDBB   → badges succès / validation (max 2 par page)
+     secure-coral     #FF6699   → badges alerte / warning (max 1-2 par page)
+     zinc-50          #f4f4f5   → texte sur fond sombre, fond light mode
+     zinc-400         #a1a1aa   → texte secondaire, légendes
+     zinc-800         rgba(39,39,42,0.6)    → fond cards semi-transparent
+     glass-bg         rgba(26,13,48,0.45)   → glassmorphism (cards/modals)
+     glass-border     rgba(155,112,229,0.15)
+   ========================================================================== */
+
+@custom-variant dark (&:where(body.dark, body.dark *));
+
+@theme {
+  /* ─── Palette directe ────────────────────────────────────────────── */
+  --color-vault: #1A0D30;
+  --color-tech-violet: #7A35F2;
+  --color-biometric-glow: #9B70E5;
+  --color-facial-light: #D1BCF9;
+  --color-signal-teal: #00DDBB;
+  --color-secure-coral: #FF6699;
+  --color-zinc-50: #f4f4f5;
+  --color-zinc-400: #a1a1aa;
+
+  /* ─── color1..color5 (alias mode-static utilisés dans la JSX) ────── */
+  --color-color1: #1A0D30;   /* vault-bg-dark — Footer, FinalCTA dark text */
+  --color-color2: #1A0D30;   /* alias — utilisé pour FinalCTA si encore présent */
+  --color-color3: #9B70E5;   /* biometric-glow — hovers */
+  --color-color4: #7A35F2;   /* tech-violet */
+  --color-color5: #f4f4f5;   /* zinc-50 — texte sur fond dark */
+
+  /* ─── Tokens "héritage" remappés (compat JSX existante) ──────────── */
+  /* CTA primaire = tech-violet, hover = biometric-glow (idem light/dark) */
+  --color-yellow-green: #7A35F2;
+  --color-yellow-green-hover: #9B70E5;
+
+  /* Texte sur CTA / icônes sur tech-violet — toujours zinc-50 */
+  --color-space-indigo: #f4f4f5;
+  --color-space-indigo-2: #1A0D30;
+
+  /* Surfaces inversées (footer dark constant) */
+  --color-floral-white: #f4f4f5;
+  --color-page-dark: #1A0D30;
+
+  /* Eyebrow / accents secondaires (mode-aware via redéfinition directe ci-dessous) */
+  --color-spicy-paprika: #7A35F2;
+
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Light mode tokens (par défaut) ─────────────────────────────────── */
+:root {
+  --page-bg: #f4f4f5;                            /* zinc-50 */
+  --section-alt-bg: rgba(122, 53, 242, 0.04);    /* tech-violet 4% */
+
+  --text-title: #1A0D30;                         /* vault-bg-dark */
+  --text-body:  rgba(26, 13, 48, 0.75);
+  --text-muted: rgba(26, 13, 48, 0.55);
+
+  --surface-card:        rgba(255, 255, 255, 0.80);
+  --surface-card-hover:  rgba(255, 255, 255, 1);
+
+  --border-neutral:  rgba(122, 53, 242, 0.12);   /* tech-violet 12% */
+  --divider-neutral: rgba(122, 53, 242, 0.10);
+
+  --connector-color: rgba(122, 53, 242, 0.30);
+
+  /* Hero relief */
+  --hero-glow:   rgba(122, 53, 242, 0.18);       /* light : moins dramatique */
+  --mesh-line:   rgba(122, 53, 242, 0.04);
+
+  /* Navbar scrolled */
+  --nav-scrolled-bg:     rgba(244, 244, 245, 0.75);
+  --nav-scrolled-border: rgba(122, 53, 242, 0.12);
+
+  /* Eyebrow accent */
+  --accent-eyebrow: #7A35F2;                     /* tech-violet */
+  --color-spicy-paprika: #7A35F2;
+}
+
+/* ─── Dark mode tokens ───────────────────────────────────────────────── */
+body.dark {
+  --page-bg: #1A0D30;                            /* vault-bg-dark */
+  --section-alt-bg: rgba(155, 112, 229, 0.04);   /* biometric-glow 4% */
+
+  --text-title: #f4f4f5;                         /* zinc-50 */
+  --text-body:  rgba(244, 244, 245, 0.85);
+  --text-muted: #a1a1aa;                         /* zinc-400 */
+
+  --surface-card:        rgba(39, 39, 42, 0.60); /* zinc-800 alpha */
+  --surface-card-hover:  rgba(39, 39, 42, 0.78);
+
+  --border-neutral:  rgba(155, 112, 229, 0.15);  /* biometric-glow 15% */
+  --divider-neutral: rgba(155, 112, 229, 0.12);
+
+  --connector-color: rgba(155, 112, 229, 0.30);
+
+  /* Hero relief — dark plus dense */
+  --hero-glow:   rgba(122, 53, 242, 0.35);
+  --mesh-line:   rgba(155, 112, 229, 0.04);
+
+  /* Navbar scrolled */
+  --nav-scrolled-bg:     rgba(26, 13, 48, 0.75);
+  --nav-scrolled-border: rgba(155, 112, 229, 0.12);
+
+  /* Eyebrow accent */
+  --accent-eyebrow: #9B70E5;                     /* biometric-glow */
+  --color-spicy-paprika: #9B70E5;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--page-bg);
+    color: var(--text-title);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border-neutral);
+  }
+
+  /* Focus visible global */
+  :focus-visible {
+    outline: 2px solid rgba(155, 112, 229, 0.5);
+    outline-offset: 3px;
+  }
+}
+
+/* ─── Utilities (tokens scopés + relief) ─────────────────────────────── */
+@layer utilities {
+  .bg-page         { background-color: var(--page-bg); }
+  .bg-section-alt  { background-color: var(--section-alt-bg); }
+
+  .text-title       { color: var(--text-title); }
+  .text-body        { color: var(--text-body); }
+  .text-muted-token { color: var(--text-muted); }
+
+  .surface-card        { background-color: var(--surface-card); }
+  .surface-card-hover  { background-color: var(--surface-card-hover); }
+
+  .border-neutral  { border-color: var(--border-neutral); }
+  .divider-neutral { border-color: var(--divider-neutral); }
+
+  /* ── Hero relief ─────────────────────────────────────────────────── */
+  /* Hero suit le mode courant (light/dark) :
+     - Light : fond zinc-50 avec halo violet diffus
+     - Dark  : fond vault-bg-dark avec halo violet plus dense */
+  .hero-radial-bg {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%,
+        var(--hero-glow) 0%,
+        transparent 70%),
+      var(--page-bg);
+  }
+
+  .hero-mesh {
+    background-image:
+      linear-gradient(var(--mesh-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--mesh-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* ── FinalCTA relief — fond toujours vault-bg-dark + radial central ──*/
+  .final-cta-radial-bg {
+    background:
+      radial-gradient(ellipse 70% 80% at 50% 50%,
+        rgba(122, 53, 242, 0.25) 0%,
+        transparent 70%),
+      #1A0D30;
+    /* Force tokens "sur fond sombre" indépendamment du mode global. */
+    --text-title: #f4f4f5;
+    --text-body:  rgba(244, 244, 245, 0.85);
+    --text-muted: #a1a1aa;
+  }
+
+  /* ── Footer — suit le mode courant ───────────────────────────────── */
+  .bg-vault {
+    background-color: var(--page-bg);
+    color: var(--text-title);
+  }
+
+  /* ── Navbar scroll-aware ─────────────────────────────────────────── */
+  .nav-scrolled {
+    background-color: var(--nav-scrolled-bg);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom-color: var(--nav-scrolled-border);
+  }
+
+  /* ── Card glassmorphism (cards / modals seulement) ───────────────── */
+  .glass-card {
+    background: rgba(26, 13, 48, 0.45);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+  }
+
+  /* ── Button shimmer effect — sweeping highlight on hover ─────────── */
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-shimmer > * {
+    position: relative;
+    z-index: 1;
+  }
+  .btn-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 30%,
+      rgba(244, 244, 245, 0.18) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .btn-shimmer:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* ── Mockup pulsing shadow (hero visual) ─────────────────────────── */
+  @keyframes mockup-pulse {
+    0%, 100% { box-shadow: 0 20px 60px rgba(122, 53, 242, 0.20); }
+    50%      { box-shadow: 0 30px 80px rgba(122, 53, 242, 0.35); }
+  }
+  .mockup-pulse-shadow {
+    animation: mockup-pulse 4s ease-in-out infinite;
+    will-change: box-shadow;
+  }
+}
+
+/* ─── Reduced motion fallbacks ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* Désactiver effets coûteux */
+  .nav-scrolled,
+  .glass-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .nav-scrolled {
+    background-color: var(--page-bg);
+  }
+  .mockup-pulse-shadow {
+    animation: none;
+    box-shadow: 0 20px 60px rgba(122, 53, 242, 0.20);
+  }
+  .btn-shimmer::after {
+    display: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

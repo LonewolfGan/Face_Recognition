@@ -9,3 +9,4 @@ pillow==10.0.0
 python-dotenv==1.0.0
 tensorflow==2.11.0
 bcrypt==4.0.1
+PyJWT==2.8.0

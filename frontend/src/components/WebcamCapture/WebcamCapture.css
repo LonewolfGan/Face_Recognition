@@ -1,0 +1,159 @@
+/* ==========================================================================
+   WebcamCapture Component Styles
+   ========================================================================== */
+
+.webcam-capture {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.webcam-container {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: #111827;
+  box-shadow: var(--shadow-lg);
+}
+
+.webcam-video {
+  width: 100%;
+  border-radius: var(--radius-md);
+  transform: scaleX(-1);
+  display: block;
+}
+
+.webcam-canvas-hidden {
+  display: none;
+}
+
+.webcam-face-guide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.webcam-face-outline {
+  width: 200px;
+  height: 200px;
+  border: 3px dashed rgba(var(--text-light-rgb), 0.7);
+  border-radius: 50%;
+  position: relative;
+}
+
+.webcam-progress-bar-container {
+  width: 80%;
+  height: 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin: var(--space-5) auto 0 auto;
+  position: absolute;
+  bottom: 30px;
+  left: 10%;
+  overflow: hidden;
+}
+
+.webcam-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent) 60%, #6366f1 100%);
+  border-radius: var(--radius-sm);
+  transition: width 0.5s;
+}
+
+.webcam-guidance-text {
+  margin-top: var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+.webcam-controls {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-top: var(--space-5);
+}
+
+.webcam-capture-button {
+  background-color: var(--accent);
+  color: var(--text-light);
+  border: none;
+  border-radius: 25px;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.webcam-capture-button:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+.webcam-capture-button:disabled {
+  background-color: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.webcam-cancel-button {
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--error);
+  color: var(--text-light);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.webcam-cancel-button:hover {
+  opacity: 0.9;
+}
+
+@keyframes webcam-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.webcam-countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  color: var(--text-light);
+  font-weight: var(--font-weight-bold);
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  animation: webcam-pulse 1s infinite;
+}

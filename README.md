@@ -1,175 +1,207 @@
-# My-App - Application de Reconnaissance Faciale
+# Face Recognition Notes
 
-Une application complète avec reconnaissance faciale, authentification et gestion de notes, utilisant React pour le frontend et Python/Flask pour le backend.
+A full-stack application with facial recognition authentication and note management, built with React (frontend) and Python/Flask (backend).
 
-## Fonctionnalités
+## Features
 
-- Authentification par reconnaissance faciale
-- Authentification alternative par mot de passe
-- Gestion de notes avec éditeur de texte riche
-- Thème clair/sombre
-- Interface responsive
+- Face recognition authentication via webcam
+- Password-based authentication (alternative)
+- Rich text note editor with folder organization
+- Light/dark theme support
+- Responsive interface
 
-## Structure du projet
+## Project Structure
 
-- **Frontend**: React avec Vite
-- **Backend**: Services Flask pour la reconnaissance faciale et l'API
-- **Base de données**: SQLite avec FAISS pour les embeddings de visages
+```
+Face_Recognition/
+├── frontend/                # React + Vite application
+│   ├── src/
+│   │   ├── components/      # Reusable UI components
+│   │   ├── pages/           # Page-level components
+│   │   ├── context/         # React context providers
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── utils/           # Utilities and API client
+│   │   ├── styles/          # CSS styles
+│   │   └── theme/           # Theme configuration
+│   ├── public/              # Static assets
+│   ├── vercel.json          # Vercel deployment config
+│   └── package.json
+├── backend/
+│   ├── app/                 # Flask application package
+│   │   ├── __init__.py      # Application factory (create_app)
+│   │   ├── config.py        # Configuration classes
+│   │   ├── auth.py          # JWT/bcrypt utilities
+│   │   ├── validators.py    # Input validation
+│   │   ├── rate_limiter.py  # Rate limiting middleware
+│   │   ├── cors.py          # CORS configuration
+│   │   ├── routes/          # Blueprint route handlers
+│   │   ├── services/        # Business logic (face, embeddings)
+│   │   └── models/          # Database models
+│   ├── tests/               # Test suite
+│   ├── data/                # Runtime data (DB, embeddings)
+│   ├── run.py               # Application entry point
+│   └── requirements.txt     # Python dependencies
+├── dev.bat                  # Windows dev startup script
+├── dev.sh                   # Linux/macOS dev startup script
+├── docker-compose.yml       # Containerized development
+├── render.yaml              # Render deployment config
+├── .env.example             # Environment variable template
+└── README.md
+```
 
-## Prérequis
+## Prerequisites
 
-### Système
-- **Node.js 18+** ([Téléchargement](https://nodejs.org/))
-- **Python 3.9+** ([Téléchargement](https://www.python.org/downloads/))
-- **Webcam fonctionnelle**
-- **Outils de compilation** (pour les dépendances Python) :
+- **Node.js 18+** — [Download](https://nodejs.org/)
+- **Python 3.9+** — [Download](https://www.python.org/downloads/)
+- **Webcam** (for face recognition features)
+- **Build tools** (for native Python dependencies):
   ```bash
   # Windows
   winget install -e --id Kitware.CMake
-  winget install -e --id LLVM.LLVM
-  
+
   # Linux (Debian/Ubuntu)
   sudo apt-get install build-essential cmake
   ```
 
-### Environnement virtuel Python
+## Setup
+
+### 1. Clone and configure environment
+
 ```bash
-# Création de l'environnement
-python -m venv face_env
+cp .env.example .env
+# Edit .env with your secret keys
 ```
 
-## Installation
+### 2. Backend setup
 
-### Dépendances Backend
-1. Activer l'environnement virtuel :
+```bash
+cd backend
+python -m venv .venv
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+### 3. Frontend setup
+
+```bash
+cd frontend
+npm install
+```
+
+## Development
+
+### Single-command startup
+
+Start both backend and frontend with one command:
+
 ```bash
 # Windows
-.\face_env\Scripts\activate
+dev.bat
 
-# Linux/Mac
-source face_env/bin/activate
+# Linux/macOS
+./dev.sh
 ```
-2. Installer les dépendances :
+
+This launches:
+- Flask backend on **http://localhost:5000**
+- Vite dev server on **http://localhost:5173**
+
+### Manual startup
+
+If you prefer to run services separately:
+
 ```bash
+# Terminal 1 — Backend
 cd backend
-pip install -r requirements.txt
-```
+.venv\Scripts\activate   # or: source .venv/bin/activate
+python run.py
 
-### Dépendances Frontend
-```bash
-npm install
-```
-
-```bash
-# Naviguer vers le dossier backend
-cd backend
-
-# Installer les dépendances
-
-> **Important : Avant d'installer les dépendances, activez votre environnement virtuel Python avec** :
-> 
-> Windows :
-> ```bash
-> .\\face_env\\Scripts\\activate
-> ```
-> Linux/Mac :
-> ```bash
-> source face_env/bin/activate
-> ```
-
-pip install -r requirements.txt
-
-# Démarrer les services
-python start_backend.py
-```
-
-### Frontend
-
-```bash
-# Installer les dépendances
-npm install
-
-# Démarrer le serveur de développement
+# Terminal 2 — Frontend
+cd frontend
 npm run dev
 ```
 
-# Lancement de l'application
+### Running tests
 
-Pour démarrer rapidement l'application, suivez ces étapes dans l'ordre :
-
-## 1. Prérequis système
-- **Node.js 18+** ([Téléchargement](https://nodejs.org/))
-- **Python 3.9+** ([Téléchargement](https://www.python.org/downloads/))
-- **Webcam fonctionnelle**
-
-## 2. Création et activation de l'environnement virtuel Python
-Dans le dossier racine du projet :
-```bash
-python -m venv face_env
-```
-- **Windows** :
-  ```bash
-  .\face_env\Scripts\activate
-  ```
-- **Linux/Mac** :
-  ```bash
-  source face_env/bin/activate
-  ```
-
-## 3. Installation des dépendances Backend
 ```bash
 cd backend
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
+pytest
 ```
 
-## 4. Installation des dépendances Frontend
-Dans le dossier racine du projet :
-```bash
-npm install
-```
+## Deployment
 
-## 5. Lancement global de l'application
-Utilisez le script fourni pour démarrer à la fois le backend et le frontend :
-```bash
-start_app.bat
-```
+### Frontend (Vercel)
 
-## 6. Accès à l'application
-Ouvrez votre navigateur à l'adresse suivante :
-[http://localhost:5173](http://localhost:5173)
+The frontend deploys as a static site on Vercel:
 
----
+1. Connect the repository to Vercel
+2. Set the root directory to `frontend/`
+3. Set the `VITE_API_URL` environment variable to your backend URL
+4. Vercel auto-detects Vite and builds accordingly
 
-Pour plus de détails ou d'autres méthodes de déploiement (Docker, serveur), consultez la section "Déploiement" ci-dessous.
+API requests are proxied to the backend via rewrites configured in `frontend/vercel.json`.
 
-## Déploiement
+### Backend (Render)
 
-Plusieurs options de déploiement sont disponibles :
+The backend deploys on Render as a Python web service:
 
-1. **Déploiement local** : Suivre les instructions d'installation ci-dessus
-2. **Déploiement avec Docker** : Utiliser `docker-compose up` pour déployer l'ensemble de l'application
-3. **Déploiement sur serveur** : Consulter le fichier `DEPLOYMENT.md` pour des instructions détaillées
+1. Connect the repository to Render
+2. Render reads `render.yaml` for service configuration
+3. Set environment variables: `JWT_SECRET_KEY`, `SECRET_KEY`, `CORS_ORIGINS`, `DATABASE_PATH`
+4. The service starts with Gunicorn on the configured port
 
-## Configuration
+Health check endpoint: `GET /health`
 
-Les variables d'environnement peuvent être configurées dans le fichier `.env` à la racine du projet.
-
-## Développement
-
-### Scripts disponibles
-
-- `npm run dev` : Démarrer le serveur de développement
-- `npm run build` : Construire l'application pour la production
-- `npm run preview` : Prévisualiser la version de production
-
-### Réinitialisation du système
-
-Pour réinitialiser complètement le système (base de données et embeddings) :
+### Docker (local)
 
 ```bash
-python backend/reset_system.py
+docker-compose up --build
 ```
 
-## Licence
+## Available Scripts
 
-Ce projet est sous licence MIT.
+| Command | Description |
+|---------|-------------|
+| `dev.bat` / `dev.sh` | Start full dev environment |
+| `python backend/run.py` | Start backend only |
+| `cd frontend && npm run dev` | Start frontend only |
+| `cd frontend && npm run build` | Build frontend for production |
+| `cd backend && pytest` | Run backend tests |
+| `python migrate_data.py` | Migrate data files to new structure |
+
+## Data Migration
+
+If upgrading from the old multi-service structure, run the migration script to move data files:
+
+```bash
+python migrate_data.py
+```
+
+This moves `users.db`, `embeddings.pkl`, and `embeddings.index` into `backend/data/`.
+
+## Environment Variables
+
+See `.env.example` for all available configuration options. Key variables:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `FLASK_ENV` | Flask environment | `development` |
+| `SECRET_KEY` | Flask secret key | — |
+| `JWT_SECRET_KEY` | JWT signing key | — |
+| `DATABASE_PATH` | SQLite database path | `backend/data/users.db` |
+| `DATA_DIR` | Data directory | `backend/data/` |
+| `CORS_ORIGINS` | Allowed CORS origins | `http://localhost:5173` |
+| `VITE_API_URL` | Backend URL for frontend | `http://localhost:5000` |
+| `MODEL_NAME` | DeepFace model | `ArcFace` |
+| `DETECTOR_BACKEND` | Face detector | `ssd` |
+
+## License
+
+MIT

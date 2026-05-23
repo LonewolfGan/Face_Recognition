@@ -1,0 +1,227 @@
+"""Face detection, embedding generation, and recognition service.
+
+Provides the FaceService class that handles face addition and recognition
+using DeepFace for embedding generation and a shared EmbeddingStore for
+storage and similarity search.
+"""
+
+import os
+import base64
+import uuid
+import tempfile
+import logging
+
+import cv2
+import numpy as np
+from deepface import DeepFace
+
+from .embedding_service import EmbeddingStore
+
+logger = logging.getLogger(__name__)
+
+
+class FaceProcessingError(Exception):
+    """Raised when face processing (detection/embedding) fails."""
+    pass
+
+
+class FaceNotFoundError(Exception):
+    """Raised when no matching face is found during recognition."""
+    pass
+
+
+class FaceService:
+    """Handles face detection, embedding generation, and recognition.
+
+    Uses DeepFace for generating face embeddings and a shared EmbeddingStore
+    for persisting and searching embeddings. Images are processed via direct
+    function calls (no HTTP).
+    """
+
+    def __init__(self, embedding_store: EmbeddingStore, model_name: str = "ArcFace", detector_backend: str = "ssd"):
+        """Initialize with shared embedding store.
+
+        Args:
+            embedding_store: The shared EmbeddingStore instance for storage/search.
+            model_name: DeepFace model to use for embedding generation.
+            detector_backend: DeepFace detector backend for face detection.
+        """
+        self._embedding_store = embedding_store
+        self._model_name = model_name
+        self._detector_backend = detector_backend
+
+    def add_face(self, name: str, images: list[str]) -> tuple[str, str]:
+        """Process images, generate embeddings, store them.
+
+        Decodes base64 images, preprocesses them, generates face embeddings
+        using DeepFace, and stores them in the shared EmbeddingStore.
+
+        Args:
+            name: The name associated with the face.
+            images: List of base64-encoded image strings.
+
+        Returns:
+            A tuple of (face_id, name) on success.
+
+        Raises:
+            FaceProcessingError: If no valid images are provided or no faces
+                are detected in any of the images.
+        """
+        if not images:
+            raise FaceProcessingError("No images provided")
+
+        face_id = str(uuid.uuid4())
+        processed_images = self._preprocess_batch(images)
+
+        if not processed_images:
+            raise FaceProcessingError("No valid images could be processed")
+
+        embeddings = []
+
+        for i, processed_image in enumerate(processed_images):
+            temp_path = None
+            try:
+                # Write to a temporary file for DeepFace processing
+                temp_path = self._write_temp_image(processed_image)
+
+                embedding = DeepFace.represent(
+                    img_path=temp_path,
+                    model_name=self._model_name,
+                    detector_backend=self._detector_backend,
+                    enforce_detection=False,
+                    align=True,
+                )[0]["embedding"]
+
+                embeddings.append(embedding)
+
+            except Exception as e:
+                logger.warning("Error processing image %d: %s", i + 1, str(e))
+                continue
+            finally:
+                if temp_path and os.path.exists(temp_path):
+                    os.remove(temp_path)
+
+        if not embeddings:
+            raise FaceProcessingError("No faces detected in the provided images")
+
+        # Store embeddings via the shared EmbeddingStore
+        self._embedding_store.add_embeddings(face_id, embeddings)
+
+        logger.info("Face added successfully: face_id=%s, name=%s, embeddings=%d", face_id, name, len(embeddings))
+        return (face_id, name)
+
+    def recognize(self, image: str) -> tuple[str, float]:
+        """Recognize a face from a base64 image.
+
+        Decodes the base64 image, generates an embedding using DeepFace,
+        and searches the EmbeddingStore for the closest match.
+
+        Args:
+            image: A base64-encoded image string.
+
+        Returns:
+            A tuple of (face_id, distance) on success.
+
+        Raises:
+            FaceProcessingError: If the image cannot be processed or no face
+                is detected.
+            FaceNotFoundError: If no matching face is found within the
+                distance threshold.
+        """
+        processed_image = self._preprocess_base64_image(image)
+        if processed_image is None:
+            raise FaceProcessingError("Failed to process the provided image")
+
+        temp_path = None
+        try:
+            temp_path = self._write_temp_image(processed_image)
+
+            representation = DeepFace.represent(
+                img_path=temp_path,
+                model_name=self._model_name,
+                detector_backend=self._detector_backend,
+                enforce_detection=False,
+                align=True,
+            )
+
+            if not representation:
+                raise FaceProcessingError("No face detected in the image")
+
+            captured_embedding = representation[0]["embedding"]
+
+        except FaceProcessingError:
+            raise
+        except Exception as e:
+            raise FaceProcessingError(f"Error generating embedding: {str(e)}")
+        finally:
+            if temp_path and os.path.exists(temp_path):
+                os.remove(temp_path)
+
+        # Search the embedding store
+        face_id, distance = self._embedding_store.search(captured_embedding)
+
+        if face_id is None:
+            raise FaceNotFoundError("No matching face found")
+
+        logger.info("Face recognized: face_id=%s, distance=%.4f", face_id, distance)
+        return (face_id, distance)
+
+    def _preprocess_base64_image(self, base64_str: str, target_size: tuple[int, int] = (112, 112)) -> np.ndarray | None:
+        """Decode and preprocess a base64 image for DeepFace.
+
+        Args:
+            base64_str: Base64-encoded image string (may include data URI prefix).
+            target_size: Target dimensions for resizing.
+
+        Returns:
+            Preprocessed image as a numpy array, or None on failure.
+        """
+        try:
+            # Strip data URI prefix if present
+            if "," in base64_str:
+                base64_str = base64_str.split(",")[1]
+
+            image_bytes = base64.b64decode(base64_str)
+            nparr = np.frombuffer(image_bytes, np.uint8)
+            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+            if image is None:
+                return None
+
+            image = cv2.resize(image, target_size, interpolation=cv2.INTER_AREA)
+            return image.astype(np.uint8)
+
+        except Exception as e:
+            logger.warning("Error preprocessing base64 image: %s", str(e))
+            return None
+
+    def _preprocess_batch(self, images_base64: list[str], target_size: tuple[int, int] = (112, 112)) -> list[np.ndarray]:
+        """Preprocess a batch of base64 images.
+
+        Args:
+            images_base64: List of base64-encoded image strings.
+            target_size: Target dimensions for resizing.
+
+        Returns:
+            List of successfully preprocessed images as numpy arrays.
+        """
+        processed = []
+        for b64 in images_base64:
+            img = self._preprocess_base64_image(b64, target_size)
+            if img is not None:
+                processed.append(img)
+        return processed
+
+    def _write_temp_image(self, image: np.ndarray) -> str:
+        """Write an image to a temporary file for DeepFace processing.
+
+        Args:
+            image: Image as a numpy array.
+
+        Returns:
+            Path to the temporary image file.
+        """
+        fd, temp_path = tempfile.mkstemp(suffix=".jpg")
+        os.close(fd)
+        cv2.imwrite(temp_path, image)
+        return temp_path

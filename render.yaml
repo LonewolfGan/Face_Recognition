@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: face-recognition-api
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 2
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: DATABASE_PATH
+        value: /opt/render/project/src/backend/data/users.db
+      - key: CORS_ORIGINS
+        sync: false
+      - key: DATA_DIR
+        value: /opt/render/project/src/backend/data/
+      - key: PYTHON_VERSION
+        value: "3.11"
+    healthCheckPath: /health
+    autoDeploy: true

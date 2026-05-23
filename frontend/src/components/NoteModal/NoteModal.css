@@ -1,0 +1,228 @@
+/* NoteModal - co-located styles */
+
+.note-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: background 0.3s;
+}
+
+.note-modal-container {
+  background: var(--card);
+  color: var(--text);
+  border-radius: var(--radius-xl);
+  width: 95%;
+  max-width: 700px;
+  min-height: 400px;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: fadeInModal 0.3s;
+}
+
+.note-modal-titlebar {
+  background: var(--card);
+  color: var(--text);
+  padding: 18px var(--space-6) var(--space-2) var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+}
+
+.note-modal-titlebar-text {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+}
+
+.note-modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.note-modal-close-btn:hover {
+  color: var(--accent);
+}
+
+.note-modal-title-input-container {
+  padding: var(--space-2) var(--space-6);
+  border-bottom: 1px solid var(--bg);
+  background: var(--bg);
+}
+
+.note-modal-title-label {
+  margin-right: var(--space-3);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+
+.note-modal-title-input {
+  width: calc(100% - 60px);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-family: var(--font-family);
+}
+
+.note-modal-title-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.note-modal-folder-container {
+  padding: var(--space-2) var(--space-6);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+}
+
+.note-modal-folder-label {
+  margin-right: var(--space-3);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+
+.note-modal-folder-select {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-family: var(--font-family);
+  cursor: pointer;
+}
+
+.note-modal-folder-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.note-modal-editor-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-6) var(--space-4) var(--space-6);
+  overflow: hidden;
+  margin: 5px 0;
+}
+
+.note-modal-quill {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: auto;
+  min-height: 200px;
+  max-height: 350px;
+  margin: 5px 0;
+  background: var(--card);
+  color: var(--text);
+}
+
+.note-modal-statusbar {
+  padding: var(--space-2) var(--space-6);
+  border-top: 1px solid var(--border);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  background: var(--bg);
+}
+
+.note-modal-buttonbar {
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  gap: var(--space-4);
+}
+
+.note-modal-cancel-btn {
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-6);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.note-modal-cancel-btn:hover {
+  background: var(--hover);
+}
+
+.note-modal-save-btn {
+  background: var(--accent);
+  color: var(--text-light);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-6);
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.08);
+  transition: background 0.15s;
+}
+
+.note-modal-save-btn:hover {
+  background: var(--accent-dark);
+}
+
+.note-modal-save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .note-modal-container {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .note-modal-titlebar {
+    border-radius: 0;
+  }
+
+  .note-modal-quill {
+    max-height: none;
+  }
+}
