@@ -185,6 +185,32 @@
   border-radius: 2px;
 }
 
+/* ─── Greeting header ─────────────────────────────────────────────────────── */
+
+.notes-greeting {
+  padding: 40px 32px 20px;
+}
+
+.notes-greeting__text {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-title);
+  font-family: var(--font-sans);
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .notes-greeting {
+    padding: 24px 16px 16px;
+  }
+
+  .notes-greeting__text {
+    font-size: 1.375rem;
+  }
+}
+
 /* Section header */
 .notes-list-header {
   display: flex;
@@ -345,6 +371,32 @@
   max-width: 260px;
   font-family: var(--font-sans);
   line-height: 1.5;
+}
+
+.notes-grid__empty-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 8px;
+  background: var(--color-tech-violet);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.notes-grid__empty-btn:hover {
+  background-color: var(--color-biometric-glow);
+}
+
+.notes-grid__empty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ─── Overlay (webcam) ────────────────────────────────────────────────────── */

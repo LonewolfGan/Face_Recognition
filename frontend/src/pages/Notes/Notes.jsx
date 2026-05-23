@@ -37,6 +37,14 @@ import NoteEditor from './NoteEditor';
 import SettingsPanel from './SettingsPanel';
 import './Notes.css';
 
+/* ─── Time-based greeting ────────────────────────────────────────────────── */
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
 /* ─── Note row (Notion-style list item) ─────────────────────────────────── */
 function NoteCard({ note, onClick, folderName }) {
   const date = note.updated_at
@@ -293,19 +301,34 @@ export default function Notes() {
               saving={store.loading.saving}
             />
           ) : (
-            /* ── Notes grid ── */
+            /* ── Notes list view ── */
             <div className="notes-grid-view">
+              {/* Greeting header */}
+              <div className="notes-greeting">
+                <h1 className="notes-greeting__text">
+                  {getGreeting()}, {currentUser?.name?.split(' ')[0] || 'there'} 👋
+                </h1>
+              </div>
+
               {store.loading.notes && (
                 <p className="notes-grid__loading">Loading…</p>
               )}
 
               {!store.loading.notes && store.notes.length === 0 && (
                 <div className="notes-grid__empty">
-                  <LuFileText size={40} className="notes-grid__empty-icon" />
+                  <LuFileText size={36} className="notes-grid__empty-icon" />
                   <p className="notes-grid__empty-title">No notes yet</p>
                   <p className="notes-grid__empty-sub">
-                    Create your first note with the button above.
+                    Start writing — your first note is one click away.
                   </p>
+                  <button
+                    className="notes-grid__empty-btn"
+                    onClick={handleNewNote}
+                    disabled={store.loading.notes}
+                  >
+                    <LuPlus size={16} />
+                    Create a note
+                  </button>
                 </div>
               )}
 
