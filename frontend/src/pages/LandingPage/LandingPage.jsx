@@ -664,8 +664,8 @@ function Footer() {
 
   return (
     <footer
-      className="footer-dark relative overflow-hidden"
-      style={{ backgroundColor: "#1A0D30", background: "#1A0D30", color: "rgba(244,244,245,0.75)" }}
+      className="relative overflow-hidden"
+      style={{ backgroundColor: "#1A0D30", color: "rgba(244,244,245,0.75)" }}
     >
       {/* Subtle top glow */}
       <div

@@ -198,20 +198,10 @@ body.dark {
     --text-muted: #a1a1aa;
   }
 
-  /* ── Footer — always dark, independent of theme ─────────────────── */
+  /* ── Footer — background forced via inline style in JSX ─────────── */
   .bg-vault {
     background-color: var(--page-bg);
     color: var(--text-title);
-  }
-
-  .footer-dark {
-    background: #1A0D30 !important;
-    --page-bg:      #1A0D30;
-    --text-title:   #f4f4f5;
-    --text-body:    rgba(244, 244, 245, 0.85);
-    --text-muted:   #a1a1aa;
-    --border-neutral: rgba(155, 112, 229, 0.15);
-    color: rgba(244, 244, 245, 0.75);
   }
 
   /* ── Navbar scroll-aware ─────────────────────────────────────────── */
@@ -267,18 +257,6 @@ body.dark {
     animation: mockup-pulse 4s ease-in-out infinite;
     will-change: box-shadow;
   }
-}
-
-/* ─── Footer always-dark — outside any layer, beats everything ──────── */
-.footer-dark {
-  background-color: #1A0D30 !important;
-  background-image: none;
-  --page-bg:        #1A0D30;
-  --text-title:     #f4f4f5;
-  --text-body:      rgba(244, 244, 245, 0.85);
-  --text-muted:     #a1a1aa;
-  --border-neutral: rgba(155, 112, 229, 0.15);
-  color: rgba(244, 244, 245, 0.75);
 }
 
 /* ─── Reduced motion fallbacks ──────────────────────────────────────── */
