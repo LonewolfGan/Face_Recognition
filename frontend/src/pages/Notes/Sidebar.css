@@ -15,7 +15,7 @@
 
 /* ── Dark variant (default for dark mode) ──────────────────────────────── */
 .sidebar--dark {
-  background-color: #160b28; /* slightly deeper than vault-bg */
+  background-color: #221540; /* slightly deeper than page-bg */
 }
 
 /* ── Light variant ─────────────────────────────────────────────────────── */
@@ -132,8 +132,6 @@
 .sidebar__item--active {
   background-color: rgba(122, 53, 242, 0.12);
   color: var(--color-tech-violet);
-  border-left: 2px solid var(--color-tech-violet);
-  padding-left: 8px; /* compensate for border */
 }
 
 .sidebar__item--active .sidebar__item-icon {

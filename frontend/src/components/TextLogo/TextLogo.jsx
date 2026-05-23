@@ -8,9 +8,11 @@ export default function TextLogo({ className = '' }) {
     <Link to="/" className={`text-logo ${className}`} aria-label="PrivyNote — accueil">
       <img
         src={isDarkMode ? '/logodark.png' : '/logolight.png'}
-        alt="PrivyNote"
+        alt=""
+        aria-hidden="true"
         className="text-logo__img"
       />
+      <span className="text-logo__name">PrivyNote</span>
     </Link>
   );
 }

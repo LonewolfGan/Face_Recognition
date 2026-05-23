@@ -1,7 +1,7 @@
 .text-logo {
   font-family: var(--font-family);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-lg);
   color: var(--accent);
   text-decoration: none;
   line-height: var(--line-height-tight);
@@ -11,20 +11,23 @@
 }
 
 .text-logo__img {
-  width: 140px;
-  height: auto;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .text-logo__img {
-    width: 110px;
-  }
+.text-logo__name {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-title);
+  font-family: var(--font-sans);
 }
 
 @media (max-width: 768px) {
-  .text-logo {
-    font-size: var(--font-size-xl);
+  .text-logo__img {
+    width: 28px;
+    height: 28px;
   }
 }

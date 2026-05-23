@@ -93,8 +93,8 @@
 
 /* ─── Dark mode tokens ───────────────────────────────────────────────── */
 body.dark {
-  --page-bg: #1A0D30;                            /* vault-bg-dark */
-  --section-alt-bg: rgba(155, 112, 229, 0.04);   /* biometric-glow 4% */
+  --page-bg: #2a1a48;                            /* lighter dark purple */
+  --section-alt-bg: rgba(155, 112, 229, 0.05);   /* biometric-glow 5% */
 
   --text-title: #f4f4f5;                         /* zinc-50 */
   --text-body:  rgba(244, 244, 245, 0.85);
@@ -109,12 +109,12 @@ body.dark {
   --connector-color: rgba(155, 112, 229, 0.30);
 
   /* Hero relief — dark plus dense */
-  --hero-glow:   rgba(122, 53, 242, 0.35);
-  --mesh-line:   rgba(155, 112, 229, 0.04);
+  --hero-glow:   rgba(122, 53, 242, 0.28);
+  --mesh-line:   rgba(155, 112, 229, 0.05);
 
   /* Navbar scrolled */
-  --nav-scrolled-bg:     rgba(26, 13, 48, 0.75);
-  --nav-scrolled-border: rgba(155, 112, 229, 0.12);
+  --nav-scrolled-bg:     rgba(42, 26, 72, 0.80);
+  --nav-scrolled-border: rgba(155, 112, 229, 0.15);
 
   /* Eyebrow accent */
   --accent-eyebrow: #9B70E5;                     /* biometric-glow */
@@ -219,43 +219,9 @@ body.dark {
     -webkit-backdrop-filter: blur(12px) saturate(140%);
   }
 
-  /* ── Button shimmer effect — sweeping highlight on hover ─────────── */
-  .btn-shimmer {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .btn-shimmer > * {
-    position: relative;
-    z-index: 1;
-  }
-  .btn-shimmer::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      110deg,
-      transparent 30%,
-      rgba(244, 244, 245, 0.18) 50%,
-      transparent 70%
-    );
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .btn-shimmer:hover::after {
-    transform: translateX(100%);
-  }
-
-  /* ── Mockup pulsing shadow (hero visual) ─────────────────────────── */
-  @keyframes mockup-pulse {
-    0%, 100% { box-shadow: 0 20px 60px rgba(122, 53, 242, 0.20); }
-    50%      { box-shadow: 0 30px 80px rgba(122, 53, 242, 0.35); }
-  }
+  /* ── Mockup shadow (hero visual) ─────────────────────────────────── */
   .mockup-pulse-shadow {
-    animation: mockup-pulse 4s ease-in-out infinite;
-    will-change: box-shadow;
+    box-shadow: 0 20px 60px rgba(122, 53, 242, 0.20);
   }
 }
 
@@ -278,11 +244,7 @@ body.dark {
     background-color: var(--page-bg);
   }
   .mockup-pulse-shadow {
-    animation: none;
     box-shadow: 0 20px 60px rgba(122, 53, 242, 0.20);
-  }
-  .btn-shimmer::after {
-    display: none;
   }
 
   html {
