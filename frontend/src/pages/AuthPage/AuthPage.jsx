@@ -95,12 +95,6 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
                 <LuX className="w-4 h-4" />
               </button>
               <div className="flex items-start gap-3">
-                {Icon && (
-                  <span className="w-10 h-10 inline-flex items-center justify-center rounded-xl shrink-0"
-                    style={{ background: "rgba(122,53,242,0.12)", color: "#7A35F2" }}>
-                    <Icon className="w-5 h-5" />
-                  </span>
-                )}
                 <h3 className="text-[17px] font-bold text-title m-0 mt-1 leading-snug pr-6">{title}</h3>
               </div>
               <p className="text-[14px] leading-relaxed text-body m-0">{children}</p>
