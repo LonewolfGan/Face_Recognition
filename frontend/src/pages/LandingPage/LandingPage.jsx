@@ -637,6 +637,7 @@ function FinalCTA({ onSignup }) {
 
 /* ─── Footer ─────────────────────────────────────────────────────────── */
 function Footer() {
+  const { isDarkMode } = useTheme();
   const cols = [
     {
       title: "Produit",
@@ -662,10 +663,22 @@ function Footer() {
     { label: "LinkedIn", href: "#", icon: <LuLinkedin /> },
   ];
 
+  const bgColor      = isDarkMode ? "#1A0D30"                  : "#f5f3ff";
+  const textMuted    = isDarkMode ? "rgba(244,244,245,0.75)"   : "rgba(60,40,100,0.75)";
+  const taglineColor = isDarkMode ? "rgba(209,188,249,0.6)"    : "rgba(100,70,160,0.65)";
+  const labelColor   = isDarkMode ? "rgba(244,244,245,0.4)"    : "rgba(60,40,100,0.4)";
+  const linkColor    = isDarkMode ? "rgba(209,188,249,0.65)"   : "rgba(100,70,160,0.75)";
+  const linkHover    = isDarkMode ? "#D1BCF9"                  : "#7A35F2";
+  const borderColor  = isDarkMode ? "rgba(255,255,255,0.08)"   : "rgba(122,53,242,0.12)";
+  const copyColor    = isDarkMode ? "rgba(244,244,245,0.3)"    : "rgba(60,40,100,0.35)";
+  const socialColor  = isDarkMode ? "rgba(209,188,249,0.5)"    : "rgba(100,70,160,0.5)";
+  const socialBorder = isDarkMode ? "rgba(255,255,255,0.1)"    : "rgba(122,53,242,0.2)";
+  const nameColor    = isDarkMode ? "#f4f4f5"                  : "#7A35F2";
+
   return (
     <footer
       className="relative overflow-hidden"
-      style={{ backgroundColor: "#1A0D30", color: "rgba(244,244,245,0.75)" }}
+      style={{ backgroundColor: bgColor, color: textMuted }}
     >
       {/* Subtle top glow */}
       <div
@@ -682,24 +695,24 @@ function Footer() {
 
       <div className="relative max-w-[1180px] mx-auto px-6 pt-14 pb-8">
         {/* Main grid */}
-        <div className="grid sm:grid-cols-[1.6fr_1fr_1fr] gap-10 pb-10 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+        <div className="grid sm:grid-cols-[1.6fr_1fr_1fr] gap-10 pb-10 border-b" style={{ borderColor }}>
           {/* Brand block */}
           <div className="flex flex-col gap-5">
             <a href="#top" className="inline-flex items-center gap-2.5 w-fit" aria-label="PrivyNote — accueil">
               <img
-                src="/logodark.png"
+                src={isDarkMode ? "/logodark.png" : "/logolight.png"}
                 alt="" aria-hidden="true"
                 style={{ height: 30, width: "auto", objectFit: "contain" }}
               />
               <span
                 className="text-[18px] font-bold tracking-[-0.02em] leading-none"
-                style={{ fontFamily: '"Syne", sans-serif', color: "#f4f4f5" }}
+                style={{ fontFamily: '"Syne", sans-serif', color: nameColor }}
               >
                 PrivyNote
               </span>
             </a>
 
-            <p className="text-[14px] leading-[1.75] m-0 max-w-[240px]" style={{ color: "rgba(209,188,249,0.6)" }}>
+            <p className="text-[14px] leading-[1.75] m-0 max-w-[240px]" style={{ color: taglineColor }}>
               Vos notes, protégées par votre visage.
               Toujours locales, jamais compromises.
             </p>
@@ -711,7 +724,7 @@ function Footer() {
             <div key={c.title}>
               <h4
                 className="text-[11px] uppercase tracking-[0.14em] font-semibold mb-4 m-0"
-                style={{ color: "rgba(244,244,245,0.4)" }}
+                style={{ color: labelColor }}
               >
                 {c.title}
               </h4>
@@ -721,9 +734,9 @@ function Footer() {
                     <a
                       href={l.href}
                       className="text-[14px] no-underline transition-colors duration-200"
-                      style={{ color: "rgba(209,188,249,0.65)" }}
-                      onMouseEnter={(e) => e.currentTarget.style.color = "#D1BCF9"}
-                      onMouseLeave={(e) => e.currentTarget.style.color = "rgba(209,188,249,0.65)"}
+                      style={{ color: linkColor }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = linkHover}
+                      onMouseLeave={(e) => e.currentTarget.style.color = linkColor}
                     >
                       {l.label}
                     </a>
@@ -736,7 +749,7 @@ function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-7 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-[13px]" style={{ color: "rgba(244,244,245,0.3)" }}>
+          <span className="text-[13px]" style={{ color: copyColor }}>
             © {new Date().getFullYear()} PrivyNote — Tous droits réservés.
           </span>
 
@@ -747,15 +760,15 @@ function Footer() {
                 href={href}
                 aria-label={label}
                 className="w-8 h-8 inline-flex items-center justify-center rounded-md transition-all duration-200"
-                style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(209,188,249,0.5)" }}
+                style={{ border: `1px solid ${socialBorder}`, color: socialColor }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = "#9B70E5";
                   e.currentTarget.style.borderColor = "rgba(155,112,229,0.4)";
                   e.currentTarget.style.background = "rgba(122,53,242,0.12)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "rgba(209,188,249,0.5)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                  e.currentTarget.style.color = socialColor;
+                  e.currentTarget.style.borderColor = socialBorder;
                   e.currentTarget.style.background = "transparent";
                 }}
               >
