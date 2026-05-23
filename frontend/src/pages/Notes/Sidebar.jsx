@@ -10,6 +10,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   LuFileText,
   LuFolder,
@@ -134,13 +135,13 @@ export default function Sidebar({
     <aside className={`sidebar ${isDarkMode ? 'sidebar--dark' : 'sidebar--light'}`}>
       {/* ── Header ── */}
       <div className="sidebar__header">
-        <div className="sidebar__brand">
+        <Link to="/" className="sidebar__brand" style={{ textDecoration: 'none' }}>
           <img
             src={isDarkMode ? '/logodark.png' : '/logolight.png'}
             alt="PrivyNote"
             style={{ height: 32, width: 'auto', objectFit: 'contain', maxWidth: 140 }}
           />
-        </div>
+        </Link>
         {isMobile && (
           <button
             className="sidebar__close-btn"

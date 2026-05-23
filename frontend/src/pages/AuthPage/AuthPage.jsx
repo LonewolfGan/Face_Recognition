@@ -25,9 +25,20 @@ import { cn } from "../../lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1];
 
-/* ──────────────────────────────────────────────────────────────────────
-   Modal
-   ────────────────────────────────────────────────────────────────────── */
+/* ─── Spinner ──────────────────────────────────────────────────────── */
+function Spinner({ className }) {
+  return (
+    <motion.span
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+      className={cn("inline-flex shrink-0", className)}
+    >
+      <LuLoader className="w-4 h-4" />
+    </motion.span>
+  );
+}
+
+/* ─── Modal ────────────────────────────────────────────────────────── */
 function Modal({ open, onClose, icon: Icon, title, children, actions }) {
   return (
     <AnimatePresence>
@@ -55,13 +66,9 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
                     <Icon className="w-5 h-5" />
                   </span>
                 )}
-                <h3 className="text-[18px] font-bold text-title m-0 mt-1">
-                  {title}
-                </h3>
+                <h3 className="text-[18px] font-bold text-title m-0 mt-1">{title}</h3>
               </div>
-              <div className="text-[15px] leading-[1.65] text-body">
-                {children}
-              </div>
+              <div className="text-[15px] leading-[1.65] text-body">{children}</div>
               <div className="flex gap-3 mt-2">{actions}</div>
             </Card>
           </motion.div>
@@ -71,34 +78,27 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────
-   Form field
-   ────────────────────────────────────────────────────────────────────── */
-function FormField({ icon: Icon, hint, ...inputProps }) {
+/* ─── FormField ────────────────────────────────────────────────────── */
+function FormField({ icon: Icon, ...inputProps }) {
   return (
-    <label className="flex flex-col gap-1">
-      <span className="relative flex items-center">
-        {Icon && (
-          <Icon className="absolute left-4 w-4 h-4 text-muted-token pointer-events-none" />
+    <span className="relative flex items-center">
+      {Icon && (
+        <Icon className="absolute left-4 w-4 h-4 text-muted-token pointer-events-none" />
+      )}
+      <input
+        {...inputProps}
+        className={cn(
+          "w-full h-11 rounded-full border border-neutral surface-card text-title",
+          "text-[15px] font-medium px-4 transition-colors duration-200",
+          "focus-visible:outline-none focus-visible:border-tech-violet dark:focus-visible:border-biometric-glow",
+          Icon && "pl-10"
         )}
-        <input
-          {...inputProps}
-          className={cn(
-            "w-full h-11 rounded-full border border-neutral surface-card text-title",
-            "text-[15px] font-medium px-4 transition-colors duration-200",
-            "focus-visible:outline-none focus-visible:border-tech-violet dark:focus-visible:border-biometric-glow",
-            Icon && "pl-10"
-          )}
-        />
-      </span>
-      {hint && <span className="text-[12px] text-muted-token">{hint}</span>}
-    </label>
+      />
+    </span>
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────
-   Tab bar — CSS-based active state (no framer-motion layoutId)
-   ────────────────────────────────────────────────────────────────────── */
+/* ─── TabBar ───────────────────────────────────────────────────────── */
 function TabBar({ isLogin, onLogin, onSignup }) {
   return (
     <div className="grid grid-cols-2 p-1 rounded-xl bg-section-alt border border-neutral">
@@ -106,10 +106,8 @@ function TabBar({ isLogin, onLogin, onSignup }) {
         type="button"
         onClick={onLogin}
         className={cn(
-          "h-10 text-[14px] font-semibold rounded-lg transition-colors duration-200",
-          isLogin
-            ? "bg-tech-violet text-zinc-50"
-            : "text-muted-token hover:text-title"
+          "h-9 text-[14px] font-semibold rounded-lg transition-colors duration-200",
+          isLogin ? "bg-tech-violet text-zinc-50" : "text-muted-token hover:text-title"
         )}
       >
         Connexion
@@ -118,10 +116,8 @@ function TabBar({ isLogin, onLogin, onSignup }) {
         type="button"
         onClick={onSignup}
         className={cn(
-          "h-10 text-[14px] font-semibold rounded-lg transition-colors duration-200",
-          !isLogin
-            ? "bg-tech-violet text-zinc-50"
-            : "text-muted-token hover:text-title"
+          "h-9 text-[14px] font-semibold rounded-lg transition-colors duration-200",
+          !isLogin ? "bg-tech-violet text-zinc-50" : "text-muted-token hover:text-title"
         )}
       >
         Inscription
@@ -130,29 +126,14 @@ function TabBar({ isLogin, onLogin, onSignup }) {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────
-   Spinner
-   ────────────────────────────────────────────────────────────────────── */
-function Spinner({ className }) {
-  return (
-    <motion.span
-      animate={{ rotate: 360 }}
-      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-      className={cn("inline-flex", className)}
-    >
-      <LuLoader className="w-4 h-4" />
-    </motion.span>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════════
    AuthPage
-   ────────────────────────────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════════════ */
 export default function AuthPage() {
   const location = useLocation();
   const [isLogin, setIsLogin] = useState(location.pathname === "/login");
 
-  // ── Login state ───────────────────────────────────────────────────
+  // Login state
   const [loading, setLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [error, setError] = useState("");
@@ -162,7 +143,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [showNoFacesModal, setShowNoFacesModal] = useState(false);
 
-  // ── Signup state ──────────────────────────────────────────────────
+  // Signup state
   const [name, setName] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [showCapture, setShowCapture] = useState(false);
@@ -179,7 +160,7 @@ export default function AuthPage() {
   const LOGIN_ENDPOINT = "/login";
   const REGISTER_ENDPOINT = "/register";
 
-  /* ── Password login ─────────────────────────────────────────────── */
+  /* ── Password login ──────────────────────────────────────────────── */
   const handlePasswordLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -196,38 +177,29 @@ export default function AuthPage() {
     }
   };
 
-  /* ── Face login — direct async, no useEffect watcher ────────────── */
+  /* ── Face login ──────────────────────────────────────────────────── */
   const handleFaceLogin = async () => {
     setShowCamera(true);
     setError("");
     setLoading(true);
-
-    // Give React time to re-render and mount the video element
     await new Promise((r) => setTimeout(r, 150));
 
     let stream = null;
     try {
-      console.log("[FaceLogin] Starting face capture");
       stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      console.log("[FaceLogin] Stream obtained");
-
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
       } else {
-        throw new Error("videoRef not available — video element not mounted");
+        throw new Error("Video element not mounted");
       }
-
-      // Wait 2 s for the face to be clearly visible
       await new Promise((r) => setTimeout(r, 2000));
 
       if (videoRef.current && canvasRef.current) {
         const ctx = canvasRef.current.getContext("2d");
         ctx.drawImage(videoRef.current, 0, 0, 320, 240);
         const imageData = canvasRef.current.toDataURL("image/jpeg");
-        console.log("[FaceLogin] Frame captured, sending to API");
 
-        // Stop camera before the API call
         stream.getTracks().forEach((t) => t.stop());
         videoRef.current.srcObject = null;
         stream = null;
@@ -237,7 +209,6 @@ export default function AuthPage() {
           { image: imageData },
           { withCredentials: true }
         );
-        console.log("[FaceLogin] API response:", response.data);
         const result = response.data;
 
         if (result.access_token || result.status === "success") {
@@ -251,7 +222,6 @@ export default function AuthPage() {
         }
       }
     } catch (err) {
-      console.error("[FaceLogin] Error:", err);
       if (err.response?.status === 401) {
         const msg = err.response?.data?.message || "";
         if (msg.includes("Aucun visage")) {
@@ -290,11 +260,9 @@ export default function AuthPage() {
 
     const startCapture = async () => {
       if (!showCapture || loading) return;
-
       try {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (!navigator.mediaDevices?.getUserMedia)
           throw new Error("L'API mediaDevices n'est pas disponible.");
-        }
 
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const videoEl = videoRef.current;
@@ -310,8 +278,6 @@ export default function AuthPage() {
             captureInterval = setInterval(async () => {
               if (captureCount >= 5) {
                 clearInterval(captureInterval);
-
-                // Stop camera immediately — show processing state
                 if (stream) stream.getTracks().forEach((t) => t.stop());
                 if (videoEl) videoEl.srcObject = null;
                 stream = null;
@@ -324,22 +290,14 @@ export default function AuthPage() {
                     { withCredentials: true }
                   );
                   const result = response.data;
-
                   if (result.status === "success" || result.access_token) {
                     setSuccess(true);
                     setProcessingSignup(false);
-
-                    try {
-                      await login({ password: signupPassword });
-                    } catch {
-                      // Registration succeeded; login may need explicit token auth
-                    }
-
+                    try { await login({ password: signupPassword }); } catch {}
                     setShowCapture(false);
                     navigate("/notes");
                   }
                 } catch (err) {
-                  console.error("Erreur lors de l'envoi des images:", err);
                   toast.error("Erreur lors de l'inscription: " + err.message);
                   setProcessingSignup(false);
                   setShowCapture(false);
@@ -359,14 +317,12 @@ export default function AuthPage() {
           }, 1000);
         }
       } catch (err) {
-        console.error("Erreur caméra:", err);
         toast.error("Erreur caméra: " + err.message);
         setShowCapture(false);
       }
     };
 
     if (showCapture) startCapture();
-
     return () => {
       if (captureInterval) clearInterval(captureInterval);
       if (stream) stream.getTracks().forEach((t) => t.stop());
@@ -377,7 +333,7 @@ export default function AuthPage() {
   useEffect(() => {
     return () => {
       const videoEl = videoRef.current;
-      if (videoEl && videoEl.srcObject) {
+      if (videoEl?.srcObject) {
         videoEl.srcObject.getTracks().forEach((t) => t.stop());
         videoEl.srcObject = null;
       }
@@ -401,7 +357,6 @@ export default function AuthPage() {
   /* ── Render ──────────────────────────────────────────────────────── */
   return (
     <div className="min-h-screen w-full bg-page relative overflow-hidden flex items-center justify-center px-4 py-10">
-      {/* Background face image */}
       <img
         src="/face.png"
         alt=""
@@ -411,21 +366,19 @@ export default function AuthPage() {
         style={{ filter: "saturate(0.85)" }}
       />
 
-      {/* ← Back to home button */}
       <a
         href="/"
-        className="absolute top-5 left-5 z-20 flex items-center gap-2 text-[13px] font-medium text-muted-token hover:text-title transition-colors duration-200 no-underline"
+        className="absolute top-5 left-5 z-20 flex items-center gap-1.5 text-[13px] font-medium text-muted-token hover:text-title transition-colors duration-200 no-underline"
       >
-        <LuArrowLeft className="w-4 h-4" />
+        <LuArrowLeft className="w-3.5 h-3.5" />
         Retour
       </a>
 
-      {/* Auth card — already-logged-in state OR slide transition */}
-      <div className="relative z-10 w-[420px] max-w-[95vw]">
+      <div className="relative z-10 w-[400px] max-w-[95vw]">
         <AnimatePresence mode="wait">
           {isAuthenticated ? (
             <motion.div
-              key="already-logged-in"
+              key="already-in"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8 }}
@@ -434,9 +387,7 @@ export default function AuthPage() {
               <AlreadySignedInCard
                 user={user}
                 onGoToNotes={() => navigate("/notes")}
-                onLogout={async () => {
-                  await logout();
-                }}
+                onLogout={async () => { await logout(); }}
               />
             </motion.div>
           ) : isLogin ? (
@@ -506,10 +457,7 @@ export default function AuthPage() {
             <Button
               variant="primary"
               size="md"
-              onClick={() => {
-                setShowNoFacesModal(false);
-                handleTabSwitch(false);
-              }}
+              onClick={() => { setShowNoFacesModal(false); handleTabSwitch(false); }}
               className="flex-1"
             >
               S'inscrire
@@ -518,8 +466,7 @@ export default function AuthPage() {
           </>
         }
       >
-        Aucun visage n'est enregistré pour ce compte. Veuillez vous inscrire
-        pour ajouter votre signature biométrique.
+        Aucun visage n'est enregistré. Veuillez vous inscrire pour ajouter votre signature biométrique.
       </Modal>
 
       <Modal
@@ -532,10 +479,7 @@ export default function AuthPage() {
             <Button
               variant="ghost"
               size="md"
-              onClick={() => {
-                setShowFaceFailModal(false);
-                setShowPasswordForm(true);
-              }}
+              onClick={() => { setShowFaceFailModal(false); setShowPasswordForm(true); }}
               className="flex-1"
             >
               Mot de passe
@@ -543,10 +487,7 @@ export default function AuthPage() {
             <Button
               variant="primary"
               size="md"
-              onClick={() => {
-                setShowFaceFailModal(false);
-                handleFaceLogin();
-              }}
+              onClick={() => { setShowFaceFailModal(false); handleFaceLogin(); }}
               className="flex-1"
             >
               Réessayer
@@ -554,19 +495,17 @@ export default function AuthPage() {
           </>
         }
       >
-        Votre visage n'a pas été reconnu. Voulez-vous réessayer ou utiliser
-        votre mot de passe ?
+        Votre visage n'a pas été reconnu. Voulez-vous réessayer ou utiliser votre mot de passe ?
       </Modal>
     </div>
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────
-   ALREADY SIGNED IN CARD
-   ────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   ALREADY SIGNED IN
+   ═══════════════════════════════════════════════════════════════════ */
 function AlreadySignedInCard({ user, onGoToNotes, onLogout }) {
   const [loggingOut, setLoggingOut] = useState(false);
-
   const handleLogout = async () => {
     setLoggingOut(true);
     await onLogout();
@@ -574,49 +513,23 @@ function AlreadySignedInCard({ user, onGoToNotes, onLogout }) {
   };
 
   return (
-    <Card className="w-[420px] max-w-[95vw] p-8 flex flex-col items-center gap-5 text-center">
-      {/* Icon */}
-      <span className="w-16 h-16 inline-flex items-center justify-center rounded-2xl bg-[rgba(122,53,242,0.12)] dark:bg-[rgba(155,112,229,0.15)]">
-        <IoCheckmarkDoneCircleOutline className="w-9 h-9 text-tech-violet dark:text-biometric-glow" />
+    <Card className="w-full p-8 flex flex-col items-center gap-5 text-center">
+      <span className="w-14 h-14 inline-flex items-center justify-center rounded-2xl bg-[rgba(122,53,242,0.1)] dark:bg-[rgba(155,112,229,0.13)]">
+        <IoCheckmarkDoneCircleOutline className="w-8 h-8 text-tech-violet dark:text-biometric-glow" />
       </span>
-
-      {/* Text */}
-      <div className="flex flex-col gap-1.5">
-        <h2 className="text-[20px] font-bold text-title m-0">
-          Déjà connecté(e)
-        </h2>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-[19px] font-bold text-title m-0">Déjà connecté(e)</h2>
         <p className="text-[14px] text-body m-0">
-          Vous êtes connecté(e) en tant que{" "}
-          <span className="font-semibold text-title">
-            {user?.name || "Utilisateur"}
-          </span>
-          .
+          Connecté(e) en tant que <span className="font-semibold text-title">{user?.name || "Utilisateur"}</span>
         </p>
       </div>
-
-      {/* Actions */}
-      <div className="flex flex-col gap-2.5 w-full mt-1">
-        <Button
-          variant="primary"
-          size="md"
-          onClick={onGoToNotes}
-          className="btn-shimmer w-full rounded-full!"
-        >
+      <div className="flex flex-col gap-2 w-full">
+        <Button variant="primary" size="md" onClick={onGoToNotes} className="btn-shimmer w-full rounded-full!">
           <LuNotebook />
-          Accéder à mes notes
+          Mes notes
         </Button>
-        <Button
-          variant="ghost"
-          size="md"
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="w-full rounded-full!"
-        >
-          {loggingOut ? (
-            <Spinner />
-          ) : (
-            <LuLogOut className="w-4 h-4" />
-          )}
+        <Button variant="ghost" size="md" onClick={handleLogout} disabled={loggingOut} className="w-full rounded-full!">
+          {loggingOut ? <Spinner /> : <LuLogOut className="w-4 h-4" />}
           {loggingOut ? "Déconnexion…" : "Se déconnecter"}
         </Button>
       </div>
@@ -624,39 +537,23 @@ function AlreadySignedInCard({ user, onGoToNotes, onLogout }) {
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════════
    LOGIN PANEL
-   ────────────────────────────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════════════ */
 function LoginPanel({
-  loading,
-  showCamera,
-  loginSuccess,
-  showPasswordForm,
-  password,
-  setPassword,
-  error,
-  setError,
-  setShowPasswordForm,
-  handleFaceLogin,
-  handlePasswordLogin,
-  videoRef,
-  canvasRef,
-  onSwitchToSignup,
+  loading, showCamera, loginSuccess, showPasswordForm,
+  password, setPassword, error, setError, setShowPasswordForm,
+  handleFaceLogin, handlePasswordLogin, videoRef, canvasRef, onSwitchToSignup,
 }) {
   const showCameraOverlay = showCamera || loginSuccess;
 
   return (
-    <Card className="w-[420px] max-w-[95vw] h-[420px] p-6 flex flex-col gap-4 overflow-hidden">
-      {/* Tabs */}
+    <Card className="w-full h-[400px] p-6 flex flex-col gap-4 overflow-hidden">
       <TabBar isLogin={true} onLogin={() => {}} onSignup={onSwitchToSignup} />
 
-      {/*
-        Camera area — always mounted (CSS show/hide, not conditional rendering).
-        This ensures videoRef.current is never null when handleFaceLogin runs.
-      */}
+      {/* Camera overlay — always mounted via CSS so ref is always valid */}
       <div className={showCameraOverlay ? "flex-1 flex flex-col items-center justify-center gap-3" : "hidden"}>
-        <div className="relative w-[180px] h-[180px] rounded-2xl overflow-hidden border-2 border-tech-violet dark:border-biometric-glow bg-section-alt">
-          {/* Video always in DOM; hidden after success */}
+        <div className="relative w-[172px] h-[172px] rounded-2xl overflow-hidden border-2 border-tech-violet dark:border-biometric-glow bg-section-alt">
           <video
             ref={videoRef}
             width="320"
@@ -664,33 +561,23 @@ function LoginPanel({
             autoPlay
             muted
             playsInline
-            className={cn(
-              "absolute inset-0 w-full h-full object-cover",
-              loginSuccess && "hidden"
-            )}
+            className={cn("absolute inset-0 w-full h-full object-cover", loginSuccess && "hidden")}
           />
-          {/* Success checkmark */}
           {loginSuccess && (
             <div className="absolute inset-0 flex items-center justify-center text-signal-teal">
-              <IoCheckmarkDoneCircleOutline size={90} />
+              <IoCheckmarkDoneCircleOutline size={86} />
             </div>
           )}
           <canvas ref={canvasRef} width="320" height="240" className="hidden" />
         </div>
         <p className="text-[13px] text-muted-token text-center m-0">
-          {loginSuccess ? "Connexion réussie. Redirection…" : "Restez immobile…"}
+          {loginSuccess ? "Connexion réussie — redirection…" : "Restez immobile…"}
         </p>
       </div>
 
-      {/* Default state */}
+      {/* Default: face scan button */}
       {!showCameraOverlay && !showPasswordForm && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-4">
-          <div className="text-center mb-1">
-            <p className="text-[14px] text-muted-token m-0">
-              Votre visage suffit. Pas de mot de passe à retenir.
-            </p>
-          </div>
-
+        <div className="flex-1 flex flex-col items-center justify-center gap-3">
           <Button
             variant="primary"
             size="md"
@@ -701,11 +588,10 @@ function LoginPanel({
             <LuScanFace />
             Se connecter avec mon visage
           </Button>
-
           <button
             type="button"
             onClick={() => setShowPasswordForm(true)}
-            className="text-[13px] text-tech-violet dark:text-biometric-glow font-medium hover:underline transition-colors duration-200"
+            className="text-[13px] text-muted-token hover:text-title transition-colors duration-200"
           >
             Utiliser le mot de passe
           </button>
@@ -730,36 +616,22 @@ function LoginPanel({
             autoFocus
             required
           />
-
           {error && (
             <p className="text-[13px] text-secure-coral flex items-center gap-2 m-0">
               <LuTriangleAlert className="w-4 h-4 shrink-0" />
               {error}
             </p>
           )}
-
           <div className="flex gap-2.5">
             <Button
-              variant="ghost"
-              size="md"
-              type="button"
-              onClick={() => {
-                setShowPasswordForm(false);
-                setPassword("");
-                setError("");
-              }}
+              variant="ghost" size="md" type="button"
+              onClick={() => { setShowPasswordForm(false); setPassword(""); setError(""); }}
               className="flex-1 rounded-full!"
             >
               Annuler
             </Button>
-            <Button
-              variant="primary"
-              size="md"
-              type="submit"
-              disabled={loading}
-              className="btn-shimmer flex-1 rounded-full!"
-            >
-              {loading ? "…" : "Valider"}
+            <Button variant="primary" size="md" type="submit" disabled={loading} className="btn-shimmer flex-1 rounded-full!">
+              {loading ? <Spinner /> : "Valider"}
             </Button>
           </div>
         </motion.form>
@@ -768,36 +640,16 @@ function LoginPanel({
   );
 }
 
-/* ──────────────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════════
    SIGNUP PANEL
-   ────────────────────────────────────────────────────────────────────── */
+   ═══════════════════════════════════════════════════════════════════ */
 function SignupPanel({
-  loading,
-  name,
-  setName,
-  signupPassword,
-  setSignupPassword,
-  showCapture,
-  captureProgress,
-  processingSignup,
-  success,
-  videoRef,
-  canvasRef,
-  handleFullSignup,
-  onSwitchToLogin,
+  loading, name, setName, signupPassword, setSignupPassword,
+  showCapture, captureProgress, processingSignup, success,
+  videoRef, canvasRef, handleFullSignup, onSwitchToLogin,
 }) {
-  /* Phase label for the status line */
-  const phaseLabel = (() => {
-    if (success) return null;
-    if (processingSignup) return "Analyse biométrique en cours…";
-    if (captureProgress === 0) return "Positionnez votre visage…";
-    if (captureProgress < 5) return `Photo ${captureProgress} sur 5 capturée`;
-    return "Préparation de l'envoi…";
-  })();
-
   return (
-    <Card className="w-[420px] max-w-[95vw] h-[420px] p-6 flex flex-col gap-4 overflow-hidden">
-      {/* Tabs */}
+    <Card className="w-full h-[400px] p-6 flex flex-col gap-4 overflow-hidden">
       <TabBar isLogin={false} onLogin={onSwitchToLogin} onSignup={() => {}} />
 
       {!showCapture ? (
@@ -819,11 +671,9 @@ function SignupPanel({
             required
           />
           <Button
-            variant="primary"
-            size="md"
-            type="submit"
+            variant="primary" size="md" type="submit"
             disabled={loading}
-            className="btn-shimmer w-full mt-2 rounded-full!"
+            className="btn-shimmer w-full mt-1 rounded-full!"
           >
             <LuCamera />
             Capturer mon visage
@@ -831,16 +681,15 @@ function SignupPanel({
         </form>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
-          {/* Camera / success frame */}
-          <div className="relative w-[160px] h-[160px] rounded-2xl overflow-hidden border-2 border-tech-violet dark:border-biometric-glow bg-section-alt">
+          {/* Camera / processing / success frame */}
+          <div className="relative w-[156px] h-[156px] rounded-2xl overflow-hidden border-2 border-tech-violet dark:border-biometric-glow bg-section-alt">
             {success ? (
               <div className="absolute inset-0 flex items-center justify-center text-signal-teal">
-                <IoCheckmarkDoneCircleOutline size={80} />
+                <IoCheckmarkDoneCircleOutline size={78} />
               </div>
             ) : processingSignup ? (
-              /* Processing overlay — hide video, show spinner */
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-section-alt">
-                <Spinner className="text-tech-violet dark:text-biometric-glow w-8 h-8" />
+              <div className="absolute inset-0 flex items-center justify-center bg-section-alt">
+                <Spinner className="text-tech-violet dark:text-biometric-glow [&>svg]:w-7 [&>svg]:h-7" />
               </div>
             ) : (
               <video
@@ -855,78 +704,61 @@ function SignupPanel({
             )}
             <canvas ref={canvasRef} width="320" height="240" className="hidden" />
 
-            {/* Capture flash dots — overlay on the video (hidden during processing/success) */}
+            {/* 5-dot progress overlay on video */}
             {!processingSignup && !success && (
-              <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+              <div className="absolute bottom-2.5 left-0 right-0 flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <motion.span
                     key={n}
-                    animate={{
-                      scale: captureProgress >= n ? 1 : 0.7,
-                      opacity: captureProgress >= n ? 1 : 0.35,
-                    }}
-                    transition={{ duration: 0.3, ease: EASE }}
-                    className={cn(
-                      "w-2 h-2 rounded-full",
-                      captureProgress >= n
-                        ? "bg-signal-teal"
-                        : "bg-zinc-400"
-                    )}
+                    animate={{ scale: captureProgress >= n ? 1 : 0.65, opacity: captureProgress >= n ? 1 : 0.3 }}
+                    transition={{ duration: 0.25, ease: EASE }}
+                    className={cn("w-2 h-2 rounded-full", captureProgress >= n ? "bg-signal-teal" : "bg-white/70")}
                   />
                 ))}
               </div>
             )}
           </div>
 
-          {/* Progress bar + status */}
-          <div className="w-full flex flex-col gap-2">
-            {/* Animated progress bar */}
-            <div className="w-full h-1.5 rounded-full bg-section-alt overflow-hidden">
-              <motion.div
-                animate={{
-                  width: processingSignup
-                    ? "100%"
-                    : `${(captureProgress / 5) * 100}%`,
-                }}
-                transition={{ duration: 0.4, ease: EASE }}
-                className={cn(
-                  "h-full rounded-full",
-                  processingSignup
-                    ? "bg-tech-violet dark:bg-biometric-glow"
-                    : "bg-tech-violet dark:bg-biometric-glow"
-                )}
-              />
-            </div>
-
-            {/* Status line */}
-            <AnimatePresence mode="wait">
-              {success ? (
-                <motion.p
-                  key="success"
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-[13px] inline-flex items-center justify-center gap-1.5 text-signal-teal m-0"
-                >
-                  <LuCheck className="w-4 h-4" />
-                  Enregistrement réussi !
-                </motion.p>
-              ) : (
-                <motion.p
-                  key={phaseLabel}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-[13px] text-muted-token text-center m-0 inline-flex items-center justify-center gap-1.5"
-                >
-                  {processingSignup && <Spinner />}
-                  {phaseLabel}
-                </motion.p>
-              )}
-            </AnimatePresence>
+          {/* Progress bar */}
+          <div className="w-full h-1 rounded-full bg-section-alt overflow-hidden">
+            <motion.div
+              animate={{ width: processingSignup ? "100%" : `${(captureProgress / 5) * 100}%` }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="h-full rounded-full bg-tech-violet dark:bg-biometric-glow"
+            />
           </div>
+
+          {/* Status — only for processing and success, silent during capture */}
+          <AnimatePresence mode="wait">
+            {success ? (
+              <motion.p
+                key="ok"
+                initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="text-[13px] flex items-center gap-1.5 text-signal-teal m-0"
+              >
+                <LuCheck className="w-3.5 h-3.5" /> Enregistrement réussi
+              </motion.p>
+            ) : processingSignup ? (
+              <motion.p
+                key="proc"
+                initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="text-[13px] flex items-center gap-1.5 text-muted-token m-0"
+              >
+                <Spinner /> Analyse en cours…
+              </motion.p>
+            ) : (
+              <motion.p
+                key="capture"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="text-[13px] text-muted-token m-0"
+              >
+                {captureProgress === 0 ? "Positionnez votre visage…" : "Ne bougez pas…"}
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </Card>
