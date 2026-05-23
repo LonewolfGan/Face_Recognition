@@ -123,6 +123,7 @@ REGISTER_SCHEMA = {
 LOGIN_SCHEMA = {
     'password': {'type': 'string', 'required': False, 'min_length': 8, 'max_length': 128},
     'image': {'type': 'string', 'required': False},
+    'images': {'type': 'list', 'required': False},
 }
 
 NOTE_SCHEMA = {

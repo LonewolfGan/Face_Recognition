@@ -208,9 +208,14 @@ def login():
             _set_refresh_cookie(response, refresh_token)
             return response
 
-        # Face recognition-based login
-        if not data.get("image"):
+        # Face recognition-based login — supports single image or multi-frame array
+        images_list = data.get("images")   # multi-frame: list of base64 strings
+        single_image = data.get("image")   # legacy single-frame
+
+        if not images_list and not single_image:
             return _error_response(400, "validation_error", "Image ou mot de passe requis")
+
+        images_to_try = images_list if images_list else [single_image]
 
         # Use FaceService for recognition (direct function call, no HTTP)
         face_service = current_app.config.get("FACE_SERVICE")
@@ -221,7 +226,7 @@ def login():
             return _error_response(500, "internal_error", "Face service not available")
 
         try:
-            face_id, distance = face_service.recognize(data["image"])
+            face_id, distance = face_service.recognize_best(images_to_try)
         except Exception as e:
             _log_auth_failure("face_recognition_failed", "/login")
             err_msg = str(e)

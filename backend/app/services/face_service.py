@@ -128,6 +128,56 @@ class FaceService:
         logger.info("Face added successfully: face_id=%s, name=%s, embeddings=%d", face_id, name, len(embeddings))
         return (face_id, name)
 
+    def recognize_best(self, images: list[str]) -> tuple[str, float]:
+        """Try multiple images and return the best match (lowest distance).
+
+        Iterates through all provided images, calls recognize() on each, and
+        returns the match with the smallest distance. Raises FaceProcessingError
+        if no face is found in any image, or FaceNotFoundError if no image
+        produces a match within the threshold.
+
+        Args:
+            images: List of base64-encoded image strings.
+
+        Returns:
+            (face_id, distance) for the best match found.
+
+        Raises:
+            FaceProcessingError: If no face is detected in any image.
+            FaceNotFoundError: If no matching face is found in any image.
+        """
+        best_face_id = None
+        best_distance = float("inf")
+        no_face_count = 0
+        last_not_found_error = None
+
+        for i, image in enumerate(images):
+            try:
+                face_id, distance = self.recognize(image)
+                if distance < best_distance:
+                    best_distance = distance
+                    best_face_id = face_id
+            except FaceProcessingError as e:
+                no_face_count += 1
+                logger.debug("Frame %d: no face detected — %s", i + 1, str(e))
+            except FaceNotFoundError as e:
+                last_not_found_error = e
+                logger.debug("Frame %d: face found but no match", i + 1)
+
+        if best_face_id is not None:
+            logger.info(
+                "Best match across %d frames: face_id=%s, distance=%.4f",
+                len(images), best_face_id, best_distance,
+            )
+            return (best_face_id, best_distance)
+
+        # No frame produced a match — raise the most descriptive error
+        if no_face_count == len(images):
+            raise FaceProcessingError("no_face_in_image")
+        if last_not_found_error:
+            raise last_not_found_error
+        raise FaceNotFoundError("No matching face found in any frame")
+
     def recognize(self, image: str) -> tuple[str, float]:
         """Recognize a face from a base64 image.
 

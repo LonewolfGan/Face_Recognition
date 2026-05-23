@@ -465,40 +465,36 @@ export default function AuthPage() {
     setShowCamera(true);
     setError("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 150));
     let stream = null;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      } else {
-        throw new Error("Video element not mounted");
-      }
-      await new Promise((r) => setTimeout(r, 2000));
-      if (videoRef.current && canvasRef.current) {
-        const ctx = canvasRef.current.getContext("2d");
-        ctx.drawImage(videoRef.current, 0, 0, 320, 240);
-        const imageData = canvasRef.current.toDataURL("image/jpeg");
-        stream.getTracks().forEach((t) => t.stop());
-        videoRef.current.srcObject = null;
-        stream = null;
-        const response = await axios.post(
-          `${API_URL}${LOGIN_ENDPOINT}`,
-          { image: imageData },
-          { withCredentials: true }
-        );
-        const result = response.data;
-        if (result.access_token || result.status === "success") {
-          await login({ image: imageData });
-          setLoginSuccess(true);
-        } else if (result.status === "face_failed") {
-          setShowFaceFailModal(true);
-        } else {
-          setError(result.message || "Echec inattendu");
-          toast.error(result.message || "Echec inattendu");
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
+      });
+      if (!videoRef.current) throw new Error("Caméra non disponible");
+      videoRef.current.srcObject = stream;
+      await videoRef.current.play();
+
+      // Give the camera time to focus and expose properly
+      await new Promise((r) => setTimeout(r, 2500));
+
+      // Capture 3 frames spread over ~1 second for the best chance of a match
+      const frames = [];
+      for (let i = 0; i < 3; i++) {
+        if (videoRef.current && canvasRef.current) {
+          const ctx = canvasRef.current.getContext("2d");
+          ctx.drawImage(videoRef.current, 0, 0, 320, 240);
+          frames.push(canvasRef.current.toDataURL("image/jpeg", 0.92));
         }
+        if (i < 2) await new Promise((r) => setTimeout(r, 500));
       }
+
+      stream.getTracks().forEach((t) => t.stop());
+      videoRef.current.srcObject = null;
+      stream = null;
+
+      // Single authenticated request — backend tries all frames, returns best match
+      await login({ images: frames });
+      setLoginSuccess(true);
     } catch (err) {
       if (err.response?.status === 401) {
         const errorCode = err.response?.data?.error || "";
@@ -582,12 +578,12 @@ export default function AuthPage() {
               if (videoEl && canvasEl) {
                 const ctx = canvasEl.getContext("2d");
                 ctx.drawImage(videoEl, 0, 0, 320, 240);
-                capturedImages.push(canvasEl.toDataURL("image/jpeg"));
+                capturedImages.push(canvasEl.toDataURL("image/jpeg", 0.92));
                 captureCount++;
                 setCaptureProgress(captureCount);
               }
-            }, 2000);
-          }, 1000);
+            }, 800);
+          }, 1200);
         }
       } catch (err) {
         toast.error("Erreur camera: " + err.message);
