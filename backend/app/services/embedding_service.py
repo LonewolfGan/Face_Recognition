@@ -167,7 +167,7 @@ class EmbeddingStore:
             # Persist to disk (best effort)
             self._persist_internal()
 
-    def search(self, embedding: list[float], threshold: float = 1.0) -> tuple[str | None, float]:
+    def search(self, embedding: list[float], threshold: float = 3.5) -> tuple[str | None, float]:
         """Find closest face_id for an embedding. Thread-safe read.
 
         Does not acquire the lock since FAISS reads are safe concurrent
@@ -194,6 +194,9 @@ class EmbeddingStore:
 
         if idx < 0 or idx >= len(self._index_to_face_id):
             return (None, float("inf"))
+
+        logger.info("FAISS search: distance=%.4f, threshold=%.2f, match=%s",
+                    distance, threshold, "YES" if distance <= threshold else "NO")
 
         if distance > threshold:
             return (None, distance)

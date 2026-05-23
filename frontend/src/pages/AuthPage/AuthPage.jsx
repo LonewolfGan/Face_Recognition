@@ -941,17 +941,6 @@ function LoginForm({
         )}
       </AnimatePresence>
 
-      <p className="text-center text-[13px] text-muted-token m-0">
-        Pas encore de compte ?{" "}
-        <button
-          type="button"
-          onClick={onSwitchToSignup}
-          className="font-semibold transition-colors duration-200 hover:underline"
-          style={{ color: "#7A35F2" }}
-        >
-          S'inscrire
-        </button>
-      </p>
     </div>
   );
 }
