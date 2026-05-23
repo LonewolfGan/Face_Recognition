@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sidebar — Monday.com-inspired clean navigation
+   Sidebar — Retractable Monday.com-style navigation
    ========================================================================== */
 
 .sidebar {
@@ -11,9 +11,18 @@
   overflow: hidden;
   flex-shrink: 0;
   font-family: var(--font-sans);
+  transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1),
+              min-width 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Light / dark variants ─────────────────────────────────────────────────── */
+/* ── Collapsed state ──────────────────────────────────────────────────────── */
+
+.sidebar--collapsed {
+  width: 56px;
+  min-width: 56px;
+}
+
+/* ── Light / dark ─────────────────────────────────────────────────────────── */
 
 .sidebar--light {
   background: #ffffff;
@@ -26,7 +35,7 @@
   --sb-brand-color:  #1A0D30;
   --sb-border:       rgba(0,0,0,0.07);
   --sb-count-color:  rgba(26,13,48,0.35);
-  --sb-settings-bg:  #ffffff;
+  --sb-bottom-bg:    #ffffff;
 }
 
 .sidebar--dark {
@@ -40,17 +49,23 @@
   --sb-brand-color:  #f4f4f5;
   --sb-border:       rgba(155,112,229,0.1);
   --sb-count-color:  rgba(244,244,245,0.3);
-  --sb-settings-bg:  #2a1a48;
+  --sb-bottom-bg:    #2a1a48;
 }
 
-/* ── Header / Brand ────────────────────────────────────────────────────────── */
+/* ── Header ───────────────────────────────────────────────────────────────── */
 
 .sidebar__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 16px 14px;
+  padding: 16px 10px 12px 14px;
   flex-shrink: 0;
+  min-height: 56px;
+}
+
+.sidebar--collapsed .sidebar__header {
+  justify-content: center;
+  padding: 16px 0 12px;
 }
 
 .sidebar__brand {
@@ -58,6 +73,8 @@
   align-items: center;
   gap: 9px;
   text-decoration: none !important;
+  overflow: hidden;
+  flex: 1;
 }
 
 .sidebar__brand img {
@@ -73,17 +90,43 @@
   letter-spacing: -0.02em;
   color: var(--sb-brand-color);
   line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
+/* Collapse toggle */
+.sidebar__collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: none;
+  border: 1px solid var(--sb-border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--sb-label-color);
+  flex-shrink: 0;
+  transition: color 120ms, background 120ms;
+}
+
+.sidebar__collapse-btn:hover {
+  color: var(--sb-brand-color);
+  background: var(--sb-item-hover);
+}
+
+/* Mobile close */
 .sidebar__close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
   color: var(--sb-item-text);
   border-radius: 6px;
-  display: flex;
-  align-items: center;
   transition: color 120ms, background 120ms;
 }
 
@@ -92,17 +135,21 @@
   background: var(--sb-item-hover);
 }
 
-/* ── Sections ───────────────────────────────────────────────────────────── */
+/* ── Sections ─────────────────────────────────────────────────────────────── */
 
 .sidebar__section {
   padding: 0 8px 4px;
   flex-shrink: 0;
 }
 
+.sidebar--collapsed .sidebar__section {
+  padding: 0 4px 4px;
+}
+
 .sidebar__section--folders {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
   scrollbar-width: thin;
   scrollbar-color: rgba(0,0,0,0.08) transparent;
 }
@@ -113,6 +160,7 @@
   border-radius: 2px;
 }
 
+/* Section label */
 .sidebar__section-label {
   display: flex;
   align-items: center;
@@ -123,10 +171,29 @@
   text-transform: uppercase;
   color: var(--sb-label-color);
   padding: 10px 8px 4px;
-  font-family: var(--font-sans);
 }
 
-/* ── Nav items ──────────────────────────────────────────────────────────────── */
+.sidebar__section-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--sb-label-color);
+  border-radius: 4px;
+  transition: color 100ms, background 100ms;
+  flex-shrink: 0;
+}
+
+.sidebar__section-add:hover {
+  color: var(--sb-brand-color);
+  background: var(--sb-item-hover);
+}
+
+/* ── Nav items ────────────────────────────────────────────────────────────── */
 
 .sidebar__item {
   display: flex;
@@ -143,8 +210,13 @@
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--sb-item-text);
-  transition: background 100ms ease, color 100ms ease;
-  position: relative;
+  transition: background 100ms, color 100ms;
+}
+
+.sidebar--collapsed .sidebar__item {
+  justify-content: center;
+  padding: 9px;
+  gap: 0;
 }
 
 .sidebar__item:hover {
@@ -164,15 +236,15 @@
 }
 
 .sidebar__item--active .sidebar__item-count {
-  color: rgba(255,255,255,0.65) !important;
+  color: rgba(255,255,255,0.6) !important;
 }
 
 .sidebar__item-icon {
   flex-shrink: 0;
-  color: var(--sb-item-text);
-  opacity: 0.75;
   display: flex;
   align-items: center;
+  color: var(--sb-item-text);
+  opacity: 0.75;
 }
 
 .sidebar__item:hover .sidebar__item-icon {
@@ -192,20 +264,9 @@
   flex-shrink: 0;
   min-width: 16px;
   text-align: right;
-  font-family: var(--font-sans);
 }
 
-/* ── Folder color dot ──────────────────────────────────────────────────────── */
-
-.sidebar__folder-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 3px;
-  background: var(--color-tech-violet);
-  flex-shrink: 0;
-}
-
-/* ── Folder list ─────────────────────────────────────────────────────────────── */
+/* ── Folder list ──────────────────────────────────────────────────────────── */
 
 .sidebar__folder-list {
   list-style: none;
@@ -276,7 +337,7 @@
   min-width: 0;
 }
 
-/* ── New folder button ───────────────────────────────────────────────────────── */
+/* ── New folder button ────────────────────────────────────────────────────── */
 
 .sidebar__new-folder-btn {
   display: flex;
@@ -300,88 +361,104 @@
   background: var(--sb-item-hover);
 }
 
-/* New folder row (inline input — kept for compat) */
-.sidebar__new-folder-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-}
-
-.sidebar__new-folder-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  border-bottom: 1.5px solid var(--color-tech-violet);
-  outline: none;
-  color: var(--sb-brand-color);
-  font-size: 0.875rem;
-  font-family: var(--font-sans);
-  padding: 2px 0;
-  min-width: 0;
-}
-
-.sidebar__new-folder-input::placeholder {
-  color: var(--sb-label-color);
-}
-
-/* ── Spacer ──────────────────────────────────────────────────────────────── */
+/* ── Spacer ───────────────────────────────────────────────────────────────── */
 
 .sidebar__spacer {
   flex: 1;
   min-height: 8px;
 }
 
-/* ── Bottom ──────────────────────────────────────────────────────────────── */
+/* ── Bottom ───────────────────────────────────────────────────────────────── */
 
 .sidebar__bottom {
-  padding: 8px 8px 14px;
+  padding: 6px 8px 14px;
   border-top: 1px solid var(--sb-border);
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
-.sidebar__bottom-row {
-  display: flex;
+.sidebar--collapsed .sidebar__bottom {
+  padding: 6px 4px 14px;
   align-items: center;
-  gap: 2px;
 }
 
-.sidebar__icon-btn {
+/* Bottom row button */
+.sidebar__bottom-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 10px;
   background: none;
   border: none;
-  border-radius: 7px;
+  border-radius: 8px;
   cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
   color: var(--sb-item-text);
-  transition: color 100ms, background 100ms;
+  text-align: left;
+  transition: background 100ms, color 100ms;
 }
 
-.sidebar__icon-btn:hover {
-  color: var(--sb-brand-color);
+.sidebar--collapsed .sidebar__bottom-btn {
+  justify-content: center;
+  padding: 9px;
+  gap: 0;
+  width: 40px;
+}
+
+.sidebar__bottom-btn:hover {
   background: var(--sb-item-hover);
+  color: var(--sb-brand-color);
 }
 
-/* Settings wrapper */
+.sidebar__bottom-btn .sidebar__item-icon {
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.sidebar__bottom-btn:hover .sidebar__item-icon {
+  opacity: 1;
+}
+
+.sidebar__bottom-btn--danger {
+  color: var(--sb-item-text);
+}
+
+.sidebar__bottom-btn--danger:hover {
+  color: #ef4444;
+  background: rgba(239,68,68,0.07);
+}
+
+/* ── Settings wrapper + dropdown ──────────────────────────────────────────── */
+
 .sidebar__settings-wrapper {
   position: relative;
+  width: 100%;
 }
 
-/* Settings dropdown */
+.sidebar--collapsed .sidebar__settings-wrapper {
+  width: auto;
+}
+
 .sidebar__settings-menu {
   position: absolute;
   bottom: calc(100% + 6px);
   left: 0;
-  background: var(--sb-settings-bg);
+  background: var(--sb-bottom-bg);
   border: 1px solid var(--sb-border);
   border-radius: 10px;
   padding: 4px;
   min-width: 180px;
   z-index: 400;
   box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+}
+
+.sidebar--collapsed .sidebar__settings-menu {
+  left: calc(100% + 8px);
+  bottom: 0;
 }
 
 .sidebar__settings-item {
@@ -406,37 +483,13 @@
   color: var(--sb-brand-color);
 }
 
-.sidebar__settings-item--danger { color: #ef4444; }
-.sidebar__settings-item--danger:hover {
-  background: rgba(239,68,68,0.08);
-  color: #ef4444;
-}
-
 .sidebar__settings-divider {
   height: 1px;
   background: var(--sb-border);
   margin: 3px 0;
 }
 
-/* Avatar */
-.sidebar__avatar {
-  margin-left: auto;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-tech-violet), var(--color-biometric-glow));
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  flex-shrink: 0;
-  cursor: default;
-}
-
-/* ── Mobile backdrop ─────────────────────────────────────────────────────── */
+/* ── Mobile backdrop ──────────────────────────────────────────────────────── */
 
 .sidebar__backdrop {
   position: fixed;

@@ -1,25 +1,18 @@
 /**
- * Notes — Main dashboard page (complete rewrite).
+ * Notes — Main dashboard page.
  *
  * Layout:
- *   <Sidebar>  |  <Topbar>
- *              |  <NoteEditor> or <NoteGrid>
- *
- * No Quill, no NoteModal, no FolderSidebar, no DeleteNoteModal.
+ *   <Sidebar (retractable)>  |  <NoteGrid grouped by folder> or <NoteEditor>
  */
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { motion } from 'framer-motion';
 import {
   LuPlus,
-  LuSearch,
   LuUser,
   LuMenu,
   LuFileText,
-  LuChevronRight,
-  LuSettings,
   LuFolder,
   LuBookOpen,
 } from 'react-icons/lu';
@@ -28,7 +21,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToastContext } from '../../context/ToastContext';
 import { useTheme } from '../../theme';
 import { useNotesStore } from '../../hooks/useNotesStore';
-import { ADD_FACE_URL, CONFIG } from '../../config';
+import { ADD_FACE_URL } from '../../config';
 import { handleApiError } from '../../utils/errorHandler';
 
 import WebcamCapture from '../../components/WebcamCapture';
@@ -39,7 +32,7 @@ import NoteEditor from './NoteEditor';
 import SettingsPanel from './SettingsPanel';
 import './Notes.css';
 
-/* ─── Time-based greeting ────────────────────────────────────────────────── */
+/* ─── Helpers ────────────────────────────────────────────────────────────── */
 function getGreeting() {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';
@@ -47,27 +40,58 @@ function getGreeting() {
   return 'Good evening';
 }
 
-/* ─── Note row (Notion-style list item) ─────────────────────────────────── */
-function NoteCard({ note, onClick, folderName }) {
+function stripHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+}
+
+/* Group notes by folder for All Notes view */
+function groupNotesByFolder(notes, folders) {
+  const groups = {};
+  const noFolder = [];
+
+  notes.forEach(note => {
+    if (!note.folder_id) {
+      noFolder.push(note);
+    } else {
+      if (!groups[note.folder_id]) groups[note.folder_id] = [];
+      groups[note.folder_id].push(note);
+    }
+  });
+
+  const result = [];
+  folders.forEach(folder => {
+    const folderNotes = groups[folder.folder_id];
+    if (folderNotes?.length > 0) {
+      result.push({ folder, notes: folderNotes });
+    }
+  });
+  if (noFolder.length > 0) {
+    result.push({ folder: null, notes: noFolder });
+  }
+  return result;
+}
+
+/* ─── Note box card ──────────────────────────────────────────────────────── */
+function NoteBox({ note, onClick, showFolder, folderName }) {
+  const preview = stripHtml(note.content || '').slice(0, 110);
   const date = note.updated_at
     ? new Date(note.updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
     : '';
 
-  const folder = folderName || note.folder_name || '';
-
   return (
     <button
-      className="note-card"
+      className="note-box"
       onClick={onClick}
       aria-label={`Open note: ${note.title || 'Untitled'}`}
     >
-      <div className="note-card__header">
-        <LuFileText size={14} className="note-card__icon" />
-        <span className="note-card__title">{note.title || 'Untitled'}</span>
-      </div>
-      <div className="note-card__footer">
-        <span className="note-card__folder-badge">{folder}</span>
-        {date && <span className="note-card__date">{date}</span>}
+      <div className="note-box__title">{note.title || 'Untitled'}</div>
+      {preview && <p className="note-box__preview">{preview}</p>}
+      <div className="note-box__footer">
+        {showFolder && folderName && (
+          <span className="note-box__folder-badge">{folderName}</span>
+        )}
+        {date && <span className="note-box__date">{date}</span>}
       </div>
     </button>
   );
@@ -80,29 +104,23 @@ export default function Notes() {
   const toast = useToastContext();
   const { isDarkMode, toggleTheme } = useTheme();
 
-  // Sidebar open state
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
 
-  // Modals
   const [showWebcam, setShowWebcam] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
 
-  // Notes store
   const store = useNotesStore();
 
-  // ─── Auth guard ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!currentUser) navigate('/login');
   }, [currentUser, navigate]);
 
-  // ─── Dark mode sync ──────────────────────────────────────────────────────
   useEffect(() => {
     document.body.classList.toggle('dark', isDarkMode);
   }, [isDarkMode]);
 
-  // ─── Responsive ─────────────────────────────────────────────────────────
   useEffect(() => {
     function onResize() {
       const mobile = window.innerWidth < 768;
@@ -114,20 +132,17 @@ export default function Notes() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // ─── Initial data load ───────────────────────────────────────────────────
   useEffect(() => {
     if (!currentUser) return;
     store.loadFolders();
     store.loadNotes(store.activeFolderId);
-  }, [currentUser]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentUser]); // eslint-disable-line
 
-  // Reload notes when folder filter changes
   useEffect(() => {
     if (!currentUser) return;
     store.loadNotes(store.activeFolderId);
-  }, [store.activeFolderId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [store.activeFolderId]); // eslint-disable-line
 
-  // ─── Actions ────────────────────────────────────────────────────────────
   async function handleNewNote() {
     const noteId = await store.createNote('', '', store.activeFolderId);
     if (noteId) store.setActiveNote(noteId);
@@ -139,25 +154,16 @@ export default function Notes() {
   }
 
   async function handleCaptures(images) {
-    if (!images || images.length === 0) {
-      toast.error('No images captured.');
-      return;
-    }
+    if (!images || images.length === 0) { toast.error('No images captured.'); return; }
     setShowWebcam(false);
     try {
       const { data: faceData } = await authFetch.get('/get_face_id');
       const face_id = faceData.face_id;
       const response = await axios.post(ADD_FACE_URL, {
-        face_id,
-        images,
-        name: currentUser.name,
+        face_id, images, name: currentUser.name,
       }, { headers: { 'Content-Type': 'application/json' } });
-
-      if (response.data.status === 'success') {
-        toast.success('Face added successfully');
-      } else {
-        toast.error(response.data.message || 'Error adding face');
-      }
+      if (response.data.status === 'success') toast.success('Face added successfully');
+      else toast.error(response.data.message || 'Error adding face');
     } catch (err) {
       console.error('Face add error:', err);
       handleApiError(err, toast);
@@ -173,21 +179,21 @@ export default function Notes() {
       } else {
         toast.error(res.data.message || 'Error changing password');
       }
-    } catch (err) {
-      handleApiError(err, toast);
-    }
+    } catch (err) { handleApiError(err, toast); }
   }
 
-  // ─── Derived ────────────────────────────────────────────────────────────
   const activeNote = store.activeNote;
-  const folderName = store.activeFolder?.name || null;
-  const breadcrumb = folderName || 'All Notes';
 
-  // ─── Render ─────────────────────────────────────────────────────────────
   if (!currentUser) return null;
+
+  /* ── Grouped notes for "All Notes" view ── */
+  const noteGroups = store.activeFolderId === null
+    ? groupNotesByFolder(store.notes, store.folders)
+    : null;
 
   return (
     <div className={`notes-page ${isDarkMode ? 'notes-page--dark' : 'notes-page--light'}`}>
+
       {/* ── Sidebar ── */}
       <Sidebar
         folders={store.folders}
@@ -206,73 +212,24 @@ export default function Notes() {
         onLogout={handleLogout}
         onAddFace={() => setShowWebcam(true)}
         onChangePassword={() => setShowChangePassword(true)}
+        onOpenSettings={() => { setShowSettingsPanel(true); store.setActiveNote(null); }}
         currentUser={currentUser}
       />
 
       {/* ── Main area ── */}
       <div className="notes-main">
 
-        {/* ── Topbar ── */}
-        <header className="notes-topbar">
-          {/* Left: hamburger on mobile */}
-          <div className="notes-topbar__left">
-            {isMobile && (
-              <button
-                className="notes-topbar__icon-btn"
-                onClick={() => setSidebarOpen(true)}
-                aria-label="Open sidebar"
-              >
-                <LuMenu size={19} />
-              </button>
-            )}
-            <nav className="notes-topbar__breadcrumb" aria-label="Breadcrumb">
-              <span className="notes-topbar__breadcrumb-root">Notes</span>
-              <LuChevronRight size={13} className="notes-topbar__breadcrumb-sep" />
-              <span className="notes-topbar__breadcrumb-current">
-                {activeNote ? (activeNote.title || 'Untitled') : breadcrumb}
-              </span>
-            </nav>
-          </div>
+        {/* Mobile open-sidebar button (no topbar on desktop) */}
+        {isMobile && !sidebarOpen && (
+          <button
+            className="notes-mobile-menu-btn"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open sidebar"
+          >
+            <LuMenu size={20} />
+          </button>
+        )}
 
-          {/* Center: search bar */}
-          <div className="notes-topbar__search" role="search" aria-label="Search notes">
-            <LuSearch size={14} className="notes-topbar__search-icon" />
-            <span className="notes-topbar__search-text">Search or type a command</span>
-            <span className="notes-topbar__search-kbd">⌘ K</span>
-          </div>
-
-          {/* Right: actions */}
-          <div className="notes-topbar__right">
-            <button
-              className="notes-topbar__icon-btn"
-              aria-label="Settings"
-              title="Settings"
-              onClick={() => {
-                setShowSettingsPanel(v => !v);
-                store.setActiveNote(null);
-              }}
-            >
-              <LuSettings size={17} />
-            </button>
-
-            <div className="notes-topbar__avatar" title={currentUser?.name || ''}>
-              {currentUser?.name
-                ? currentUser.name.slice(0, 2).toUpperCase()
-                : <LuUser size={13} />}
-            </div>
-
-            <button
-              className="notes-topbar__new-btn"
-              onClick={handleNewNote}
-              disabled={store.loading.notes}
-            >
-              <LuPlus size={15} />
-              New Note
-            </button>
-          </div>
-        </header>
-
-        {/* ── Content ── */}
         <main className="notes-content">
           {showSettingsPanel ? (
             <SettingsPanel
@@ -295,7 +252,7 @@ export default function Notes() {
           ) : (
             <div className="notes-grid-view">
 
-              {/* ── Greeting ── */}
+              {/* Greeting */}
               <div className="notes-greeting">
                 <span className="notes-greeting__date">
                   {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -304,7 +261,7 @@ export default function Notes() {
                   {getGreeting()}, {currentUser?.name?.split(' ')[0] || 'there'}
                 </h1>
 
-                {/* Stats pills */}
+                {/* Stats + new note action */}
                 <div className="notes-stats">
                   <div className="notes-stat-pill">
                     <LuFileText size={14} className="notes-stat-pill__icon" />
@@ -322,76 +279,89 @@ export default function Notes() {
                       {store.activeFolder ? store.activeFolder.name : 'All Notes'}
                     </span>
                   </div>
+
+                  <button
+                    className="notes-new-btn"
+                    onClick={handleNewNote}
+                    disabled={store.loading.notes}
+                  >
+                    <LuPlus size={15} />
+                    New Note
+                  </button>
                 </div>
               </div>
 
+              {/* Loading */}
               {store.loading.notes && (
                 <p className="notes-grid__loading">Loading…</p>
               )}
 
+              {/* Empty state */}
               {!store.loading.notes && store.notes.length === 0 && (
-                <div className="notes-section-card">
-                  <div className="notes-grid__empty">
-                    <LuFileText size={36} className="notes-grid__empty-icon" />
-                    <p className="notes-grid__empty-title">No notes yet</p>
-                    <p className="notes-grid__empty-sub">
-                      Start writing — your first note is one click away.
-                    </p>
-                    <button
-                      className="notes-grid__empty-btn"
-                      onClick={handleNewNote}
-                      disabled={store.loading.notes}
-                    >
-                      <LuPlus size={15} />
-                      Create a note
-                    </button>
-                  </div>
+                <div className="notes-grid__empty">
+                  <LuFileText size={36} className="notes-grid__empty-icon" />
+                  <p className="notes-grid__empty-title">No notes yet</p>
+                  <p className="notes-grid__empty-sub">
+                    Start writing — your first note is one click away.
+                  </p>
+                  <button
+                    className="notes-new-btn"
+                    onClick={handleNewNote}
+                    disabled={store.loading.notes}
+                  >
+                    <LuPlus size={15} />
+                    Create a note
+                  </button>
                 </div>
               )}
 
+              {/* Notes — grouped by folder (All Notes) or flat grid (folder view) */}
               {!store.loading.notes && store.notes.length > 0 && (
-                <div className="notes-section-card">
-                  {/* Card header */}
-                  <div className="notes-section-card__header">
-                    <span className="notes-section-card__title">
-                      <LuBookOpen size={16} className="notes-section-card__title-icon" />
-                      {store.activeFolder ? store.activeFolder.name : 'My Notes'}
-                    </span>
-                    <button className="notes-section-card__see-all" onClick={handleNewNote}>
-                      + New
-                    </button>
-                  </div>
-
-                  {/* Column headers */}
-                  <div className="notes-list-cols">
-                    <span className="notes-list-col-label">Note title</span>
-                    <span className="notes-list-col-label">Folder</span>
-                    <span className="notes-list-col-label" style={{ textAlign: 'right' }}>Last edited</span>
-                  </div>
-
-                  {/* Rows */}
-                  <div className="notes-list">
-                    {store.notes.map(note => (
-                      <NoteCard
-                        key={note.note_id}
-                        note={note}
-                        folderName={
-                          note.folder_id
-                            ? (store.folders.find(f => f.folder_id === note.folder_id)?.name || note.folder_name)
-                            : null
-                        }
-                        onClick={() => store.setActiveNote(note.note_id)}
-                      />
-                    ))}
-                  </div>
-                </div>
+                <>
+                  {/* ALL NOTES: grouped by folder */}
+                  {noteGroups !== null ? (
+                    noteGroups.map(({ folder, notes: groupNotes }) => (
+                      <div key={folder ? folder.folder_id : '__none__'} className="notes-folder-group">
+                        <div className="notes-folder-group__header">
+                          <LuFolder size={15} className="notes-folder-group__icon" />
+                          <span className="notes-folder-group__name">
+                            {folder ? folder.name : 'No folder'}
+                          </span>
+                          <span className="notes-folder-group__count">{groupNotes.length}</span>
+                        </div>
+                        <div className="notes-cards-grid">
+                          {groupNotes.map(note => (
+                            <NoteBox
+                              key={note.note_id}
+                              note={note}
+                              showFolder={false}
+                              onClick={() => store.setActiveNote(note.note_id)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    /* FOLDER VIEW: flat grid */
+                    <div className="notes-cards-grid">
+                      {store.notes.map(note => (
+                        <NoteBox
+                          key={note.note_id}
+                          note={note}
+                          showFolder={false}
+                          onClick={() => store.setActiveNote(note.note_id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}
         </main>
       </div>
 
-      {/* ── Webcam overlay ── */}
+      {/* Webcam overlay */}
       {showWebcam && (
         <div className="notes-overlay">
           <div className="notes-overlay__content">
@@ -406,7 +376,7 @@ export default function Notes() {
         </div>
       )}
 
-      {/* ── Change password modal ── */}
+      {/* Change password modal */}
       {showChangePassword && (
         <ChangePasswordModal
           onClose={() => setShowChangePassword(false)}

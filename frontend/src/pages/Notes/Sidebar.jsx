@@ -1,12 +1,10 @@
 /**
- * Sidebar — Premium dark sidebar for the Notes dashboard.
+ * Sidebar — Retractable premium navigation panel.
  *
- * Sections:
- *  - Logo / brand
- *  - Workspace: "All Notes" with count
- *  - Folders: list with inline rename, hover edit/delete
- *  - Divider
- *  - Bottom: theme toggle, settings dropdown (logout, add face, change pw), avatar
+ * Features:
+ *  - Collapsible (icon-only mode at 56px)
+ *  - Folders with inline rename + delete
+ *  - Bottom: Paramètres (gear) + Déconnexion (logout)
  */
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -23,9 +21,11 @@ import {
   LuTrash2,
   LuPencil,
   LuScanFace,
-  LuUser,
   LuKeyRound,
   LuX,
+  LuChevronLeft,
+  LuChevronRight,
+  LuUser,
 } from 'react-icons/lu';
 import * as LuIcons from 'react-icons/lu';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -41,23 +41,6 @@ function FolderIcon({ iconName, isOpen, size = 16 }) {
   return isOpen ? <LuFolderOpen size={size} /> : <LuFolder size={size} />;
 }
 
-/**
- * @param {Object} props
- * @param {import('../../hooks/useNotesStore').Folder[]} props.folders
- * @param {import('../../hooks/useNotesStore').Note[]} props.notes  — needed for count badges
- * @param {string|null} props.activeFolderId
- * @param {boolean} props.isOpen
- * @param {boolean} props.isMobile
- * @param {() => void} props.onClose
- * @param {(id: string|null) => void} props.onFolderSelect
- * @param {(name: string) => void} props.onCreateFolder
- * @param {(id: string, name: string) => void} props.onRenameFolder
- * @param {(id: string) => void} props.onDeleteFolder
- * @param {() => void} props.onLogout
- * @param {() => void} props.onAddFace
- * @param {() => void} props.onChangePassword
- * @param {object|null} props.currentUser
- */
 export default function Sidebar({
   folders,
   notes,
@@ -72,9 +55,13 @@ export default function Sidebar({
   onLogout,
   onAddFace,
   onChangePassword,
+  onOpenSettings,
   currentUser,
 }) {
   const { isDarkMode, toggleTheme } = useTheme();
+
+  // Retractable state (desktop only)
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Settings dropdown
   const [showSettings, setShowSettings] = useState(false);
@@ -83,10 +70,9 @@ export default function Sidebar({
   // Create folder modal
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  // Rename state: { id, value }
+  // Rename state
   const [renaming, setRenaming] = useState(null);
 
-  // Close settings on outside click
   useEffect(() => {
     function onOutside(e) {
       if (settingsRef.current && !settingsRef.current.contains(e.target)) {
@@ -97,7 +83,9 @@ export default function Sidebar({
     return () => document.removeEventListener('mousedown', onOutside);
   }, []);
 
-  // Count notes per folder
+  // Don't collapse on mobile
+  const collapsed = !isMobile && isCollapsed;
+
   function folderNoteCount(folderId) {
     return notes.filter(n => n.folder_id === folderId).length;
   }
@@ -114,36 +102,46 @@ export default function Sidebar({
     if (isMobile) onClose();
   }
 
-  const userInitials = currentUser?.name
-    ? currentUser.name.slice(0, 2).toUpperCase()
-    : 'PN';
-
-  // Animation variants for mobile slide-in
   const sidebarVariants = {
     hidden: { x: '-100%', opacity: 0 },
     visible: { x: 0, opacity: 1, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } },
     exit: { x: '-100%', opacity: 0, transition: { duration: 0.18 } },
   };
 
+  const themeClass = isDarkMode ? 'sidebar--dark' : 'sidebar--light';
+  const collapseClass = collapsed ? 'sidebar--collapsed' : '';
+
   const sidebarContent = (
-    <aside className={`sidebar ${isDarkMode ? 'sidebar--dark' : 'sidebar--light'}`}>
+    <aside className={`sidebar ${themeClass} ${collapseClass}`}>
+
       {/* ── Header ── */}
       <div className="sidebar__header">
-        <Link to="/" className="sidebar__brand" style={{ textDecoration: 'none' }}>
-          <img
-            src={isDarkMode ? '/logodark.png' : '/logolight.png'}
-            alt=""
-            aria-hidden="true"
-            style={{ height: 22, width: 22, objectFit: 'contain', flexShrink: 0 }}
-          />
-          <span className="sidebar__brand-name">PrivyNote</span>
-        </Link>
-        {isMobile && (
+        {!collapsed && (
+          <Link to="/" className="sidebar__brand">
+            <img
+              src={isDarkMode ? '/logodark.png' : '/logolight.png'}
+              alt=""
+              aria-hidden="true"
+            />
+            <span className="sidebar__brand-name">PrivyNote</span>
+          </Link>
+        )}
+
+        {/* Toggle collapse button */}
+        {!isMobile && (
           <button
-            className="sidebar__close-btn"
-            onClick={onClose}
-            aria-label="Close sidebar"
+            className="sidebar__collapse-btn"
+            onClick={() => setIsCollapsed(v => !v)}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={collapsed ? 'Expand' : 'Collapse'}
           >
+            {collapsed ? <LuChevronRight size={15} /> : <LuChevronLeft size={15} />}
+          </button>
+        )}
+
+        {/* Mobile close */}
+        {isMobile && (
+          <button className="sidebar__close-btn" onClick={onClose} aria-label="Close sidebar">
             <LuX size={18} />
           </button>
         )}
@@ -151,20 +149,35 @@ export default function Sidebar({
 
       {/* ── Workspace section ── */}
       <div className="sidebar__section">
-        <span className="sidebar__section-label">Workspace</span>
+        {!collapsed && <span className="sidebar__section-label">Workspace</span>}
         <button
           className={`sidebar__item ${activeFolderId === null ? 'sidebar__item--active' : ''}`}
           onClick={() => handleFolderClick(null)}
+          title={collapsed ? 'All Notes' : undefined}
         >
-          <LuFileText size={16} className="sidebar__item-icon" />
-          <span className="sidebar__item-name">All Notes</span>
-          <span className="sidebar__item-count">{notes.length}</span>
+          <span className="sidebar__item-icon">
+            <LuFileText size={16} />
+          </span>
+          {!collapsed && <span className="sidebar__item-name">All Notes</span>}
+          {!collapsed && <span className="sidebar__item-count">{notes.length}</span>}
         </button>
       </div>
 
       {/* ── Folders section ── */}
       <div className="sidebar__section sidebar__section--folders">
-        <span className="sidebar__section-label">Folders</span>
+        {!collapsed && (
+          <div className="sidebar__section-label">
+            <span>Folders</span>
+            <button
+              className="sidebar__section-add"
+              onClick={() => setShowCreateModal(true)}
+              aria-label="New folder"
+              title="New folder"
+            >
+              <LuPlus size={13} />
+            </button>
+          </div>
+        )}
 
         <ul className="sidebar__folder-list" role="list">
           {folders.map(folder => {
@@ -175,37 +188,40 @@ export default function Sidebar({
             return (
               <li key={folder.folder_id} className="sidebar__folder-item-wrapper">
                 <button
-                  className={`sidebar__item sidebar__item--folder ${isActive ? 'sidebar__item--active' : ''}`}
+                  className={`sidebar__item ${isActive ? 'sidebar__item--active' : ''}`}
                   onClick={() => !isRenaming && handleFolderClick(folder.folder_id)}
+                  title={collapsed ? folder.name : undefined}
                 >
                   <span className="sidebar__item-icon">
                     <FolderIcon iconName={folder.icon} isOpen={isActive} size={16} />
                   </span>
 
-                  {isRenaming ? (
-                    <input
-                      className="sidebar__rename-input"
-                      value={renaming.value}
-                      onChange={e => setRenaming({ id: folder.folder_id, value: e.target.value })}
-                      onBlur={() => handleRenameSubmit(folder.folder_id)}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') handleRenameSubmit(folder.folder_id);
-                        if (e.key === 'Escape') setRenaming(null);
-                      }}
-                      onClick={e => e.stopPropagation()}
-                      autoFocus
-                    />
-                  ) : (
-                    <span className="sidebar__item-name">{folder.name}</span>
+                  {!collapsed && (
+                    isRenaming ? (
+                      <input
+                        className="sidebar__rename-input"
+                        value={renaming.value}
+                        onChange={e => setRenaming({ id: folder.folder_id, value: e.target.value })}
+                        onBlur={() => handleRenameSubmit(folder.folder_id)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') handleRenameSubmit(folder.folder_id);
+                          if (e.key === 'Escape') setRenaming(null);
+                        }}
+                        onClick={e => e.stopPropagation()}
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="sidebar__item-name">{folder.name}</span>
+                    )
                   )}
 
-                  {!isRenaming && (
+                  {!collapsed && !isRenaming && (
                     <span className="sidebar__item-count">{count}</span>
                   )}
                 </button>
 
-                {/* Hover actions — shown via CSS :hover on wrapper */}
-                {!isRenaming && (
+                {/* Hover edit/delete — only in expanded mode */}
+                {!collapsed && !isRenaming && (
                   <div className="sidebar__folder-actions">
                     <button
                       className="sidebar__folder-action-btn"
@@ -236,94 +252,100 @@ export default function Sidebar({
           })}
         </ul>
 
-        {/* New folder button */}
-        <button
-          className="sidebar__new-folder-btn"
-          onClick={() => setShowCreateModal(true)}
-        >
-          <LuPlus size={15} />
-          New folder
-        </button>
+        {/* New folder button — expanded: text, collapsed: just + icon */}
+        {collapsed ? (
+          <button
+            className="sidebar__item"
+            onClick={() => setShowCreateModal(true)}
+            title="New folder"
+          >
+            <span className="sidebar__item-icon"><LuPlus size={16} /></span>
+          </button>
+        ) : (
+          <button
+            className="sidebar__new-folder-btn"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <LuPlus size={14} />
+            New folder
+          </button>
+        )}
       </div>
 
-      {/* ── Spacer ── */}
+      {/* Spacer */}
       <div className="sidebar__spacer" />
 
-      {/* ── Bottom row ── */}
+      {/* ── Bottom: Paramètres + Déconnexion ── */}
       <div className="sidebar__bottom">
-        <div className="sidebar__bottom-row">
-          {/* Theme toggle */}
-          <button
-            className="sidebar__icon-btn"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
+        {/* Theme toggle */}
+        <button
+          className="sidebar__bottom-btn"
+          onClick={toggleTheme}
+          title={isDarkMode ? 'Light mode' : 'Dark mode'}
+          aria-label="Toggle theme"
+        >
+          <span className="sidebar__item-icon">
             {isDarkMode ? <LuSun size={17} /> : <LuMoon size={17} />}
+          </span>
+          {!collapsed && <span>{isDarkMode ? 'Light mode' : 'Dark mode'}</span>}
+        </button>
+
+        {/* Paramètres */}
+        <div ref={settingsRef} className="sidebar__settings-wrapper">
+          <button
+            className="sidebar__bottom-btn"
+            onClick={() => setShowSettings(v => !v)}
+            title="Paramètres"
+            aria-label="Paramètres"
+          >
+            <span className="sidebar__item-icon"><LuSettings size={17} /></span>
+            {!collapsed && <span>Paramètres</span>}
           </button>
 
-          {/* Settings */}
-          <div ref={settingsRef} className="sidebar__settings-wrapper">
-            <button
-              className="sidebar__icon-btn"
-              onClick={() => setShowSettings(v => !v)}
-              aria-label="Settings"
-              title="Settings"
-            >
-              <LuSettings size={17} />
-            </button>
-
-            <AnimatePresence>
-              {showSettings && (
-                <motion.div
-                  className="sidebar__settings-menu"
-                  initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                  transition={{ duration: 0.14 }}
+          <AnimatePresence>
+            {showSettings && (
+              <motion.div
+                className="sidebar__settings-menu"
+                initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                transition={{ duration: 0.14 }}
+              >
+                <button
+                  className="sidebar__settings-item"
+                  onClick={() => { setShowSettings(false); onAddFace(); }}
                 >
-                  <button
-                    className="sidebar__settings-item"
-                    onClick={() => { setShowSettings(false); onAddFace(); }}
-                  >
-                    <LuScanFace size={15} />
-                    Add face
-                  </button>
-                  <button
-                    className="sidebar__settings-item"
-                    onClick={() => { setShowSettings(false); onChangePassword(); }}
-                  >
-                    <LuKeyRound size={15} />
-                    Change password
-                  </button>
-                  <div className="sidebar__settings-divider" />
-                  <button
-                    className="sidebar__settings-item sidebar__settings-item--danger"
-                    onClick={() => { setShowSettings(false); onLogout(); }}
-                  >
-                    <LuLogOut size={15} />
-                    Log out
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* User avatar */}
-          <div className="sidebar__avatar" title={currentUser?.name || ''} aria-label="User">
-            {currentUser?.name
-              ? <span>{userInitials}</span>
-              : <LuUser size={15} />
-            }
-          </div>
+                  <LuScanFace size={15} />
+                  Add face
+                </button>
+                <button
+                  className="sidebar__settings-item"
+                  onClick={() => { setShowSettings(false); onChangePassword(); }}
+                >
+                  <LuKeyRound size={15} />
+                  Change password
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* Déconnexion */}
+        <button
+          className="sidebar__bottom-btn sidebar__bottom-btn--danger"
+          onClick={onLogout}
+          title="Déconnexion"
+          aria-label="Déconnexion"
+        >
+          <span className="sidebar__item-icon"><LuLogOut size={17} /></span>
+          {!collapsed && <span>Déconnexion</span>}
+        </button>
       </div>
     </aside>
   );
 
   return (
     <>
-      {/* Sidebar content */}
       {isMobile ? (
         <AnimatePresence>
           {isOpen && (
@@ -352,7 +374,6 @@ export default function Sidebar({
         isOpen ? sidebarContent : null
       )}
 
-      {/* Create folder modal — rendered outside sidebar so it escapes overflow:hidden */}
       {showCreateModal && (
         <CreateFolderModal
           onClose={() => setShowCreateModal(false)}
@@ -365,4 +386,3 @@ export default function Sidebar({
     </>
   );
 }
-
