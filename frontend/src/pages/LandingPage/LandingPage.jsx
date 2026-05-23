@@ -102,7 +102,10 @@ function Navbar({ onLogin, onSignup }) {
             alt="" aria-hidden="true"
             style={{ height: 32, width: "auto", objectFit: "contain" }}
           />
-          <span className="text-[17px] font-bold text-title tracking-[-0.02em] leading-none" style={{ fontFamily: '"Syne", sans-serif' }}>
+          <span
+            className="text-[17px] font-bold tracking-[-0.02em] leading-none"
+            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? "#f4f4f5" : "#7A35F2" }}
+          >
             PrivyNote
           </span>
         </a>
