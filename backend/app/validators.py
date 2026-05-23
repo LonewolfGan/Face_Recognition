@@ -135,4 +135,5 @@ NOTE_SCHEMA = {
 FOLDER_SCHEMA = {
     'name': {'type': 'string', 'required': True, 'max_length': 100},
     'parent_id': {'type': 'integer', 'required': False},
+    'icon': {'type': 'string', 'required': False, 'max_length': 64},
 }

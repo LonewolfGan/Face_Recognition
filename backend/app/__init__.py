@@ -157,12 +157,19 @@ def _create_schema(conn: sqlite3.Connection) -> None:
         folder_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id TEXT NOT NULL,
         name TEXT NOT NULL,
+        icon TEXT DEFAULT NULL,
         parent_id INTEGER,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(user_id),
         FOREIGN KEY (parent_id) REFERENCES folders(folder_id)
     )
     """)
+    # Migration: add icon column to existing databases
+    try:
+        cursor.execute("ALTER TABLE folders ADD COLUMN icon TEXT DEFAULT NULL")
+        conn.commit()
+    except Exception:
+        pass
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS notes (

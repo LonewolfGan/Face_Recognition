@@ -30,6 +30,7 @@ def create_folder(
     user_id: str,
     name: str,
     parent_id: Optional[int] = None,
+    icon: Optional[str] = None,
 ) -> int:
     """
     Create a new folder for a user.
@@ -39,6 +40,7 @@ def create_folder(
         user_id: Identifier of the owning user.
         name: Folder name.
         parent_id: Optional parent folder ID for nesting.
+        icon: Optional icon name string (e.g. 'LuBookOpen').
 
     Returns:
         The auto-generated folder_id of the created folder.
@@ -50,8 +52,8 @@ def create_folder(
     now = datetime.datetime.now().isoformat()
 
     cursor.execute(
-        "INSERT INTO folders (user_id, name, parent_id, created_at) VALUES (?, ?, ?, ?)",
-        (user_id, name, parent_id, now),
+        "INSERT INTO folders (user_id, name, icon, parent_id, created_at) VALUES (?, ?, ?, ?, ?)",
+        (user_id, name, icon, parent_id, now),
     )
     conn.commit()
     return cursor.lastrowid
@@ -135,6 +137,7 @@ def update_folder(
     user_id: str,
     name: str,
     parent_id: Optional[int] = None,
+    icon: Optional[str] = None,
 ) -> bool:
     """
     Update an existing folder's name and/or parent.
@@ -151,8 +154,8 @@ def update_folder(
     """
     cursor = conn.cursor()
     cursor.execute(
-        "UPDATE folders SET name = ?, parent_id = ? WHERE folder_id = ? AND user_id = ?",
-        (name, parent_id, folder_id, user_id),
+        "UPDATE folders SET name = ?, icon = ?, parent_id = ? WHERE folder_id = ? AND user_id = ?",
+        (name, icon, parent_id, folder_id, user_id),
     )
     conn.commit()
     return cursor.rowcount > 0

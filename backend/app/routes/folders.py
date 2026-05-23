@@ -74,6 +74,7 @@ def create_folder_route():
         # Sanitize name
         name = sanitize_string(data["name"])
         parent_id = data.get("parent_id")
+        icon = data.get("icon") or None
 
         conn = _get_db_connection()
         try:
@@ -85,7 +86,7 @@ def create_folder_route():
                         403, "forbidden", "You do not have access to this resource"
                     )
 
-            folder_id = create_folder(conn, g.user_id, name, parent_id)
+            folder_id = create_folder(conn, g.user_id, name, parent_id, icon)
 
             return jsonify({
                 "status": "success",
@@ -146,6 +147,7 @@ def update_folder_route(folder_id):
             # Sanitize name
             name = sanitize_string(data["name"])
             parent_id = data.get("parent_id")
+            icon = data.get("icon") or None
 
             # If parent_id provided, verify ownership of parent folder
             if parent_id is not None:
@@ -155,7 +157,7 @@ def update_folder_route(folder_id):
                         403, "forbidden", "You do not have access to this resource"
                     )
 
-            success = update_folder(conn, folder_id, g.user_id, name, parent_id)
+            success = update_folder(conn, folder_id, g.user_id, name, parent_id, icon)
             if not success:
                 return _error_response(404, "not_found", "Dossier non trouvé")
 

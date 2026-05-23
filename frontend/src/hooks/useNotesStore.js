@@ -85,13 +85,13 @@ export function useNotesStore() {
     }
   }, [authFetch, toast]);
 
-  const createFolder = useCallback(async (name) => {
+  const createFolder = useCallback(async (name, icon = null) => {
     if (!name.trim()) {
       toast.error('Folder name is required');
       return null;
     }
     try {
-      const res = await authFetch.post('/folders', { name: name.trim() });
+      const res = await authFetch.post('/folders', { name: name.trim(), icon: icon || null });
       if (res.data.status === 'success') {
         toast.success('Folder created');
         await loadFolders();

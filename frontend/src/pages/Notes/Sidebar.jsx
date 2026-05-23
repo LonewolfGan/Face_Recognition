@@ -27,9 +27,19 @@ import {
   LuKeyRound,
   LuX,
 } from 'react-icons/lu';
+import * as LuIcons from 'react-icons/lu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../theme';
+import CreateFolderModal from './CreateFolderModal';
 import './Sidebar.css';
+
+function FolderIcon({ iconName, isOpen, size = 16 }) {
+  if (iconName) {
+    const Comp = LuIcons[iconName];
+    if (Comp) return <Comp size={size} />;
+  }
+  return isOpen ? <LuFolderOpen size={size} /> : <LuFolder size={size} />;
+}
 
 /**
  * @param {Object} props
@@ -70,10 +80,8 @@ export default function Sidebar({
   const [showSettings, setShowSettings] = useState(false);
   const settingsRef = useRef(null);
 
-  // New folder input
-  const [showNewFolder, setShowNewFolder] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
-  const newFolderInputRef = useRef(null);
+  // Create folder modal
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // Rename state: { id, value }
   const [renaming, setRenaming] = useState(null);
@@ -89,23 +97,9 @@ export default function Sidebar({
     return () => document.removeEventListener('mousedown', onOutside);
   }, []);
 
-  // Focus new folder input when shown
-  useEffect(() => {
-    if (showNewFolder) {
-      setTimeout(() => newFolderInputRef.current?.focus(), 50);
-    }
-  }, [showNewFolder]);
-
   // Count notes per folder
   function folderNoteCount(folderId) {
     return notes.filter(n => n.folder_id === folderId).length;
-  }
-
-  function handleCreateFolder() {
-    if (!newFolderName.trim()) return;
-    onCreateFolder(newFolderName.trim());
-    setNewFolderName('');
-    setShowNewFolder(false);
   }
 
   function handleRenameSubmit(id) {
@@ -184,10 +178,9 @@ export default function Sidebar({
                   className={`sidebar__item sidebar__item--folder ${isActive ? 'sidebar__item--active' : ''}`}
                   onClick={() => !isRenaming && handleFolderClick(folder.folder_id)}
                 >
-                  {isActive
-                    ? <LuFolderOpen size={16} className="sidebar__item-icon" />
-                    : <LuFolder size={16} className="sidebar__item-icon" />
-                  }
+                  <span className="sidebar__item-icon">
+                    <FolderIcon iconName={folder.icon} isOpen={isActive} size={16} />
+                  </span>
 
                   {isRenaming ? (
                     <input
@@ -243,38 +236,14 @@ export default function Sidebar({
           })}
         </ul>
 
-        {/* New folder input */}
-        {showNewFolder ? (
-          <div className="sidebar__new-folder-row">
-            <LuFolder size={15} className="sidebar__item-icon" />
-            <input
-              ref={newFolderInputRef}
-              className="sidebar__new-folder-input"
-              value={newFolderName}
-              onChange={e => setNewFolderName(e.target.value)}
-              onBlur={() => {
-                if (newFolderName.trim()) handleCreateFolder();
-                else setShowNewFolder(false);
-              }}
-              onKeyDown={e => {
-                if (e.key === 'Enter') handleCreateFolder();
-                if (e.key === 'Escape') {
-                  setShowNewFolder(false);
-                  setNewFolderName('');
-                }
-              }}
-              placeholder="Folder name"
-            />
-          </div>
-        ) : (
-          <button
-            className="sidebar__new-folder-btn"
-            onClick={() => setShowNewFolder(true)}
-          >
-            <LuPlus size={15} />
-            New folder
-          </button>
-        )}
+        {/* New folder button */}
+        <button
+          className="sidebar__new-folder-btn"
+          onClick={() => setShowCreateModal(true)}
+        >
+          <LuPlus size={15} />
+          New folder
+        </button>
       </div>
 
       {/* ── Spacer ── */}
@@ -352,36 +321,48 @@ export default function Sidebar({
     </aside>
   );
 
-  // Mobile: animate in/out as overlay
-  if (isMobile) {
-    return (
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              className="sidebar__backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              onClick={onClose}
-            />
-            <motion.div
-              variants={sidebarVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              style={{ position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 200 }}
-            >
-              {sidebarContent}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    );
-  }
+  return (
+    <>
+      {/* Sidebar content */}
+      {isMobile ? (
+        <AnimatePresence>
+          {isOpen && (
+            <>
+              <motion.div
+                className="sidebar__backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                onClick={onClose}
+              />
+              <motion.div
+                variants={sidebarVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{ position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 200 }}
+              >
+                {sidebarContent}
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      ) : (
+        isOpen ? sidebarContent : null
+      )}
 
-  // Desktop: always visible, no animation
-  return isOpen ? sidebarContent : null;
+      {/* Create folder modal — rendered outside sidebar so it escapes overflow:hidden */}
+      {showCreateModal && (
+        <CreateFolderModal
+          onClose={() => setShowCreateModal(false)}
+          onCreate={async (name, icon) => {
+            await onCreateFolder(name, icon);
+            setShowCreateModal(false);
+          }}
+        />
+      )}
+    </>
+  );
 }
+
