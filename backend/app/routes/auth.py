@@ -35,6 +35,7 @@ from ..validators import (
     validate_request,
 )
 from ..models.user import create_user, get_user_by_face_id, get_user_by_id
+from ..services.face_service import FaceNotFoundError, FaceProcessingError
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -131,6 +132,16 @@ def register():
                          getattr(current_app, 'embedding_store', 'MISSING'),
                          current_app.config.get('FACE_SERVICE', 'MISSING'))
             return _error_response(500, "internal_error", "Face service not available")
+
+        # Reject registration if this face is already registered to another account
+        try:
+            existing_face_id, _ = face_service.recognize_best(data["images"])
+            if existing_face_id:
+                logger.warning("Registration blocked: face already registered as face_id=%s", existing_face_id)
+                return _error_response(409, "face_already_registered",
+                    "Un compte avec ce visage existe déjà. Connectez-vous plutôt.")
+        except (FaceNotFoundError, FaceProcessingError):
+            pass  # No existing match — safe to proceed
 
         try:
             face_id, _ = face_service.add_face(name, data["images"])

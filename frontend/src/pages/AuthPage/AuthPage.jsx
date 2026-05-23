@@ -90,7 +90,7 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="absolute top-4 right-4 w-7 h-7 inline-flex items-center justify-center rounded-lg text-muted-token hover:text-title hover:bg-section-alt transition-colors duration-150"
+                className="absolute top-4 right-4 w-7 h-7 inline-flex items-center justify-center rounded-lg text-muted-token hover:text-title hover:bg-section-alt transition-colors duration-150 cursor-pointer"
               >
                 <LuX className="w-4 h-4" />
               </button>
@@ -562,7 +562,16 @@ export default function AuthPage() {
                     navigate("/notes");
                   }
                 } catch (err) {
-                  toast.error("Erreur lors de l'inscription: " + err.message);
+                  const errorCode = err.response?.data?.error || "";
+                  const msg = err.response?.data?.message || err.message;
+                  if (errorCode === "face_already_registered") {
+                    toast.error("Ce visage est déjà enregistré. Connectez-vous plutôt.");
+                    setShowCapture(false);
+                    setIsLogin(true);
+                    navigate("/login");
+                  } else {
+                    toast.error("Erreur lors de l'inscription: " + msg);
+                  }
                   setProcessingSignup(false);
                   setShowCapture(false);
                 }
@@ -603,9 +612,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (!loginSuccess) return;
-    setLoading(false);
-    const t = setTimeout(() => navigate("/notes"), 1500);
-    return () => clearTimeout(t);
+    navigate("/notes");
   }, [loginSuccess, navigate]);
 
   const handleTabSwitch = (toLogin) => {
@@ -675,7 +682,7 @@ export default function AuthPage() {
         <div className="relative z-10 flex-1 flex items-center justify-center px-8 py-8">
           <div className="w-full max-w-[420px]" style={{ perspective: "1200px" }}>
             <AnimatePresence mode="wait" custom={flipDirection}>
-              {isAuthenticated ? (
+              {isAuthenticated && !loginSuccess ? (
                 <motion.div
                   key="already-in"
                   initial={{ opacity: 0, y: 16 }}
