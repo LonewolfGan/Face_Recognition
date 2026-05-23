@@ -260,7 +260,6 @@ function BrandPanel({ isDarkMode }) {
         background: isDarkMode
           ? "linear-gradient(145deg, #0f0620 0%, #1A0D30 50%, #130825 100%)"
           : "linear-gradient(145deg, #f5f0ff 0%, #ede8ff 50%, #e8f0ff 100%)",
-        borderRight: isDarkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(122,53,242,0.1)",
       }}
     >
       {/* Radial glow */}
