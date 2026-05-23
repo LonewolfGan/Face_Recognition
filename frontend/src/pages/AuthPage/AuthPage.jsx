@@ -364,62 +364,53 @@ function BrandPanel({ isDarkMode }) {
   );
 }
 
-/* ─── Tab buttons (no pill — flip handles the transition) ──────────── */
+/* ─── Tab buttons (box style — one filled, one not) ───────────────── */
 function TabBar({ isLogin, onLogin, onSignup }) {
-  const activeStyle = { color: "#7A35F2", borderBottomColor: "#7A35F2" };
-  const inactiveStyle = { borderBottomColor: "transparent" };
   return (
-    <div className="flex border-b border-neutral">
-      {[
-        { label: "Connexion",  active: isLogin,  onClick: onLogin },
-        { label: "Inscription", active: !isLogin, onClick: onSignup },
-      ].map(({ label, active, onClick }) => (
-        <button
-          key={label}
-          type="button"
-          onClick={onClick}
-          className="flex-1 h-10 text-[14px] font-semibold transition-all duration-200 border-b-2"
-          style={active ? activeStyle : { ...inactiveStyle, color: "var(--color-muted, #888)" }}
-        >
-          {label}
-        </button>
-      ))}
+    <div className="grid grid-cols-2 p-1 rounded-xl bg-section-alt border border-neutral gap-1">
+      <button
+        type="button"
+        onClick={onLogin}
+        className={cn(
+          "h-9 text-[14px] font-semibold rounded-lg transition-all duration-200",
+          isLogin ? "bg-tech-violet text-zinc-50 shadow-sm" : "text-muted-token hover:text-title"
+        )}
+      >
+        Connexion
+      </button>
+      <button
+        type="button"
+        onClick={onSignup}
+        className={cn(
+          "h-9 text-[14px] font-semibold rounded-lg transition-all duration-200",
+          !isLogin ? "bg-tech-violet text-zinc-50 shadow-sm" : "text-muted-token hover:text-title"
+        )}
+      >
+        Inscription
+      </button>
     </div>
   );
 }
 
-/* ─── 3D flip variants ─────────────────────────────────────────────── */
+/* ─── 3D flip variants (direction-aware via custom prop) ───────────── */
 const flipVariants = {
-  enterFromRight: {
-    rotateY: 90,
+  enter: (dir) => ({
+    rotateY: dir > 0 ? 90 : -90,
     opacity: 0,
     scale: 0.96,
-    transition: { duration: 0 },
-  },
-  enterFromLeft: {
-    rotateY: -90,
-    opacity: 0,
-    scale: 0.96,
-    transition: { duration: 0 },
-  },
+  }),
   center: {
     rotateY: 0,
     opacity: 1,
     scale: 1,
     transition: { duration: 0.48, ease: EASE },
   },
-  exitToLeft: {
-    rotateY: -90,
+  exit: (dir) => ({
+    rotateY: dir > 0 ? -90 : 90,
     opacity: 0,
     scale: 0.96,
     transition: { duration: 0.32, ease: [0.4, 0, 1, 1] },
-  },
-  exitToRight: {
-    rotateY: 90,
-    opacity: 0,
-    scale: 0.96,
-    transition: { duration: 0.32, ease: [0.4, 0, 1, 1] },
-  },
+  }),
 };
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -650,7 +641,7 @@ export default function AuthPage() {
           aria-hidden="true"
           loading="eager"
           className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover z-0"
-          style={{ opacity: isDarkMode ? 0.18 : 0.12, filter: "saturate(0.7)" }}
+          style={{ opacity: isDarkMode ? 0.22 : 0.32, filter: "saturate(0.6)" }}
         />
         {/* Subtle grid */}
         <div
@@ -711,10 +702,10 @@ export default function AuthPage() {
                 <motion.div
                   key="login"
                   custom={flipDirection}
-                  initial={flipDirection > 0 ? "enterFromLeft" : "enterFromRight"}
-                  animate="center"
-                  exit={flipDirection > 0 ? "exitToRight" : "exitToLeft"}
                   variants={flipVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
                   style={{ transformStyle: "preserve-3d", transformOrigin: "center center" }}
                 >
                   <LoginForm
@@ -739,10 +730,10 @@ export default function AuthPage() {
                 <motion.div
                   key="signup"
                   custom={flipDirection}
-                  initial={flipDirection > 0 ? "enterFromRight" : "enterFromLeft"}
-                  animate="center"
-                  exit={flipDirection > 0 ? "exitToLeft" : "exitToRight"}
                   variants={flipVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
                   style={{ transformStyle: "preserve-3d", transformOrigin: "center center" }}
                 >
                   <SignupForm
