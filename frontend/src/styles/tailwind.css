@@ -269,6 +269,18 @@ body.dark {
   }
 }
 
+/* ─── Footer always-dark — outside any layer, beats everything ──────── */
+.footer-dark {
+  background-color: #1A0D30 !important;
+  background-image: none;
+  --page-bg:        #1A0D30;
+  --text-title:     #f4f4f5;
+  --text-body:      rgba(244, 244, 245, 0.85);
+  --text-muted:     #a1a1aa;
+  --border-neutral: rgba(155, 112, 229, 0.15);
+  color: rgba(244, 244, 245, 0.75);
+}
+
 /* ─── Reduced motion fallbacks ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,

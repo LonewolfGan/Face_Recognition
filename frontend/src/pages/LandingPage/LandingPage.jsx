@@ -43,7 +43,7 @@ const cardReveal = (i) => ({
   transition: { duration: 0.5, delay: i * 0.08, ease: EASE },
 });
 
-export const fadeInUp = {
+const fadeInUp = {
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
@@ -660,7 +660,10 @@ function Footer() {
   ];
 
   return (
-    <footer className="footer-dark relative overflow-hidden">
+    <footer
+      className="footer-dark relative overflow-hidden"
+      style={{ backgroundColor: "#1A0D30", background: "#1A0D30", color: "rgba(244,244,245,0.75)" }}
+    >
       {/* Subtle top glow */}
       <div
         aria-hidden="true"
