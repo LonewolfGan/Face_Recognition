@@ -86,7 +86,14 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-[400px]"
           >
-            <div className="surface-card border border-neutral rounded-2xl p-7 flex flex-col gap-5">
+            <div className="surface-card border border-neutral rounded-2xl p-7 flex flex-col gap-5 relative">
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute top-4 right-4 w-7 h-7 inline-flex items-center justify-center rounded-lg text-muted-token hover:text-title hover:bg-section-alt transition-colors duration-150"
+              >
+                <LuX className="w-4 h-4" />
+              </button>
               <div className="flex items-start gap-3">
                 {Icon && (
                   <span className="w-10 h-10 inline-flex items-center justify-center rounded-xl shrink-0"
@@ -94,7 +101,7 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
                     <Icon className="w-5 h-5" />
                   </span>
                 )}
-                <h3 className="text-[17px] font-bold text-title m-0 mt-1 leading-snug">{title}</h3>
+                <h3 className="text-[17px] font-bold text-title m-0 mt-1 leading-snug pr-6">{title}</h3>
               </div>
               <p className="text-[14px] leading-relaxed text-body m-0">{children}</p>
               <div className="flex gap-2.5 mt-1">{actions}</div>
@@ -174,7 +181,7 @@ function ScanRing({ active, success }) {
         <motion.span
           key={i}
           className="absolute rounded-full border"
-          style={{ borderColor: "rgba(20,200,140,0.45)" }}
+          style={{ borderColor: "rgba(122,53,242,0.45)" }}
           initial={{ width: 160, height: 160, opacity: 0.7 }}
           animate={{ width: 220 + i * 30, height: 220 + i * 30, opacity: 0 }}
           transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.4, ease: "easeOut" }}
@@ -186,7 +193,7 @@ function ScanRing({ active, success }) {
 
 /* ─── CameraFrame ──────────────────────────────────────────────────── */
 function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
-  const borderColor = success ? "rgba(20,200,140,0.9)" : "rgba(122,53,242,0.8)";
+  const borderColor = success ? "rgba(122,53,242,0.9)" : "rgba(122,53,242,0.8)";
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <ScanRing active={showScan} success={success} />
@@ -198,9 +205,7 @@ function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
           border: `2.5px solid ${borderColor}`,
           background: "var(--color-section-alt, #f5f3ff)",
           transition: "border-color 0.4s ease",
-          boxShadow: success
-            ? "0 0 24px rgba(20,200,140,0.25)"
-            : "0 0 24px rgba(122,53,242,0.18)",
+          boxShadow: "0 0 24px rgba(122,53,242,0.22)",
         }}
       >
         <video
@@ -210,7 +215,7 @@ function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
           className={cn("absolute inset-0 w-full h-full object-cover", success && "hidden")}
         />
         {success && (
-          <div className="absolute inset-0 flex items-center justify-center" style={{ color: "rgba(20,200,140,1)" }}>
+          <div className="absolute inset-0 flex items-center justify-center" style={{ color: "#7A35F2" }}>
             <IoCheckmarkDoneCircleOutline size={size * 0.52} />
           </div>
         )}
@@ -861,7 +866,7 @@ function LoginForm({
             />
             <p className="text-[13.5px] text-muted-token text-center m-0 font-medium">
               {loginSuccess ? (
-                <span className="flex items-center gap-1.5" style={{ color: "rgba(20,200,140,1)" }}>
+                <span className="flex items-center gap-1.5" style={{ color: "#7A35F2" }}>
                   <LuCheck className="w-4 h-4" /> Connexion reussie — redirection...
                 </span>
               ) : "Restez immobile, analyse en cours..."}
@@ -994,46 +999,24 @@ function SignupForm({
               success={success}
               size={176}
             />
-            <div className="w-full">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[12px] font-medium text-muted-token">
-                  {processingSignup ? "Analyse biometrique..." : success ? "Termine" : "Captures effectuees"}
-                </span>
-                <span className="text-[12px] font-semibold" style={{ color: "#7A35F2" }}>
-                  {processingSignup ? "..." : `${captureProgress} / 5`}
-                </span>
-              </div>
-              <div className="w-full h-1.5 rounded-full bg-section-alt overflow-hidden">
+            <div className="w-full flex flex-col gap-2.5">
+              <div className="w-full h-1 rounded-full bg-section-alt overflow-hidden">
                 <motion.div
                   animate={{ width: processingSignup ? "100%" : `${(captureProgress / 5) * 100}%` }}
-                  transition={{ duration: 0.4, ease: EASE }}
+                  transition={{ duration: 0.5, ease: EASE }}
                   className="h-full rounded-full"
-                  style={{ background: success ? "rgba(20,200,140,1)" : "#7A35F2" }}
+                  style={{ background: "#7A35F2" }}
                 />
               </div>
+              <p className="text-[13px] text-center text-muted-token m-0">
+                {processingSignup
+                  ? <span className="inline-flex items-center gap-2"><Spinner /> Enregistrement en cours...</span>
+                  : success
+                    ? <span style={{ color: "#7A35F2" }}>Terminé</span>
+                    : "Restez face à la caméra"
+                }
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <motion.span
-                  key={n}
-                  animate={{
-                    scale: captureProgress >= n ? 1 : 0.6,
-                    opacity: captureProgress >= n ? 1 : 0.25,
-                    backgroundColor: captureProgress >= n ? "rgba(20,200,140,1)" : "rgba(122,53,242,0.5)",
-                  }}
-                  transition={{ duration: 0.25, ease: EASE }}
-                  className="w-2 h-2 rounded-full inline-block"
-                />
-              ))}
-            </div>
-            <AnimatePresence mode="wait">
-              {processingSignup && (
-                <motion.p key="proc" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="text-[13px] flex items-center gap-2 text-muted-token m-0">
-                  <Spinner /> Enregistrement de votre signature biometrique...
-                </motion.p>
-              )}
-            </AnimatePresence>
           </motion.div>
         ) : (
           <motion.form
