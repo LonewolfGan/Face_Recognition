@@ -674,7 +674,7 @@ function Footer() {
 
   return (
     <footer
-      style={{ background: "#1A0D30" }}
+      style={{ background: "#1A0D30", color: "rgba(244,244,245,0.7)" }}
       className="relative overflow-hidden"
     >
       {/* Subtle top glow */}
@@ -714,16 +714,6 @@ function Footer() {
               Toujours locales, jamais compromises.
             </p>
 
-            {/* Security badge */}
-            <div
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg w-fit"
-              style={{ background: "rgba(122,53,242,0.15)", border: "1px solid rgba(155,112,229,0.2)" }}
-            >
-              <LuShieldCheck className="w-3.5 h-3.5 shrink-0" style={{ color: "#9B70E5" }} />
-              <span className="text-[12px] font-medium" style={{ color: "#9B70E5" }}>
-                Architecture zéro-confiance
-              </span>
-            </div>
           </div>
 
           {/* Link columns */}
