@@ -264,6 +264,105 @@ function Hero({ onSignup, onLogin }) {
   );
 }
 
+/* ─── Why PrivyNote — honest comparison section ─────────────────────── */
+function WhyPrivyNote() {
+  const rows = [
+    {
+      label: "Accès à vos notes",
+      before: "Mot de passe à retenir et à protéger",
+      after:  "Votre visage — toujours avec vous",
+    },
+    {
+      label: "Où vos données sont stockées",
+      before: "Serveurs d'un tiers, quelque part",
+      after:  "Votre appareil, nulle part ailleurs",
+    },
+    {
+      label: "Qui peut techniquement lire vos notes",
+      before: "Vous… et l'éditeur de l'appli",
+      after:  "Vous seul, sans aucune exception",
+    },
+    {
+      label: "En cas de fuite de données",
+      before: "Vos notes sont exposées",
+      after:  "Rien à exposer : tout est local",
+    },
+    {
+      label: "Sans connexion internet",
+      before: "Fonctionnalités souvent limitées",
+      after:  "100 % disponible hors-ligne",
+    },
+  ];
+
+  return (
+    <section className="bg-section-alt py-20 px-6">
+      <div className="max-w-[860px] mx-auto">
+        <motion.div
+          {...sectionTitle}
+          className="text-center mb-10 flex flex-col items-center gap-2"
+        >
+          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-spicy-paprika">
+            Pourquoi PrivyNote
+          </span>
+          <h2
+            className="text-[clamp(1.5rem,3vw,2.1rem)] font-bold tracking-[-0.02em] leading-[1.15] text-title m-0"
+            style={{ fontFamily: '"Syne", sans-serif' }}
+          >
+            Ce qui change vraiment
+          </h2>
+        </motion.div>
+
+        {/* Header row */}
+        <motion.div
+          {...sectionTitle}
+          transition={{ ...sectionTitle.transition, delay: 0.08 }}
+          className="grid grid-cols-[1fr_1fr_1fr] gap-0 mb-1 px-4"
+        >
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-token" />
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-token text-center pb-2">
+            Notes classiques
+          </span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-tech-violet dark:text-biometric-glow text-center pb-2">
+            PrivyNote
+          </span>
+        </motion.div>
+
+        {/* Comparison rows */}
+        <div className="rounded-xl border border-neutral overflow-hidden" style={{ background: "var(--surface-card)" }}>
+          {rows.map((row, i) => (
+            <motion.div
+              key={row.label}
+              {...cardReveal(i)}
+              className={`grid grid-cols-[1fr_1fr_1fr] gap-0 ${i < rows.length - 1 ? "border-b border-neutral" : ""}`}
+            >
+              {/* Label */}
+              <div className="px-5 py-4 flex items-center border-r border-neutral">
+                <span className="text-[13px] font-medium text-title leading-[1.5]">{row.label}</span>
+              </div>
+              {/* Before */}
+              <div className="px-5 py-4 flex items-center gap-2.5 border-r border-neutral">
+                <span className="w-4 h-4 rounded-full border border-neutral inline-flex items-center justify-center shrink-0">
+                  <span className="w-1.5 h-[1.5px] bg-muted-token block" />
+                </span>
+                <span className="text-[13px] text-muted-token leading-[1.5]">{row.before}</span>
+              </div>
+              {/* After */}
+              <div className="px-5 py-4 flex items-center gap-2.5 bg-tech-violet/[0.04] dark:bg-biometric-glow/[0.04]">
+                <span className="w-4 h-4 rounded-full bg-tech-violet/15 inline-flex items-center justify-center shrink-0">
+                  <svg width="8" height="6" viewBox="0 0 8 6" fill="none" aria-hidden="true">
+                    <path d="M1 3l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-tech-violet dark:text-biometric-glow" style={{color:"inherit"}}/>
+                  </svg>
+                </span>
+                <span className="text-[13px] font-medium text-title leading-[1.5]">{row.after}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Section Head ───────────────────────────────────────────────────── */
 function SectionHead({ eyebrow, title, sub }) {
   return (
@@ -547,90 +646,143 @@ function FinalCTA({ onSignup }) {
 }
 
 /* ─── Footer ─────────────────────────────────────────────────────────── */
-function FooterSocial({ href, label, children }) {
-  return (
-    <a
-      href={href}
-      aria-label={label}
-      className="w-9 h-9 inline-flex items-center justify-center rounded-md border border-neutral text-body hover:text-tech-violet dark:hover:text-biometric-glow hover:border-tech-violet dark:hover:border-biometric-glow transition-all duration-200"
-    >
-      {React.cloneElement(children, { className: "w-4 h-4" })}
-    </a>
-  );
-}
-
 function Footer() {
-  const { isDarkMode } = useTheme();
-
   const cols = [
     {
       title: "Produit",
       links: [
-        { label: "Fonctionnalités", href: "#features" },
-        { label: "Sécurité",        href: "#security" },
-        { label: "Comment ça marche", href: "#how" },
+        { label: "Fonctionnalités",    href: "#features" },
+        { label: "Sécurité",           href: "#security" },
+        { label: "Comment ça marche",  href: "#how" },
+        { label: "Témoignages",        href: "#testimonials" },
       ],
     },
     {
       title: "Légal",
       links: [
-        { label: "Confidentialité", href: "#" },
+        { label: "Confidentialité",         href: "#" },
         { label: "Conditions d'utilisation", href: "#" },
       ],
     },
   ];
 
+  const socials = [
+    { label: "GitHub",   href: "#", icon: <LuGithub /> },
+    { label: "Twitter",  href: "#", icon: <LuTwitter /> },
+    { label: "LinkedIn", href: "#", icon: <LuLinkedin /> },
+  ];
+
   return (
-    <footer className="bg-vault border-t border-neutral px-6 pt-14 pb-7">
-      <div className="max-w-[1180px] mx-auto grid sm:grid-cols-[1fr_auto_auto] gap-10 pb-10 border-b border-neutral items-start">
-        {/* Brand */}
-        <div className="flex flex-col gap-3 max-w-[260px]">
-          <a href="#top" className="inline-flex items-center gap-2.5" aria-label="PrivyNote — accueil">
-            <img
-              src={isDarkMode ? "/logodark.png" : "/logolight.png"}
-              alt="" aria-hidden="true"
-              style={{ height: 28, width: "auto", objectFit: "contain" }}
-            />
-            <span className="text-[16px] font-bold text-title tracking-[-0.02em]" style={{ fontFamily: '"Syne", sans-serif' }}>
-              PrivyNote
-            </span>
-          </a>
-          <p className="text-[14px] leading-[1.7] text-muted-token m-0">
-            Vos notes, protégées par votre visage.
-            Toujours locales, jamais compromises.
-          </p>
+    <footer
+      style={{ background: "#1A0D30" }}
+      className="relative overflow-hidden"
+    >
+      {/* Subtle top glow */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px pointer-events-none"
+        style={{ background: "linear-gradient(to right, transparent, rgba(155,112,229,0.5), transparent)" }}
+      />
+      {/* Background radial */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[320px] pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at center, rgba(122,53,242,0.07) 0%, transparent 70%)" }}
+      />
+
+      <div className="relative max-w-[1180px] mx-auto px-6 pt-14 pb-8">
+        {/* Main grid */}
+        <div className="grid sm:grid-cols-[1.6fr_1fr_1fr] gap-10 pb-10 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+          {/* Brand block */}
+          <div className="flex flex-col gap-5">
+            <a href="#top" className="inline-flex items-center gap-2.5 w-fit" aria-label="PrivyNote — accueil">
+              <img
+                src="/logodark.png"
+                alt="" aria-hidden="true"
+                style={{ height: 30, width: "auto", objectFit: "contain" }}
+              />
+              <span
+                className="text-[18px] font-bold tracking-[-0.02em] leading-none"
+                style={{ fontFamily: '"Syne", sans-serif', color: "#f4f4f5" }}
+              >
+                PrivyNote
+              </span>
+            </a>
+
+            <p className="text-[14px] leading-[1.75] m-0 max-w-[240px]" style={{ color: "rgba(209,188,249,0.6)" }}>
+              Vos notes, protégées par votre visage.
+              Toujours locales, jamais compromises.
+            </p>
+
+            {/* Security badge */}
+            <div
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg w-fit"
+              style={{ background: "rgba(122,53,242,0.15)", border: "1px solid rgba(155,112,229,0.2)" }}
+            >
+              <LuShieldCheck className="w-3.5 h-3.5 shrink-0" style={{ color: "#9B70E5" }} />
+              <span className="text-[12px] font-medium" style={{ color: "#9B70E5" }}>
+                Architecture zéro-confiance
+              </span>
+            </div>
+          </div>
+
+          {/* Link columns */}
+          {cols.map((c) => (
+            <div key={c.title}>
+              <h4
+                className="text-[11px] uppercase tracking-[0.14em] font-semibold mb-4 m-0"
+                style={{ color: "rgba(244,244,245,0.4)" }}
+              >
+                {c.title}
+              </h4>
+              <ul className="list-none m-0 p-0 flex flex-col gap-3">
+                {c.links.map((l) => (
+                  <li key={l.label}>
+                    <a
+                      href={l.href}
+                      className="text-[14px] no-underline transition-colors duration-200"
+                      style={{ color: "rgba(209,188,249,0.65)" }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = "#D1BCF9"}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "rgba(209,188,249,0.65)"}
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Link columns */}
-        {cols.map((c) => (
-          <div key={c.title}>
-            <h4 className="text-[12px] uppercase tracking-[0.12em] text-title font-semibold mb-3.5 m-0">
-              {c.title}
-            </h4>
-            <ul className="list-none m-0 p-0 flex flex-col gap-2.5">
-              {c.links.map((l) => (
-                <li key={l.label}>
-                  <a
-                    href={l.href}
-                    className="text-[14px] text-body no-underline hover:text-tech-violet dark:hover:text-biometric-glow transition-colors duration-200"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+        {/* Bottom bar */}
+        <div className="pt-7 flex flex-wrap items-center justify-between gap-4">
+          <span className="text-[13px]" style={{ color: "rgba(244,244,245,0.3)" }}>
+            © {new Date().getFullYear()} PrivyNote — Tous droits réservés.
+          </span>
 
-      <div className="max-w-[1180px] mx-auto pt-6 flex flex-wrap items-center justify-between gap-4">
-        <span className="text-[13px] text-muted-token">
-          © {new Date().getFullYear()} PrivyNote — Tous droits réservés.
-        </span>
-        <div aria-label="Réseaux sociaux" className="flex gap-2">
-          <FooterSocial label="GitHub" href="#"><LuGithub /></FooterSocial>
-          <FooterSocial label="Twitter" href="#"><LuTwitter /></FooterSocial>
-          <FooterSocial label="LinkedIn" href="#"><LuLinkedin /></FooterSocial>
+          <div aria-label="Réseaux sociaux" className="flex gap-2">
+            {socials.map(({ label, href, icon }) => (
+              <a
+                key={label}
+                href={href}
+                aria-label={label}
+                className="w-8 h-8 inline-flex items-center justify-center rounded-md transition-all duration-200"
+                style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(209,188,249,0.5)" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#9B70E5";
+                  e.currentTarget.style.borderColor = "rgba(155,112,229,0.4)";
+                  e.currentTarget.style.background = "rgba(122,53,242,0.12)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "rgba(209,188,249,0.5)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                {React.cloneElement(icon, { className: "w-3.5 h-3.5" })}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
@@ -648,6 +800,7 @@ function LandingPage() {
       <Navbar onLogin={onLogin} onSignup={onSignup} />
       <main className="bg-page">
         <Hero onSignup={onSignup} onLogin={onLogin} />
+        <WhyPrivyNote />
         <Features />
         <HowItWorks />
         <Security />
