@@ -354,12 +354,6 @@ function BrandPanel({ isDarkMode }) {
         </div>
       </div>
 
-      <div className="relative z-10">
-        <p className="text-[12px] m-0"
-          style={{ color: isDarkMode ? "rgba(244,244,245,0.2)" : "rgba(80,50,130,0.35)" }}>
-          {new Date().getFullYear()} PrivyNote
-        </p>
-      </div>
     </div>
   );
 }
@@ -1079,17 +1073,6 @@ function SignupForm({
         )}
       </AnimatePresence>
 
-      <p className="text-center text-[13px] text-muted-token m-0">
-        Deja un compte ?{" "}
-        <button
-          type="button"
-          onClick={onSwitchToLogin}
-          className="font-semibold transition-colors duration-200 hover:underline"
-          style={{ color: "#7A35F2" }}
-        >
-          Se connecter
-        </button>
-      </p>
     </div>
   );
 }
