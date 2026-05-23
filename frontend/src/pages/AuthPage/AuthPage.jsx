@@ -393,68 +393,59 @@ export default function AuthPage() {
         Retour
       </a>
 
-      {/* Auth card — centered, 3D flip */}
-      <div
-        className="relative z-10 w-[420px] max-w-[95vw]"
-        style={{ perspective: "1600px" }}
-      >
-        <motion.div
-          animate={{ rotateY: isLogin ? 0 : 180 }}
-          transition={{ duration: 0.7, ease: EASE }}
-          style={{ transformStyle: "preserve-3d" }}
-          className="relative w-full"
-        >
-          {/* FRONT — Login */}
-          <div
-            className="w-full"
-            style={{
-              backfaceVisibility: "hidden",
-              WebkitBackfaceVisibility: "hidden",
-            }}
-          >
-            <LoginPanel
-              loading={loading}
-              showCamera={showCamera}
-              loginSuccess={loginSuccess}
-              showPasswordForm={showPasswordForm}
-              password={password}
-              setPassword={setPassword}
-              error={error}
-              setError={setError}
-              setShowPasswordForm={setShowPasswordForm}
-              handleFaceLogin={handleFaceLogin}
-              handlePasswordLogin={handlePasswordLogin}
-              videoRef={videoRef}
-              canvasRef={canvasRef}
-              onSwitchToSignup={() => handleTabSwitch(false)}
-            />
-          </div>
-
-          {/* BACK — Signup */}
-          <div
-            className="absolute inset-0 w-full"
-            style={{
-              backfaceVisibility: "hidden",
-              WebkitBackfaceVisibility: "hidden",
-              transform: "rotateY(180deg)",
-            }}
-          >
-            <SignupPanel
-              loading={loading}
-              name={name}
-              setName={setName}
-              signupPassword={signupPassword}
-              setSignupPassword={setSignupPassword}
-              showCapture={showCapture}
-              captureProgress={captureProgress}
-              success={success}
-              videoRef={videoRef}
-              canvasRef={canvasRef}
-              handleFullSignup={handleFullSignup}
-              onSwitchToLogin={() => handleTabSwitch(true)}
-            />
-          </div>
-        </motion.div>
+      {/* Auth card — slide transition */}
+      <div className="relative z-10 w-[420px] max-w-[95vw]">
+        <AnimatePresence mode="wait">
+          {isLogin ? (
+            <motion.div
+              key="login"
+              initial={{ opacity: 0, x: -24 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -24 }}
+              transition={{ duration: 0.28, ease: EASE }}
+            >
+              <LoginPanel
+                loading={loading}
+                showCamera={showCamera}
+                loginSuccess={loginSuccess}
+                showPasswordForm={showPasswordForm}
+                password={password}
+                setPassword={setPassword}
+                error={error}
+                setError={setError}
+                setShowPasswordForm={setShowPasswordForm}
+                handleFaceLogin={handleFaceLogin}
+                handlePasswordLogin={handlePasswordLogin}
+                videoRef={videoRef}
+                canvasRef={canvasRef}
+                onSwitchToSignup={() => handleTabSwitch(false)}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="signup"
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 24 }}
+              transition={{ duration: 0.28, ease: EASE }}
+            >
+              <SignupPanel
+                loading={loading}
+                name={name}
+                setName={setName}
+                signupPassword={signupPassword}
+                setSignupPassword={setSignupPassword}
+                showCapture={showCapture}
+                captureProgress={captureProgress}
+                success={success}
+                videoRef={videoRef}
+                canvasRef={canvasRef}
+                handleFullSignup={handleFullSignup}
+                onSwitchToLogin={() => handleTabSwitch(true)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Modals */}

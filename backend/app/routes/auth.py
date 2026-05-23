@@ -81,13 +81,16 @@ def _log_auth_failure(failure_type: str, endpoint: str) -> None:
 
 def _set_refresh_cookie(response, refresh_token: str):
     """Set the refresh_token as an httpOnly secure cookie on the response."""
+    import os
+    is_prod = os.getenv("FLASK_ENV", "development") == "production"
     response.set_cookie(
         "refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=True,
-        samesite="Strict",
+        secure=is_prod,
+        samesite="Lax",
         max_age=604800,
+        path="/",
     )
     return response
 
