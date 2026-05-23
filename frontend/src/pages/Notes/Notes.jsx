@@ -306,7 +306,7 @@ export default function Notes() {
               {/* Greeting header */}
               <div className="notes-greeting">
                 <h1 className="notes-greeting__text">
-                  {getGreeting()}, {currentUser?.name?.split(' ')[0] || 'there'} 👋
+                  {getGreeting()}, {currentUser?.name?.split(' ')[0] || 'there'}
                 </h1>
               </div>
 
