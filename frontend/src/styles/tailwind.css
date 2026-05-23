@@ -198,10 +198,20 @@ body.dark {
     --text-muted: #a1a1aa;
   }
 
-  /* ── Footer — suit le mode courant ───────────────────────────────── */
+  /* ── Footer — always dark, independent of theme ─────────────────── */
   .bg-vault {
     background-color: var(--page-bg);
     color: var(--text-title);
+  }
+
+  .footer-dark {
+    background: #1A0D30 !important;
+    --page-bg:      #1A0D30;
+    --text-title:   #f4f4f5;
+    --text-body:    rgba(244, 244, 245, 0.85);
+    --text-muted:   #a1a1aa;
+    --border-neutral: rgba(155, 112, 229, 0.15);
+    color: rgba(244, 244, 245, 0.75);
   }
 
   /* ── Navbar scroll-aware ─────────────────────────────────────────── */

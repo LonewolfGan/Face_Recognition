@@ -186,19 +186,6 @@ function Hero({ onSignup, onLogin }) {
       />
 
       <div className="relative z-1 w-full max-w-[860px] mx-auto px-6 flex flex-col items-center text-center gap-7">
-        {/* Eyebrow chip */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-neutral bg-white/60 dark:bg-vault/40"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-tech-violet" />
-          <span className="text-[12px] font-semibold tracking-[0.1em] uppercase text-muted-token">
-            Reconnaissance faciale · Chiffrement local
-          </span>
-        </motion.div>
-
         {/* Headline */}
         <h1
           className="font-extrabold tracking-[-0.035em] leading-[1.06] text-[clamp(2.75rem,7vw,5.5rem)] text-title m-0 text-balance"
@@ -673,10 +660,7 @@ function Footer() {
   ];
 
   return (
-    <footer
-      style={{ background: "#1A0D30", color: "rgba(244,244,245,0.7)" }}
-      className="relative overflow-hidden"
-    >
+    <footer className="footer-dark relative overflow-hidden">
       {/* Subtle top glow */}
       <div
         aria-hidden="true"
