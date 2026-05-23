@@ -1,11 +1,11 @@
-modules = ["python-3.12", "nodejs-20", "web", "bash"]
+modules = ["nodejs-20", "web", "bash", "python-3.11"]
 [agent]
 expertMode = true
-stack = "BEST_EFFORT_FALLBACK"
+stack = "FLASK_VANILLA_JS"
 
 [nix]
 channel = "stable-25_05"
-packages = ["cargo", "freetype", "lcms2", "libiconv", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "rustc", "tcl", "tk", "zlib"]
+packages = ["cargo", "freetype", "lcms2", "libiconv", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "openssl", "postgresql", "rustc", "tcl", "tk", "zlib"]
 
 [workflows]
 runButton = "Project"
@@ -27,13 +27,13 @@ args = "Backend API"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd frontend && npm run dev"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npx vite --port 5000 --host 0.0.0.0"
+waitForPort = 5000
 
 [[workflows.workflow]]
 name = "Backend API"
@@ -44,7 +44,7 @@ outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && python run.py"
+args = "cd backend && python3 run.py"
 waitForPort = 8000
 
 [[ports]]
@@ -57,5 +57,18 @@ externalPort = 8000
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["bash", "-c", "cd frontend && npm run build && cd ../backend && gunicorn --bind=0.0.0.0:5000 --reuse-port --workers=2 run:app"]
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
 build = ["bash", "-c", "cd frontend && npm install && npm run build"]
+
+[userenv]
+
+[userenv.shared]
+FLASK_ENV = "development"
+DATA_DIR = "backend/data/"
+DATABASE_PATH = "backend/data/users.db"
+MODEL_NAME = "ArcFace"
+DETECTOR_BACKEND = "ssd"
+SECRET_KEY = "d04640f3205bd8d589dd86787c9cb54c71493328c81f9861fc99dec8fcceb8c9"
+JWT_SECRET_KEY = "d50f41fe49bc282bbfd33572fd7ab67261fe38562c2e277f7141605431531ad2"
+FLASK_DEBUG = "false"
+PORT = "8000"
