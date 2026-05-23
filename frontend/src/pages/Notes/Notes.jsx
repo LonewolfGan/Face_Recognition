@@ -20,6 +20,8 @@ import {
   LuFileText,
   LuChevronRight,
   LuSettings,
+  LuFolder,
+  LuBookOpen,
 } from 'react-icons/lu';
 
 import { useAuth } from '../../context/AuthContext';
@@ -209,77 +211,70 @@ export default function Notes() {
 
       {/* ── Main area ── */}
       <div className="notes-main">
-        {/* Topbar */}
+
+        {/* ── Topbar ── */}
         <header className="notes-topbar">
+          {/* Left: hamburger on mobile */}
           <div className="notes-topbar__left">
-            {/* Hamburger for mobile */}
             {isMobile && (
               <button
                 className="notes-topbar__icon-btn"
                 onClick={() => setSidebarOpen(true)}
                 aria-label="Open sidebar"
               >
-                <LuMenu size={20} />
+                <LuMenu size={19} />
               </button>
             )}
-
-            {/* Breadcrumb */}
             <nav className="notes-topbar__breadcrumb" aria-label="Breadcrumb">
               <span className="notes-topbar__breadcrumb-root">Notes</span>
-              <LuChevronRight size={14} className="notes-topbar__breadcrumb-sep" />
+              <LuChevronRight size={13} className="notes-topbar__breadcrumb-sep" />
               <span className="notes-topbar__breadcrumb-current">
                 {activeNote ? (activeNote.title || 'Untitled') : breadcrumb}
               </span>
             </nav>
           </div>
 
-          <div className="notes-topbar__right">
-            {/* Search — icon only */}
-            <button
-              className="notes-topbar__icon-btn"
-              aria-label="Search notes"
-              title="Search (coming soon)"
-            >
-              <LuSearch size={18} />
-            </button>
+          {/* Center: search bar */}
+          <div className="notes-topbar__search" role="search" aria-label="Search notes">
+            <LuSearch size={14} className="notes-topbar__search-icon" />
+            <span className="notes-topbar__search-text">Search or type a command</span>
+            <span className="notes-topbar__search-kbd">⌘ K</span>
+          </div>
 
-            {/* Settings */}
+          {/* Right: actions */}
+          <div className="notes-topbar__right">
             <button
               className="notes-topbar__icon-btn"
-              aria-label="Paramètres"
-              title="Paramètres"
+              aria-label="Settings"
+              title="Settings"
               onClick={() => {
                 setShowSettingsPanel(v => !v);
                 store.setActiveNote(null);
               }}
             >
-              <LuSettings size={18} />
+              <LuSettings size={17} />
             </button>
 
-            {/* Avatar */}
             <div className="notes-topbar__avatar" title={currentUser?.name || ''}>
               {currentUser?.name
                 ? currentUser.name.slice(0, 2).toUpperCase()
-                : <LuUser size={15} />
-              }
+                : <LuUser size={13} />}
             </div>
 
-            {/* New Note */}
             <button
               className="notes-topbar__new-btn"
               onClick={handleNewNote}
               disabled={store.loading.notes}
             >
-              <LuPlus size={16} />
+              <LuPlus size={15} />
               New Note
             </button>
           </div>
         </header>
 
-        {/* Content */}
+        {/* ── Content ── */}
         <main className="notes-content">
           {showSettingsPanel ? (
-            /* ── Settings panel ── */
             <SettingsPanel
               currentUser={currentUser}
               onLogout={handleLogout}
@@ -290,24 +285,44 @@ export default function Notes() {
               onClose={() => setShowSettingsPanel(false)}
             />
           ) : activeNote ? (
-            /* ── Editor view ── */
             <NoteEditor
               note={activeNote}
               onUpdate={store.updateNote}
-              onDelete={async (id) => {
-                await store.deleteNote(id);
-              }}
+              onDelete={async (id) => { await store.deleteNote(id); }}
               onBack={() => store.setActiveNote(null)}
               saving={store.loading.saving}
             />
           ) : (
-            /* ── Notes list view ── */
             <div className="notes-grid-view">
-              {/* Greeting header */}
+
+              {/* ── Greeting ── */}
               <div className="notes-greeting">
+                <span className="notes-greeting__date">
+                  {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
                 <h1 className="notes-greeting__text">
                   {getGreeting()}, {currentUser?.name?.split(' ')[0] || 'there'}
                 </h1>
+
+                {/* Stats pills */}
+                <div className="notes-stats">
+                  <div className="notes-stat-pill">
+                    <LuFileText size={14} className="notes-stat-pill__icon" />
+                    <span className="notes-stat-pill__count">{store.notes.length}</span>
+                    <span className="notes-stat-pill__label">Notes</span>
+                  </div>
+                  <div className="notes-stat-pill">
+                    <LuFolder size={14} className="notes-stat-pill__icon" />
+                    <span className="notes-stat-pill__count">{store.folders.length}</span>
+                    <span className="notes-stat-pill__label">Folders</span>
+                  </div>
+                  <div className="notes-stat-pill">
+                    <LuBookOpen size={14} className="notes-stat-pill__icon" />
+                    <span className="notes-stat-pill__label">
+                      {store.activeFolder ? store.activeFolder.name : 'All Notes'}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {store.loading.notes && (
@@ -315,35 +330,46 @@ export default function Notes() {
               )}
 
               {!store.loading.notes && store.notes.length === 0 && (
-                <div className="notes-grid__empty">
-                  <LuFileText size={36} className="notes-grid__empty-icon" />
-                  <p className="notes-grid__empty-title">No notes yet</p>
-                  <p className="notes-grid__empty-sub">
-                    Start writing — your first note is one click away.
-                  </p>
-                  <button
-                    className="notes-grid__empty-btn"
-                    onClick={handleNewNote}
-                    disabled={store.loading.notes}
-                  >
-                    <LuPlus size={16} />
-                    Create a note
-                  </button>
+                <div className="notes-section-card">
+                  <div className="notes-grid__empty">
+                    <LuFileText size={36} className="notes-grid__empty-icon" />
+                    <p className="notes-grid__empty-title">No notes yet</p>
+                    <p className="notes-grid__empty-sub">
+                      Start writing — your first note is one click away.
+                    </p>
+                    <button
+                      className="notes-grid__empty-btn"
+                      onClick={handleNewNote}
+                      disabled={store.loading.notes}
+                    >
+                      <LuPlus size={15} />
+                      Create a note
+                    </button>
+                  </div>
                 </div>
               )}
 
               {!store.loading.notes && store.notes.length > 0 && (
-                <>
-                  <div className="notes-list-header">
-                    <span className="notes-list-header__title">
-                      {store.activeFolder ? store.activeFolder.name : 'All Notes'} · {store.notes.length}
+                <div className="notes-section-card">
+                  {/* Card header */}
+                  <div className="notes-section-card__header">
+                    <span className="notes-section-card__title">
+                      <LuBookOpen size={16} className="notes-section-card__title-icon" />
+                      {store.activeFolder ? store.activeFolder.name : 'My Notes'}
                     </span>
+                    <button className="notes-section-card__see-all" onClick={handleNewNote}>
+                      + New
+                    </button>
                   </div>
+
+                  {/* Column headers */}
                   <div className="notes-list-cols">
-                    <span className="notes-list-col-label">Title</span>
+                    <span className="notes-list-col-label">Note title</span>
                     <span className="notes-list-col-label">Folder</span>
                     <span className="notes-list-col-label" style={{ textAlign: 'right' }}>Last edited</span>
                   </div>
+
+                  {/* Rows */}
                   <div className="notes-list">
                     {store.notes.map(note => (
                       <NoteCard
@@ -358,7 +384,7 @@ export default function Notes() {
                       />
                     ))}
                   </div>
-                </>
+                </div>
               )}
             </div>
           )}
