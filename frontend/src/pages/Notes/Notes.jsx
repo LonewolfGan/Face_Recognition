@@ -37,44 +37,29 @@ import NoteEditor from './NoteEditor';
 import SettingsPanel from './SettingsPanel';
 import './Notes.css';
 
-/* ─── Note card ─────────────────────────────────────────────────────────── */
+/* ─── Note row (Notion-style list item) ─────────────────────────────────── */
 function NoteCard({ note, onClick, folderName }) {
-  // Strip markdown-ish syntax for preview
-  const preview = (note.content || '')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/(\*\*|__)(.*?)\1/g, '$2')
-    .replace(/(\*|_)(.*?)\1/g, '$2')
-    .replace(/\n+/g, ' ')
-    .trim()
-    .slice(0, 120);
-
   const date = note.updated_at
     ? new Date(note.updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
     : '';
 
+  const folder = folderName || note.folder_name || '';
+
   return (
-    <motion.button
+    <button
       className="note-card"
       onClick={onClick}
-      whileHover={{ y: -2, transition: { duration: 0.15 } }}
       aria-label={`Open note: ${note.title || 'Untitled'}`}
     >
       <div className="note-card__header">
-        <LuFileText size={15} className="note-card__icon" />
+        <LuFileText size={14} className="note-card__icon" />
         <span className="note-card__title">{note.title || 'Untitled'}</span>
       </div>
-      {preview && (
-        <p className="note-card__preview">{preview}</p>
-      )}
       <div className="note-card__footer">
-        {(folderName || note.folder_name) && (
-          <span className="note-card__folder-badge">
-            {folderName || note.folder_name}
-          </span>
-        )}
+        <span className="note-card__folder-badge">{folder}</span>
         {date && <span className="note-card__date">{date}</span>}
       </div>
-    </motion.button>
+    </button>
   );
 }
 
@@ -325,20 +310,32 @@ export default function Notes() {
               )}
 
               {!store.loading.notes && store.notes.length > 0 && (
-                <div className="notes-grid">
-                  {store.notes.map(note => (
-                    <NoteCard
-                      key={note.note_id}
-                      note={note}
-                      folderName={
-                        note.folder_id
-                          ? (store.folders.find(f => f.folder_id === note.folder_id)?.name || note.folder_name)
-                          : null
-                      }
-                      onClick={() => store.setActiveNote(note.note_id)}
-                    />
-                  ))}
-                </div>
+                <>
+                  <div className="notes-list-header">
+                    <span className="notes-list-header__title">
+                      {store.activeFolder ? store.activeFolder.name : 'All Notes'} · {store.notes.length}
+                    </span>
+                  </div>
+                  <div className="notes-list-cols">
+                    <span className="notes-list-col-label">Title</span>
+                    <span className="notes-list-col-label">Folder</span>
+                    <span className="notes-list-col-label" style={{ textAlign: 'right' }}>Last edited</span>
+                  </div>
+                  <div className="notes-list">
+                    {store.notes.map(note => (
+                      <NoteCard
+                        key={note.note_id}
+                        note={note}
+                        folderName={
+                          note.folder_id
+                            ? (store.folders.find(f => f.folder_id === note.folder_id)?.name || note.folder_name)
+                            : null
+                        }
+                        onClick={() => store.setActiveNote(note.note_id)}
+                      />
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           )}

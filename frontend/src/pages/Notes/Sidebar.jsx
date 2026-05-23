@@ -138,9 +138,11 @@ export default function Sidebar({
         <Link to="/" className="sidebar__brand" style={{ textDecoration: 'none' }}>
           <img
             src={isDarkMode ? '/logodark.png' : '/logolight.png'}
-            alt="PrivyNote"
-            style={{ height: 32, width: 'auto', objectFit: 'contain', maxWidth: 140 }}
+            alt=""
+            aria-hidden="true"
+            style={{ height: 22, width: 22, objectFit: 'contain', flexShrink: 0 }}
           />
+          <span className="sidebar__brand-name">PrivyNote</span>
         </Link>
         {isMobile && (
           <button
