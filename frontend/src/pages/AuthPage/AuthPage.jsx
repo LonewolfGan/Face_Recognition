@@ -157,40 +157,11 @@ function FormField({ icon: Icon, ...inputProps }) {
   );
 }
 
-/* ─── ScanRing ─────────────────────────────────────────────────────── */
-function ScanRing({ active, success }) {
-  return (
-    <div className="relative flex items-center justify-center">
-      {active && !success && [0, 1, 2].map((i) => (
-        <motion.span
-          key={i}
-          className="absolute rounded-full border"
-          style={{ borderColor: "rgba(122,53,242,0.35)" }}
-          initial={{ width: 160, height: 160, opacity: 0.6 }}
-          animate={{ width: 160 + (i + 1) * 36, height: 160 + (i + 1) * 36, opacity: 0 }}
-          transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.55, ease: "easeOut" }}
-        />
-      ))}
-      {success && [0, 1].map((i) => (
-        <motion.span
-          key={i}
-          className="absolute rounded-full border"
-          style={{ borderColor: "rgba(122,53,242,0.45)" }}
-          initial={{ width: 160, height: 160, opacity: 0.7 }}
-          animate={{ width: 220 + i * 30, height: 220 + i * 30, opacity: 0 }}
-          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.4, ease: "easeOut" }}
-        />
-      ))}
-    </div>
-  );
-}
-
 /* ─── CameraFrame ──────────────────────────────────────────────────── */
 function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
   const borderColor = success ? "rgba(122,53,242,0.9)" : "rgba(122,53,242,0.8)";
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <ScanRing active={showScan} success={success} />
       <div
         className="relative overflow-hidden"
         style={{
@@ -254,34 +225,8 @@ function BrandPanel({ isDarkMode }) {
 
   return (
     <div
-      className="hidden lg:flex flex-col justify-start gap-16 p-10 relative overflow-hidden h-full min-h-screen border-r-[0px]"
-      style={{
-        background: isDarkMode
-          ? "linear-gradient(145deg, #0f0620 0%, #1A0D30 50%, #130825 100%)"
-          : "linear-gradient(145deg, #f5f0ff 0%, #ede8ff 50%, #e8f0ff 100%)",
-      }}
+      className="hidden lg:flex flex-col justify-start gap-16 p-10 relative overflow-hidden h-full min-h-screen bg-subtle"
     >
-      {/* Radial glow */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: isDarkMode
-            ? "radial-gradient(ellipse at 30% 40%, rgba(122,53,242,0.18) 0%, transparent 65%)"
-            : "radial-gradient(ellipse at 30% 40%, rgba(122,53,242,0.1) 0%, transparent 65%)",
-        }}
-      />
-      {/* Grid overlay */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: isDarkMode
-            ? "linear-gradient(rgba(122,53,242,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(122,53,242,0.06) 1px, transparent 1px)"
-            : "linear-gradient(rgba(122,53,242,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(122,53,242,0.04) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
 
       <div className="relative z-10">
         <a href="/" className="inline-flex items-center gap-2.5 group">
@@ -292,7 +237,7 @@ function BrandPanel({ isDarkMode }) {
           />
           <span
             className="text-[20px] font-bold tracking-[-0.02em]"
-            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? "#f4f4f5" : "#7A35F2" }}
+            style={{ fontFamily: '"Syne", sans-serif', color: "var(--accent)" }}
           >
             PrivyNote
           </span>
@@ -305,19 +250,18 @@ function BrandPanel({ isDarkMode }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="text-[2.2rem] font-black leading-[1.15] m-0 tracking-[-0.03em]"
-            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? "#f4f4f5" : "#1a0d30" }}
+            className="text-[2.2rem] font-black leading-[1.15] m-0 tracking-[-0.03em] text-fg"
+            style={{ fontFamily: '"Syne", sans-serif' }}
           >
             Vos notes,<br />
-            <span style={{ color: "#7A35F2" }}>protégées</span><br />
+            <span style={{ color: "var(--accent)" }}>protégées</span><br />
             par votre visage.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
-            className="text-[15px] leading-relaxed mt-4 m-0 max-w-[280px]"
-            style={{ color: isDarkMode ? "rgba(209,188,249,0.6)" : "rgba(80,50,130,0.7)" }}
+            className="text-[15px] leading-relaxed mt-4 m-0 max-w-[280px] text-muted"
           >
             Plus de mots de passe à mémoriser. Votre visage est la clé.
           </motion.p>
@@ -333,18 +277,12 @@ function BrandPanel({ isDarkMode }) {
               className="flex items-center gap-3"
             >
               <span
-                className="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0"
-                style={{
-                  background: isDarkMode ? "rgba(122,53,242,0.15)" : "rgba(122,53,242,0.1)",
-                  color: "#7A35F2",
-                }}
+                className="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 bg-accent-muted"
+                style={{ color: "var(--accent)" }}
               >
                 <Icon className="w-3.5 h-3.5" />
               </span>
-              <span
-                className="text-[13.5px] font-medium"
-                style={{ color: isDarkMode ? "rgba(209,188,249,0.75)" : "rgba(80,50,130,0.8)" }}
-              >
+              <span className="text-[13.5px] font-medium text-muted">
                 {label}
               </span>
             </motion.div>
