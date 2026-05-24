@@ -101,6 +101,11 @@ export const AuthProvider = ({ children }) => {
   // Derived authentication state
   const isAuthenticated = !!accessToken;
 
+  // Update local user state (e.g. after profile save)
+  const updateUser = useCallback((patch) => {
+    setUser(prev => prev ? { ...prev, ...patch } : prev);
+  }, []);
+
   // Valeur du contexte — expose `currentUser` as alias for backward compatibility
   const value = useMemo(() => ({
     user,
@@ -112,7 +117,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     authFetch,
-  }), [user, accessToken, isAuthenticated, isLoading, login, logout, authFetch]);
+    updateUser,
+  }), [user, accessToken, isAuthenticated, isLoading, login, logout, authFetch, updateUser]);
 
   return (
     <AuthContext.Provider value={value}>

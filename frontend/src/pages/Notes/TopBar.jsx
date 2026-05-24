@@ -73,8 +73,12 @@ export default function TopBar({
           aria-label="Open profile"
           title={currentUser?.name || 'Profile'}
         >
-          {initials ? (
-            <span className="topbar__avatar-initials">{initials}</span>
+          {currentUser?.avatar ? (
+            <img
+              src={currentUser.avatar}
+              alt="Profile"
+              className="topbar__avatar-img"
+            />
           ) : (
             <LuUser size={17} />
           )}

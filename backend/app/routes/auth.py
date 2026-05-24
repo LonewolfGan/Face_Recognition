@@ -340,6 +340,65 @@ def logout():
         return _error_response(500, "internal_error", str(e))
 
 
+@auth_bp.route("/profile", methods=["GET"])
+@token_required
+def get_profile():
+    """Return the authenticated user's profile."""
+    try:
+        db = _get_db()
+        cursor = db.cursor()
+        cursor.execute(
+            "SELECT user_id, name, avatar FROM users WHERE user_id = ?",
+            (g.user_id,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            return _error_response(404, "not_found", "User not found")
+        user = dict(row)
+        return jsonify({"status": "success", "user": user})
+    except Exception as e:
+        return _error_response(500, "internal_error", str(e))
+
+
+@auth_bp.route("/profile", methods=["PATCH"])
+@token_required
+def update_profile():
+    """Update the authenticated user's name and/or avatar."""
+    try:
+        data = request.json or {}
+        name = data.get("name", "").strip()
+        avatar = data.get("avatar")  # base64 data-URL or None
+
+        if not name:
+            return _error_response(400, "validation_error", "Name is required")
+
+        if len(name) > 100:
+            return _error_response(400, "validation_error", "Name is too long")
+
+        # Basic avatar size guard (max ~2 MB base64)
+        if avatar and len(avatar) > 2_800_000:
+            return _error_response(400, "validation_error", "Avatar image is too large")
+
+        db = _get_db()
+        cursor = db.cursor()
+        cursor.execute(
+            "UPDATE users SET name = ?, avatar = ? WHERE user_id = ?",
+            (name, avatar, g.user_id),
+        )
+        db.commit()
+
+        if cursor.rowcount == 0:
+            return _error_response(404, "not_found", "User not found")
+
+        return jsonify({
+            "status": "success",
+            "user": {"user_id": g.user_id, "name": name, "avatar": avatar},
+        })
+
+    except Exception as e:
+        return _error_response(500, "internal_error", str(e))
+
+
 @auth_bp.route("/change_password", methods=["POST"])
 @token_required
 def change_password():

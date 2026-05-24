@@ -210,6 +210,13 @@ def _create_schema(conn: sqlite3.Connection) -> None:
     )
     """)
 
+    # Migration: add avatar column to existing databases
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN avatar TEXT DEFAULT NULL")
+        conn.commit()
+    except Exception:
+        pass
+
     conn.commit()
 
 

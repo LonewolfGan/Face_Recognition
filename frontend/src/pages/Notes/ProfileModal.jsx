@@ -1,38 +1,29 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  LuX,
-  LuUser,
-  LuScanFace,
-  LuKeyRound,
-  LuLogOut,
-  LuSun,
-  LuMoon,
-  LuChevronRight,
-} from 'react-icons/lu';
+import React, { useEffect, useRef, useState } from 'react';
+import { LuX, LuUser, LuCamera, LuCheck, LuLoader } from 'react-icons/lu';
 import './ProfileModal.css';
 
 /**
- * ProfileModal — overlay modal triggered by the avatar in the TopBar.
- *
- * Shows profile info + settings actions (add face, change password,
- * theme toggle, log out).
+ * ProfileModal — avatar-triggered profile editor.
+ * Lets the user update their display name and avatar photo.
  */
 export default function ProfileModal({
   currentUser,
-  isDarkMode,
-  toggleTheme,
-  onAddFace,
-  onChangePassword,
-  onLogout,
   onClose,
+  onSave,
 }) {
-  const modalRef = useRef(null);
+  const [name, setName] = useState(currentUser?.name || '');
+  const [avatar, setAvatar] = useState(currentUser?.avatar || null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [saved, setSaved] = useState(false);
 
-  const initials = currentUser?.name
-    ? currentUser.name.slice(0, 2).toUpperCase()
-    : null;
+  const fileRef = useRef(null);
+  const nameRef = useRef(null);
 
-  /* Close on Escape */
+  useEffect(() => {
+    nameRef.current?.focus();
+  }, []);
+
   useEffect(() => {
     function handleKey(e) {
       if (e.key === 'Escape') onClose();
@@ -41,85 +32,143 @@ export default function ProfileModal({
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
-  /* Trap focus / close on outside click */
-  function handleBackdropClick(e) {
+  function handleBackdrop(e) {
     if (e.target === e.currentTarget) onClose();
   }
 
+  function handleAvatarClick() {
+    fileRef.current?.click();
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file.');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Image must be under 2 MB.');
+      return;
+    }
+
+    setError('');
+    const reader = new FileReader();
+    reader.onload = (ev) => setAvatar(ev.target.result);
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
+  function handleRemoveAvatar() {
+    setAvatar(null);
+  }
+
+  async function handleSave() {
+    const trimmed = name.trim();
+    if (!trimmed) { setError('Name cannot be empty.'); return; }
+    if (trimmed.length > 100) { setError('Name is too long.'); return; }
+
+    setError('');
+    setSaving(true);
+    try {
+      await onSave({ name: trimmed, avatar });
+      setSaved(true);
+      setTimeout(() => { setSaved(false); onClose(); }, 900);
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Failed to save. Try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const hasChanges = name.trim() !== (currentUser?.name || '') || avatar !== (currentUser?.avatar || null);
+
   return (
-    <div className="profile-modal-backdrop" onClick={handleBackdropClick} aria-modal="true" role="dialog">
-      <div className="profile-modal" ref={modalRef}>
+    <div className="pm-backdrop" onClick={handleBackdrop} aria-modal="true" role="dialog">
+      <div className="pm-modal">
 
-        {/* Close button */}
-        <button className="profile-modal__close" onClick={onClose} aria-label="Close">
-          <LuX size={16} />
-        </button>
-
-        {/* ── Profile header ── */}
-        <div className="profile-modal__profile">
-          <div className="profile-modal__avatar">
-            {initials ? initials : <LuUser size={22} />}
-          </div>
-          <div className="profile-modal__info">
-            <p className="profile-modal__name">{currentUser?.name || 'User'}</p>
-            <span className="profile-modal__label">PrivyNote account</span>
-          </div>
+        {/* Header */}
+        <div className="pm-header">
+          <h2 className="pm-title">Edit Profile</h2>
+          <button className="pm-close" onClick={onClose} aria-label="Close">
+            <LuX size={16} />
+          </button>
         </div>
 
-        <div className="profile-modal__divider" />
+        {/* Avatar section */}
+        <div className="pm-avatar-section">
+          <div className="pm-avatar-wrap">
+            <div className="pm-avatar">
+              {avatar ? (
+                <img src={avatar} alt="Avatar" className="pm-avatar-img" />
+              ) : (
+                <LuUser size={32} />
+              )}
+            </div>
+            <button
+              className="pm-avatar-edit-btn"
+              onClick={handleAvatarClick}
+              aria-label="Change avatar"
+              type="button"
+            >
+              <LuCamera size={13} />
+            </button>
+          </div>
 
-        {/* ── Security ── */}
-        <div className="profile-modal__section-heading">Security</div>
+          <div className="pm-avatar-actions">
+            <button className="pm-avatar-upload-btn" onClick={handleAvatarClick} type="button">
+              {avatar ? 'Change photo' : 'Upload photo'}
+            </button>
+            {avatar && (
+              <button className="pm-avatar-remove-btn" onClick={handleRemoveAvatar} type="button">
+                Remove
+              </button>
+            )}
+          </div>
 
-        <button className="profile-modal__row" onClick={() => { onAddFace(); onClose(); }}>
-          <span className="profile-modal__row-icon">
-            <LuScanFace size={16} />
-          </span>
-          <span className="profile-modal__row-label">Add face</span>
-          <LuChevronRight size={14} className="profile-modal__row-chevron" />
-        </button>
-
-        <button className="profile-modal__row" onClick={() => { onChangePassword(); onClose(); }}>
-          <span className="profile-modal__row-icon">
-            <LuKeyRound size={16} />
-          </span>
-          <span className="profile-modal__row-label">Change password</span>
-          <LuChevronRight size={14} className="profile-modal__row-chevron" />
-        </button>
-
-        <div className="profile-modal__divider" />
-
-        {/* ── Appearance ── */}
-        <div className="profile-modal__section-heading">Appearance</div>
-
-        <div className="profile-modal__row profile-modal__row--static">
-          <span className="profile-modal__row-icon">
-            {isDarkMode ? <LuMoon size={16} /> : <LuSun size={16} />}
-          </span>
-          <span className="profile-modal__row-label">
-            {isDarkMode ? 'Dark mode' : 'Light mode'}
-          </span>
-          <label className="profile-modal__toggle" aria-label="Toggle theme">
-            <input
-              type="checkbox"
-              className="profile-modal__toggle-input"
-              checked={isDarkMode}
-              onChange={toggleTheme}
-            />
-            <span className="profile-modal__toggle-track" />
-            <span className="profile-modal__toggle-thumb" />
-          </label>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="pm-file-input"
+            onChange={handleFileChange}
+          />
         </div>
 
-        <div className="profile-modal__divider" />
+        {/* Name field */}
+        <div className="pm-field">
+          <label className="pm-label" htmlFor="pm-name">Display name</label>
+          <input
+            ref={nameRef}
+            id="pm-name"
+            className="pm-input"
+            type="text"
+            value={name}
+            onChange={e => { setName(e.target.value); setError(''); }}
+            onKeyDown={e => { if (e.key === 'Enter') handleSave(); }}
+            placeholder="Your name"
+            maxLength={100}
+          />
+        </div>
 
-        {/* ── Log out ── */}
-        <button className="profile-modal__row profile-modal__row--danger" onClick={() => { onLogout(); onClose(); }}>
-          <span className="profile-modal__row-icon profile-modal__row-icon--danger">
-            <LuLogOut size={16} />
-          </span>
-          <span className="profile-modal__row-label profile-modal__row-label--danger">Log out</span>
-          <LuChevronRight size={14} className="profile-modal__row-chevron" />
+        {/* Error */}
+        {error && <p className="pm-error">{error}</p>}
+
+        {/* Save button */}
+        <button
+          className={`pm-save-btn${saved ? ' pm-save-btn--saved' : ''}`}
+          onClick={handleSave}
+          disabled={saving || !hasChanges}
+          type="button"
+        >
+          {saving ? (
+            <LuLoader size={15} className="pm-spinner" />
+          ) : saved ? (
+            <><LuCheck size={15} /> Saved</>
+          ) : (
+            'Save changes'
+          )}
         </button>
 
       </div>

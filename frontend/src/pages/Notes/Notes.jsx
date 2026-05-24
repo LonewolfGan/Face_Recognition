@@ -100,7 +100,7 @@ function NoteBox({ note, onClick, showFolder, folderName }) {
 /* ─── Main page ─────────────────────────────────────────────────────────── */
 export default function Notes() {
   const navigate = useNavigate();
-  const { currentUser, authFetch, logout } = useAuth();
+  const { currentUser, authFetch, logout, updateUser } = useAuth();
   const toast = useToastContext();
   const { isDarkMode, toggleTheme } = useTheme();
 
@@ -170,6 +170,14 @@ export default function Notes() {
     } catch (err) {
       console.error('Face add error:', err);
       handleApiError(err, toast);
+    }
+  }
+
+  async function handleProfileSave({ name, avatar }) {
+    const res = await authFetch.patch('/profile', { name, avatar });
+    if (res.data.status === 'success') {
+      updateUser({ name: res.data.user.name, avatar: res.data.user.avatar });
+      toast.success('Profile updated');
     }
   }
 
@@ -378,11 +386,7 @@ export default function Notes() {
       {showProfileModal && (
         <ProfileModal
           currentUser={currentUser}
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-          onAddFace={() => setShowWebcam(true)}
-          onChangePassword={() => setShowChangePassword(true)}
-          onLogout={handleLogout}
+          onSave={handleProfileSave}
           onClose={() => setShowProfileModal(false)}
         />
       )}
