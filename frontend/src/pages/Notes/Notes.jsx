@@ -319,20 +319,42 @@ export default function Notes() {
 
               {/* Empty state */}
               {!store.loading.notes && filteredNotes.length === 0 && !searchQuery.trim() && (
-                <div className="notes-grid__empty">
-                  <LuFileText size={36} className="notes-grid__empty-icon" />
-                  <p className="notes-grid__empty-title">No notes yet</p>
-                  <p className="notes-grid__empty-sub">
-                    Start writing — your first note is one click away.
-                  </p>
-                  <button
-                    className="notes-new-btn"
-                    onClick={handleNewNote}
-                    disabled={store.loading.notes}
-                  >
-                    <LuPlus size={15} />
-                    Create a note
-                  </button>
+                <div className="notes-empty">
+                  <div className="notes-empty__orb" aria-hidden="true">
+                    <LuFileText size={28} className="notes-empty__orb-icon" />
+                  </div>
+
+                  <div className="notes-empty__body">
+                    <h2 className="notes-empty__title">Your space is ready</h2>
+                    <p className="notes-empty__sub">
+                      Capture ideas, thoughts, and everything in between.<br />
+                      Your first note is one click away.
+                    </p>
+
+                    <button
+                      className="notes-empty__cta"
+                      onClick={handleNewNote}
+                      disabled={store.loading.notes}
+                    >
+                      <LuPlus size={16} />
+                      Create your first note
+                    </button>
+                  </div>
+
+                  <div className="notes-empty__hints">
+                    <div className="notes-empty__hint">
+                      <LuFileText size={13} />
+                      Rich text editing
+                    </div>
+                    <div className="notes-empty__hint">
+                      <LuFolder size={13} />
+                      Folder organisation
+                    </div>
+                    <div className="notes-empty__hint">
+                      <LuBookOpen size={13} />
+                      Always in sync
+                    </div>
+                  </div>
                 </div>
               )}
 
