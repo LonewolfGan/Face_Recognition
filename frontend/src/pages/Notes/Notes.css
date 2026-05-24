@@ -304,6 +304,15 @@
   margin-left: auto;
 }
 
+/* ─── Search results label ────────────────────────────────────────────────── */
+
+.notes-search-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: -10px 0 16px;
+  font-family: var(--font-sans);
+}
+
 /* ─── Loading / empty ─────────────────────────────────────────────────────── */
 
 .notes-grid__loading {

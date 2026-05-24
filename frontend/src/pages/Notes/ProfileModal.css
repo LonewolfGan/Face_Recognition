@@ -1,0 +1,256 @@
+/* ==========================================================================
+   ProfileModal — avatar-triggered overlay
+   ========================================================================== */
+
+.profile-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 64px 20px 0;
+  animation: pmBackdropIn 160ms ease;
+}
+
+@keyframes pmBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.profile-modal {
+  position: relative;
+  width: 300px;
+  background: var(--np-card);
+  border: 1px solid var(--np-group-sep);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 20px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: pmSlideIn 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pmSlideIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ─── Close button ────────────────────────────────────────────────────────── */
+
+.profile-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 120ms, background-color 120ms;
+  padding: 0;
+}
+
+.profile-modal__close:hover {
+  color: var(--text-title);
+  background: var(--np-stat-bg);
+}
+
+/* ─── Profile header ──────────────────────────────────────────────────────── */
+
+.profile-modal__profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 12px;
+}
+
+.profile-modal__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-tech-violet, #7A35F2), var(--color-biometric-glow, #9B70E5));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.profile-modal__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-modal__name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-title);
+  margin: 0 0 2px;
+  font-family: var(--font-sans);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-modal__label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+/* ─── Divider ─────────────────────────────────────────────────────────────── */
+
+.profile-modal__divider {
+  height: 1px;
+  background: var(--np-group-sep);
+  margin: 6px 0;
+}
+
+/* ─── Section heading ─────────────────────────────────────────────────────── */
+
+.profile-modal__section-heading {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  padding: 6px 4px 4px;
+}
+
+/* ─── Row ─────────────────────────────────────────────────────────────────── */
+
+.profile-modal__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 8px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  width: 100%;
+  text-align: left;
+  transition: background-color 130ms;
+  text-decoration: none;
+}
+
+.profile-modal__row:hover {
+  background: var(--np-stat-bg);
+}
+
+.profile-modal__row--static {
+  cursor: default;
+}
+
+.profile-modal__row--static:hover {
+  background: none;
+}
+
+.profile-modal__row-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: rgba(122, 53, 242, 0.1);
+  color: var(--color-tech-violet, #7A35F2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-modal__row-icon--danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.profile-modal__row-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-title);
+  flex: 1;
+}
+
+.profile-modal__row-label--danger {
+  color: #ef4444;
+}
+
+.profile-modal__row-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ─── Toggle ──────────────────────────────────────────────────────────────── */
+
+.profile-modal__toggle {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.profile-modal__toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.profile-modal__toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: var(--text-muted);
+  opacity: 0.5;
+  transition: background-color 200ms, opacity 200ms;
+}
+
+.profile-modal__toggle-input:checked + .profile-modal__toggle-track {
+  background: var(--color-tech-violet, #7A35F2);
+  opacity: 1;
+}
+
+.profile-modal__toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 200ms ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+
+.profile-modal__toggle-input:checked ~ .profile-modal__toggle-thumb {
+  transform: translateX(18px);
+}
+
+/* ─── Mobile ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .profile-modal-backdrop {
+    padding: 60px 8px 0;
+  }
+
+  .profile-modal {
+    width: calc(100vw - 16px);
+  }
+}

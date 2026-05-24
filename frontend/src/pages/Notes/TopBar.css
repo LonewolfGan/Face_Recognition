@@ -1,0 +1,167 @@
+/* ==========================================================================
+   TopBar — persistent header bar for the Notes page
+   ========================================================================== */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  height: 56px;
+  flex-shrink: 0;
+  background: var(--np-canvas);
+  border-bottom: 1px solid var(--np-group-sep);
+  z-index: 100;
+}
+
+/* ─── Search ──────────────────────────────────────────────────────────────── */
+
+.topbar__search {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 480px;
+}
+
+.topbar__search-icon {
+  position: absolute;
+  left: 11px;
+  color: var(--text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.topbar__search-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 34px 0 34px;
+  background: var(--np-card);
+  border: 1px solid var(--np-group-sep);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  color: var(--text-title);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.topbar__search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.topbar__search-input:focus {
+  border-color: rgba(122, 53, 242, 0.35);
+  box-shadow: 0 0 0 3px rgba(122, 53, 242, 0.08);
+}
+
+.topbar__search-clear {
+  position: absolute;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 4px;
+  transition: color 120ms, background-color 120ms;
+  padding: 0;
+}
+
+.topbar__search-clear:hover {
+  color: var(--text-title);
+  background: var(--np-stat-bg);
+}
+
+/* ─── Actions ─────────────────────────────────────────────────────────────── */
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* New Note button */
+.topbar__new-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--color-tech-violet, #7A35F2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms, opacity 150ms;
+}
+
+.topbar__new-btn:hover {
+  background-color: var(--color-biometric-glow, #9B70E5);
+}
+
+.topbar__new-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.topbar__new-btn-text {
+  display: inline;
+}
+
+/* Avatar button */
+.topbar__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-tech-violet, #7A35F2), var(--color-biometric-glow, #9B70E5));
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.topbar__avatar:hover {
+  box-shadow: 0 0 0 3px rgba(122, 53, 242, 0.22);
+  transform: scale(1.05);
+}
+
+.topbar__avatar-initials {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+/* ─── Mobile ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .topbar__new-btn-text {
+    display: none;
+  }
+
+  .topbar__new-btn {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+}

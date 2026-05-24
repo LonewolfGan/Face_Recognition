@@ -2,7 +2,7 @@
  * Notes — Main dashboard page.
  *
  * Layout:
- *   <Sidebar (retractable)>  |  <NoteGrid grouped by folder> or <NoteEditor>
+ *   <Sidebar (retractable)>  |  <TopBar> / <NoteGrid grouped by folder> or <NoteEditor>
  */
 
 import React, { useEffect, useState } from 'react';
@@ -10,8 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   LuPlus,
-  LuUser,
-  LuMenu,
   LuFileText,
   LuFolder,
   LuBookOpen,
@@ -30,6 +28,8 @@ import ChangePasswordModal from '../../components/ChangePasswordModal';
 import Sidebar from './Sidebar';
 import NoteEditor from './NoteEditor';
 import SettingsPanel from './SettingsPanel';
+import TopBar from './TopBar';
+import ProfileModal from './ProfileModal';
 import './Notes.css';
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
@@ -110,6 +110,9 @@ export default function Notes() {
   const [showWebcam, setShowWebcam] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const store = useNotesStore();
 
@@ -182,13 +185,24 @@ export default function Notes() {
     } catch (err) { handleApiError(err, toast); }
   }
 
+  /* ── Filter notes by search query ── */
+  const filteredNotes = searchQuery.trim()
+    ? store.notes.filter(n => {
+        const q = searchQuery.toLowerCase();
+        return (
+          (n.title || '').toLowerCase().includes(q) ||
+          stripHtml(n.content || '').toLowerCase().includes(q)
+        );
+      })
+    : store.notes;
+
   const activeNote = store.activeNote;
 
   if (!currentUser) return null;
 
   /* ── Grouped notes for "All Notes" view ── */
   const noteGroups = store.activeFolderId === null
-    ? groupNotesByFolder(store.notes, store.folders)
+    ? groupNotesByFolder(filteredNotes, store.folders)
     : null;
 
   return (
@@ -219,16 +233,15 @@ export default function Notes() {
       {/* ── Main area ── */}
       <div className="notes-main">
 
-        {/* Mobile open-sidebar button (no topbar on desktop) */}
-        {isMobile && !sidebarOpen && (
-          <button
-            className="notes-mobile-menu-btn"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open sidebar"
-          >
-            <LuMenu size={20} />
-          </button>
-        )}
+        {/* TopBar — always visible */}
+        <TopBar
+          searchQuery={searchQuery}
+          onSearchChange={q => { setSearchQuery(q); store.setActiveNote(null); setShowSettingsPanel(false); }}
+          onNewNote={handleNewNote}
+          onAvatarClick={() => setShowProfileModal(true)}
+          currentUser={currentUser}
+          loading={store.loading.notes}
+        />
 
         <main className="notes-content">
           {showSettingsPanel ? (
@@ -261,7 +274,7 @@ export default function Notes() {
                   {getGreeting()}, {currentUser?.name?.split(' ')[0] || 'there'}
                 </h1>
 
-                {/* Stats + new note action */}
+                {/* Stats */}
                 <div className="notes-stats">
                   <div className="notes-stat-pill">
                     <LuFileText size={14} className="notes-stat-pill__icon" />
@@ -279,17 +292,17 @@ export default function Notes() {
                       {store.activeFolder ? store.activeFolder.name : 'All Notes'}
                     </span>
                   </div>
-
-                  <button
-                    className="notes-new-btn"
-                    onClick={handleNewNote}
-                    disabled={store.loading.notes}
-                  >
-                    <LuPlus size={15} />
-                    New Note
-                  </button>
                 </div>
               </div>
+
+              {/* Search results label */}
+              {searchQuery.trim() && (
+                <p className="notes-search-label">
+                  {filteredNotes.length === 0
+                    ? `No notes match "${searchQuery}"`
+                    : `${filteredNotes.length} result${filteredNotes.length !== 1 ? 's' : ''} for "${searchQuery}"`}
+                </p>
+              )}
 
               {/* Loading */}
               {store.loading.notes && (
@@ -297,7 +310,7 @@ export default function Notes() {
               )}
 
               {/* Empty state */}
-              {!store.loading.notes && store.notes.length === 0 && (
+              {!store.loading.notes && filteredNotes.length === 0 && !searchQuery.trim() && (
                 <div className="notes-grid__empty">
                   <LuFileText size={36} className="notes-grid__empty-icon" />
                   <p className="notes-grid__empty-title">No notes yet</p>
@@ -316,7 +329,7 @@ export default function Notes() {
               )}
 
               {/* Notes — grouped by folder (All Notes) or flat grid (folder view) */}
-              {!store.loading.notes && store.notes.length > 0 && (
+              {!store.loading.notes && filteredNotes.length > 0 && (
                 <>
                   {/* ALL NOTES: grouped by folder */}
                   {noteGroups !== null ? (
@@ -344,7 +357,7 @@ export default function Notes() {
                   ) : (
                     /* FOLDER VIEW: flat grid */
                     <div className="notes-cards-grid">
-                      {store.notes.map(note => (
+                      {filteredNotes.map(note => (
                         <NoteBox
                           key={note.note_id}
                           note={note}
@@ -360,6 +373,19 @@ export default function Notes() {
           )}
         </main>
       </div>
+
+      {/* ── Profile modal ── */}
+      {showProfileModal && (
+        <ProfileModal
+          currentUser={currentUser}
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          onAddFace={() => setShowWebcam(true)}
+          onChangePassword={() => setShowChangePassword(true)}
+          onLogout={handleLogout}
+          onClose={() => setShowProfileModal(false)}
+        />
+      )}
 
       {/* Webcam overlay */}
       {showWebcam && (
