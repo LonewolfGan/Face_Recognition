@@ -163,11 +163,6 @@ function Navbar({ onLogin, onSignup }) {
 
 /* ─── HERO — centered typographic layout ────────────────────────────── */
 function Hero({ onSignup, onLogin }) {
-  const pillItems = [
-    { icon: LuScanFace,    label: "Biométrie locale" },
-    { icon: LuLock,        label: "Chiffrement AES-256" },
-    { icon: LuShieldCheck, label: "Zéro transmission cloud" },
-  ];
 
   return (
     <section
@@ -232,23 +227,6 @@ function Hero({ onSignup, onLogin }) {
           </Button>
         </motion.div>
 
-        {/* Feature pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.75 }}
-          className="flex flex-wrap items-center justify-center gap-3 pt-2"
-        >
-          {pillItems.map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral bg-white/50 dark:bg-vault/30"
-            >
-              <Icon className="w-3.5 h-3.5 text-tech-violet dark:text-biometric-glow shrink-0" />
-              <span className="text-[13px] font-medium text-body">{label}</span>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
