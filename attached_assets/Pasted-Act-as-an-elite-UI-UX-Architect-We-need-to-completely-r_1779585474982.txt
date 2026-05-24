@@ -1,0 +1,23 @@
+Act as an elite UI/UX Architect. We need to completely refactor the Dashboard, specifically the Profile section and the Settings page, to make them highly functional, data-dense, and professional.
+
+CRITICAL INSTRUCTIONS & NEGATIVE CONSTRAINTS (The "Anti-Slop" Protocol):
+
+REMOVE ALL DECORATIONS: Immediately identify and delete all decorative spheres, floating circles, radial-gradients, background blurs, and glowing effects (halos). The backgrounds must be flat and clean.  
+
+NO FLASHY COLORS: Strictly forbid the use of generic AI gradients or flashy colors. You must use our existing semantic Tailwind tokens (e.g., bg-background, text-foreground, border-border).  
+
+NO FILLER CONTENT: Do not add excessive padding or giant typography just to fill empty space. The layout must be structurally tight and data-dense.  
+
+FUNCTIONAL REQUIREMENTS:
+
+Profile Section: Build a real, functional profile section. It must display actual realistic information structure (Avatar, Full Name, Email, Role, Account Status, and basic stats). Use strict CSS Grid or Flexbox.
+
+Settings Page: Build a realistic settings layout (e.g., a sidebar for navigation like 'Account', 'Security', 'Notifications', and a main content area with real form inputs, toggles, and save buttons).
+
+Maintain Consistency: YOU MUST REUSE existing components and code already present in the other pages. Do not invent a new button or card component if we already have a standard one in the codebase. Read the existing layout patterns before generating new UI.  
+
+Borders & Refinement: Use well-refined, subtle 1px solid borders (border border-border) to separate sections and cards instead of heavy drop-shadows.  
+
+Theme Compatibility: Everything must be perfectly functional, accessible, and beautifully displayed in BOTH Light Mode and Dark Mode. Ensure all text remains readable and contrasts are high in both themes.
+
+Do not rewrite the entire application architecture or backend logic. Focus only on cleaning the aesthetic and building the Profile and Settings pages properly according to these rules. Provide the updated code.

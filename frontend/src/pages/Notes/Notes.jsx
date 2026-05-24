@@ -261,6 +261,9 @@ export default function Notes() {
               isDarkMode={isDarkMode}
               toggleTheme={toggleTheme}
               onClose={() => setShowSettingsPanel(false)}
+              notesCount={store.notes.length}
+              foldersCount={store.folders.length}
+              onProfileSave={handleProfileSave}
             />
           ) : activeNote ? (
             <NoteEditor
@@ -410,6 +413,9 @@ export default function Notes() {
           currentUser={currentUser}
           onSave={handleProfileSave}
           onClose={() => setShowProfileModal(false)}
+          notesCount={store.notes.length}
+          foldersCount={store.folders.length}
+          onOpenSettings={() => { setShowSettingsPanel(true); store.setActiveNote(null); }}
         />
       )}
 
