@@ -1,11 +1,10 @@
-import React from "react";
-import "./styles/responsive.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AuthPage from "./pages/AuthPage/AuthPage";
-import Notes from "./pages/Notes/Notes";
-import LandingPage from "./pages/LandingPage/LandingPage";
-import { AuthProvider } from "./context/AuthContext";
-import Layout from "./components/Layout/Layout";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AuthPage from './pages/AuthPage/AuthPage';
+import Notes from './pages/Notes/Notes';
+import LandingPage from './pages/LandingPage/LandingPage';
+import { AuthProvider } from './context/AuthContext';
+import Layout from './components/Layout/Layout';
 
 function App() {
   return (
