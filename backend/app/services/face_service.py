@@ -247,15 +247,18 @@ class FaceService:
         logger.info("Face recognized: face_id=%s, distance=%.4f", face_id, distance)
         return (face_id, distance)
 
-    def _preprocess_base64_image(self, base64_str: str, target_size: tuple[int, int] = (112, 112)) -> np.ndarray | None:
-        """Decode and preprocess a base64 image for DeepFace.
+    def _preprocess_base64_image(self, base64_str: str) -> np.ndarray | None:
+        """Decode a base64 image for DeepFace.
+
+        Returns the image at its original resolution so that the face detector
+        has enough pixels to locate the face. DeepFace handles internal
+        cropping and resizing after detection.
 
         Args:
             base64_str: Base64-encoded image string (may include data URI prefix).
-            target_size: Target dimensions for resizing.
 
         Returns:
-            Preprocessed image as a numpy array, or None on failure.
+            Decoded image as a numpy array, or None on failure.
         """
         try:
             # Strip data URI prefix if present
@@ -269,26 +272,32 @@ class FaceService:
             if image is None:
                 return None
 
-            image = cv2.resize(image, target_size, interpolation=cv2.INTER_AREA)
+            # Cap very large images to 1280px on the longest side to avoid
+            # memory issues, while keeping enough resolution for detection.
+            max_dim = 1280
+            h, w = image.shape[:2]
+            if max(h, w) > max_dim:
+                scale = max_dim / max(h, w)
+                image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+
             return image.astype(np.uint8)
 
         except Exception as e:
             logger.warning("Error preprocessing base64 image: %s", str(e))
             return None
 
-    def _preprocess_batch(self, images_base64: list[str], target_size: tuple[int, int] = (112, 112)) -> list[np.ndarray]:
+    def _preprocess_batch(self, images_base64: list[str]) -> list[np.ndarray]:
         """Preprocess a batch of base64 images.
 
         Args:
             images_base64: List of base64-encoded image strings.
-            target_size: Target dimensions for resizing.
 
         Returns:
             List of successfully preprocessed images as numpy arrays.
         """
         processed = []
         for b64 in images_base64:
-            img = self._preprocess_base64_image(b64, target_size)
+            img = self._preprocess_base64_image(b64)
             if img is not None:
                 processed.append(img)
         return processed
