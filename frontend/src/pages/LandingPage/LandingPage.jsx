@@ -655,8 +655,8 @@ function Footer() {
                 style={{ height: 30, width: "auto", objectFit: "contain" }}
               />
               <span
-                className="text-[18px] font-bold tracking-[-0.02em] leading-none text-fg"
-                style={{ fontFamily: '"Syne", sans-serif', color: "var(--accent)" }}
+                className="text-[18px] font-bold tracking-[-0.02em] leading-none"
+                style={{ fontFamily: '"Syne", sans-serif', color: "var(--fg)" }}
               >
                 PrivyNote
               </span>

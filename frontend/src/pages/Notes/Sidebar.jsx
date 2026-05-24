@@ -20,8 +20,6 @@ import {
   LuMoon,
   LuTrash2,
   LuPencil,
-  LuScanFace,
-  LuKeyRound,
   LuX,
   LuChevronLeft,
   LuChevronRight,
@@ -63,9 +61,6 @@ export default function Sidebar({
   // Retractable state (desktop only)
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Settings dropdown
-  const [showSettings, setShowSettings] = useState(false);
-  const settingsRef = useRef(null);
 
   // Create folder modal
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -73,15 +68,6 @@ export default function Sidebar({
   // Rename state
   const [renaming, setRenaming] = useState(null);
 
-  useEffect(() => {
-    function onOutside(e) {
-      if (settingsRef.current && !settingsRef.current.contains(e.target)) {
-        setShowSettings(false);
-      }
-    }
-    document.addEventListener('mousedown', onOutside);
-    return () => document.removeEventListener('mousedown', onOutside);
-  }, []);
 
   // Don't collapse on mobile
   const collapsed = !isMobile && isCollapsed;
@@ -291,44 +277,15 @@ export default function Sidebar({
         </button>
 
         {/* Paramètres */}
-        <div ref={settingsRef} className="sidebar__settings-wrapper">
-          <button
-            className="sidebar__bottom-btn"
-            onClick={() => setShowSettings(v => !v)}
-            title="Paramètres"
-            aria-label="Paramètres"
-          >
-            <span className="sidebar__item-icon"><LuSettings size={17} /></span>
-            {!collapsed && <span>Paramètres</span>}
-          </button>
-
-          <AnimatePresence>
-            {showSettings && (
-              <motion.div
-                className="sidebar__settings-menu"
-                initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                transition={{ duration: 0.14 }}
-              >
-                <button
-                  className="sidebar__settings-item"
-                  onClick={() => { setShowSettings(false); onAddFace(); }}
-                >
-                  <LuScanFace size={15} />
-                  Add face
-                </button>
-                <button
-                  className="sidebar__settings-item"
-                  onClick={() => { setShowSettings(false); onChangePassword(); }}
-                >
-                  <LuKeyRound size={15} />
-                  Change password
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        <button
+          className="sidebar__bottom-btn"
+          onClick={onOpenSettings}
+          title="Paramètres"
+          aria-label="Paramètres"
+        >
+          <span className="sidebar__item-icon"><LuSettings size={17} /></span>
+          {!collapsed && <span>Paramètres</span>}
+        </button>
 
         {/* Déconnexion */}
         <button

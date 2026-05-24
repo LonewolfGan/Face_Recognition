@@ -304,9 +304,9 @@
 }
 
 .sp-badge--success {
-  color: #16a34a;
-  background-color: rgba(22, 163, 74, 0.08);
-  border-color: rgba(22, 163, 74, 0.20);
+  color: var(--color-tech-violet, #7A35F2);
+  background-color: rgba(122, 53, 242, 0.08);
+  border-color: rgba(122, 53, 242, 0.20);
 }
 
 /* ─── Stats grid ──────────────────────────────────────────────────────────── */

@@ -25,12 +25,12 @@
 }
 
 .notes-page--dark {
-  --np-canvas:      #1e1332;
-  --np-card:        #2e1f4a;
-  --np-card-shadow: 0 2px 8px rgba(0,0,0,0.35), 0 0 0 1px rgba(155,112,229,0.1);
-  --np-card-hover:  0 4px 16px rgba(155,112,229,0.18), 0 0 0 1.5px rgba(155,112,229,0.22);
-  --np-stat-bg:     rgba(155,112,229,0.08);
-  --np-stat-border: rgba(155,112,229,0.16);
+  --np-canvas:      var(--bg);
+  --np-card:        var(--bg-subtle);
+  --np-card-shadow: 0 2px 8px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.07);
+  --np-card-hover:  0 4px 16px rgba(122,53,242,0.18), 0 0 0 1.5px rgba(122,53,242,0.22);
+  --np-stat-bg:     rgba(255,255,255,0.04);
+  --np-stat-border: rgba(255,255,255,0.08);
   --np-group-sep:   rgba(255,255,255,0.06);
   background: var(--np-canvas);
   color: var(--text-title);
