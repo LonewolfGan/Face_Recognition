@@ -147,6 +147,7 @@ export default function Notes() {
   }, [store.activeFolderId]); // eslint-disable-line
 
   async function handleNewNote() {
+    setShowSettingsPanel(false);
     const noteId = await store.createNote('', '', store.activeFolderId);
     if (noteId) store.setActiveNote(noteId);
   }

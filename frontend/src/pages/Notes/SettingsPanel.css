@@ -148,7 +148,17 @@
 }
 
 .sp-card--danger {
-  border-color: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.28);
+  background-color: rgba(239, 68, 68, 0.04);
+}
+
+.sp-card--danger .sp-action-text__sub {
+  color: rgba(239, 68, 68, 0.65);
+}
+
+.sp-card--danger .sp-card__header {
+  border-bottom-color: rgba(239, 68, 68, 0.18);
+  background-color: rgba(239, 68, 68, 0.05);
 }
 
 .sp-card__header {

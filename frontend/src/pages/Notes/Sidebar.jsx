@@ -154,14 +154,6 @@ export default function Sidebar({
         {!collapsed && (
           <div className="sidebar__section-label">
             <span>Dossiers</span>
-            <button
-              className="sidebar__section-add"
-              onClick={() => setShowCreateModal(true)}
-              aria-label="Nouveau dossier"
-              title="Nouveau dossier"
-            >
-              <LuPlus size={13} />
-            </button>
           </div>
         )}
 

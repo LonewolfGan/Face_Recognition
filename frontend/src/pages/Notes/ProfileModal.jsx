@@ -145,10 +145,6 @@ export default function ProfileModal({
             <p className="pm-identity__name">{currentUser?.name || 'Utilisateur'}</p>
             <div className="pm-identity__badges">
               <span className="pm-badge pm-badge--accent">PrivyNote</span>
-              <span className="pm-badge pm-badge--success">
-                <LuCircleCheck size={10} />
-                Actif
-              </span>
             </div>
             {memberSince && (
               <p className="pm-identity__since">Membre depuis {memberSince}</p>
