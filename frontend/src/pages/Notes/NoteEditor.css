@@ -161,7 +161,7 @@
   padding: 48px 72px 80px;
   display: flex;
   flex-direction: column;
-  background: var(--page-bg, #f4f4f5);
+  background: var(--page-bg, #0c0b14);
   min-height: 100%;
 }
 

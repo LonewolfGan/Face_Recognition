@@ -27,11 +27,11 @@
 .notes-page--dark {
   --np-canvas:      var(--bg);
   --np-card:        var(--bg-subtle);
-  --np-card-shadow: 0 2px 8px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.07);
-  --np-card-hover:  0 4px 16px rgba(122,53,242,0.18), 0 0 0 1.5px rgba(122,53,242,0.22);
-  --np-stat-bg:     rgba(255,255,255,0.04);
-  --np-stat-border: rgba(255,255,255,0.08);
-  --np-group-sep:   rgba(255,255,255,0.06);
+  --np-card-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 0 1px rgba(155,112,229,0.10);
+  --np-card-hover:  0 4px 16px rgba(122,53,242,0.20), 0 0 0 1.5px rgba(122,53,242,0.28);
+  --np-stat-bg:     rgba(155,112,229,0.07);
+  --np-stat-border: rgba(155,112,229,0.14);
+  --np-group-sep:   rgba(155,112,229,0.10);
   background: var(--np-canvas);
   color: var(--text-title);
 }

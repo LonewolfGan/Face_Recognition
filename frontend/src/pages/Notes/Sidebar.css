@@ -39,17 +39,17 @@
 }
 
 .sidebar--dark {
-  background: #221540;
-  border-right: 1px solid rgba(155,112,229,0.12);
-  --sb-item-text:    rgba(244,244,245,0.65);
-  --sb-item-hover:   rgba(155,112,229,0.1);
+  background: #100e1c;
+  border-right: 1px solid rgba(155,112,229,0.10);
+  --sb-item-text:    rgba(240,238,255,0.65);
+  --sb-item-hover:   rgba(155,112,229,0.10);
   --sb-active-bg:    var(--color-tech-violet);
   --sb-active-text:  #ffffff;
-  --sb-label-color:  rgba(244,244,245,0.32);
-  --sb-brand-color:  #f4f4f5;
-  --sb-border:       rgba(155,112,229,0.1);
-  --sb-count-color:  rgba(244,244,245,0.3);
-  --sb-bottom-bg:    #2a1a48;
+  --sb-label-color:  rgba(240,238,255,0.30);
+  --sb-brand-color:  #f0eeff;
+  --sb-border:       rgba(155,112,229,0.10);
+  --sb-count-color:  rgba(240,238,255,0.28);
+  --sb-bottom-bg:    #131120;
 }
 
 /* ── Header ───────────────────────────────────────────────────────────────── */
