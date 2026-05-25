@@ -46,6 +46,7 @@ export function useNotesStore() {
   const [state, setState] = useState({
     folders: [],
     notes: [],
+    allNotes: [],   // always the complete list across all folders, used for counts
     activeNoteId: null,
     activeFolderId: null,
     loading: { notes: false, folders: false, saving: false },
@@ -132,6 +133,7 @@ export function useNotesStore() {
           activeFolderId: prev.activeFolderId === folderId ? null : prev.activeFolderId,
           folders: prev.folders.filter(f => f.folder_id !== folderId),
           notes: prev.notes.filter(n => n.folder_id !== folderId),
+          allNotes: prev.allNotes.filter(n => n.folder_id !== folderId),
         }));
         return true;
       }
@@ -149,9 +151,12 @@ export function useNotesStore() {
     try {
       const endpoint = folderId ? `/folders/${folderId}/notes` : '/notes';
       const res = await authFetch.get(endpoint);
+      const loaded = res.data.notes || [];
       setState(prev => ({
         ...prev,
-        notes: res.data.notes || [],
+        notes: loaded,
+        // allNotes is only updated when loading the full list (no folder filter)
+        ...(folderId == null ? { allNotes: loaded } : {}),
         loading: { ...prev.loading, notes: false },
       }));
     } catch (err) {
@@ -180,6 +185,7 @@ export function useNotesStore() {
         setState(prev => ({
           ...prev,
           notes: [newNote, ...prev.notes],
+          allNotes: [newNote, ...prev.allNotes],
           activeNoteId: res.data.note_id,
         }));
         return res.data.note_id;
@@ -195,14 +201,14 @@ export function useNotesStore() {
    * Pass debounced=true for keystroke saves, false for on-blur saves.
    */
   const updateNote = useCallback(async (noteId, { title, content, folder_id }, { debounced = false } = {}) => {
-    // Optimistic UI update
+    // Optimistic UI update (both views)
+    const updateFn = n => n.note_id === noteId
+      ? { ...n, title, content, updated_at: new Date().toISOString() }
+      : n;
     setState(prev => ({
       ...prev,
-      notes: prev.notes.map(n =>
-        n.note_id === noteId
-          ? { ...n, title, content, updated_at: new Date().toISOString() }
-          : n
-      ),
+      notes: prev.notes.map(updateFn),
+      allNotes: prev.allNotes.map(updateFn),
     }));
 
     const doSave = async () => {
@@ -236,6 +242,7 @@ export function useNotesStore() {
       setState(prev => ({
         ...prev,
         notes: prev.notes.filter(n => n.note_id !== noteId),
+        allNotes: prev.allNotes.filter(n => n.note_id !== noteId),
         activeNoteId: prev.activeNoteId === noteId ? null : prev.activeNoteId,
       }));
       toast.success('Note deleted');
@@ -266,6 +273,7 @@ export function useNotesStore() {
     ...state,
     activeNote,
     activeFolder,
+    allNotes: state.allNotes,
 
     // Actions
     loadFolders,

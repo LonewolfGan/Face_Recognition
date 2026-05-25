@@ -274,7 +274,7 @@ export default function Notes() {
       {/* ── Sidebar ── */}
       <Sidebar
         folders={store.folders}
-        notes={store.notes}
+        notes={store.allNotes}
         activeFolderId={store.activeFolderId}
         isOpen={sidebarOpen}
         isMobile={isMobile}
