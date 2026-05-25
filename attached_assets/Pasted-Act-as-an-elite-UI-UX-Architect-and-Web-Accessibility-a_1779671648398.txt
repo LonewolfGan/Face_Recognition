@@ -1,0 +1,33 @@
+Act as an elite UI/UX Architect and Web Accessibility (a11y) Expert.
+We need to perform a surgical, site-wide UI/UX sweep across ALL pages of the application to achieve a premium, human-crafted level of quality.
+
+CRITICAL OPERATIONAL RULE (Blast Radius):
+DO NOT modify any backend logic, database queries, API calls, routing, or complex state management functionality. Your ONLY job is to refine the frontend markup and Tailwind classes across the existing pages.
+
+1. INTERACTION & COMPONENT ALIGNMENT FIXES:
+
+Scan all pages and identify all interactive elements (buttons, links, clickable cards, custom toggles). Ensure EVERY single one has the cursor-pointer class applied.
+
+BUTTON HEIGHTS: Check all adjacent buttons (buttons placed next to each other). Ensure they have the EXACT same height (e.g., use consistent Shadcn size variants like size="default" or h-10). Fix the CSS Flexbox alignment (items-center, stretch) if necessary so they align perfectly.
+
+Ensure all interactive elements have clean, professional, and accessible hover/focus states using our existing semantic tokens. Do NOT use cheap erratic animations like hover:scale-110.
+
+2. HEADER & THEME MISMATCH:
+
+Fix the logo and its title immediately. Currently, the logo is using a Light Mode color while the title is using a Dark Mode style. Harmonize them using semantic Tailwind tokens (e.g., text-foreground, fill-foreground, or text-primary) so they both seamlessly adapt to the active theme (Light and Dark) without hardcoded colors.  
+
+3. STRICT ACCESSIBILITY (a11y) & LOCALIZATION:
+
+Fix all accessibility errors. Ensure proper semantic HTML (e.g., force the use of <button> instead of a clickable <div> where appropriate).
+
+Add missing aria-labels to any icon-only buttons or ambiguous interactive elements.
+
+The site content is in French. Translate any residual English UI text to French. Ensure the document root is set to lang="fr".
+
+4. GLOBAL ANTI-SLOP ENFORCEMENT:
+
+I am reiterating the absolute ban on generic "AI Slop". Across all files, if you see ANY residual radial-gradient, animate-pulse, backdrop-blur, floating decorative shapes, or generic heavy shadow-xl, DELETE THEM immediately.
+
+Maintain the premium, clean, high-density aesthetic established on the homepage. Use subtle 1px solid borders (border border-border) for component separation instead of shadows.  
+
+Carefully review the frontend files, apply these specific surgical updates site-wide

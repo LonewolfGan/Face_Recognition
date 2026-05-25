@@ -35,9 +35,9 @@ import './Notes.css';
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 function getGreeting() {
   const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 12) return 'Bonjour';
+  if (h < 18) return 'Bon après-midi';
+  return 'Bonsoir';
 }
 
 function stripHtml(html) {
@@ -83,9 +83,9 @@ function NoteBox({ note, onClick, showFolder, folderName }) {
     <button
       className="note-box"
       onClick={onClick}
-      aria-label={`Open note: ${note.title || 'Untitled'}`}
+      aria-label={`Ouvrir la note : ${note.title || 'Sans titre'}`}
     >
-      <div className="note-box__title">{note.title || 'Untitled'}</div>
+      <div className="note-box__title">{note.title || 'Sans titre'}</div>
       {preview && <p className="note-box__preview">{preview}</p>}
       <div className="note-box__footer">
         {showFolder && folderName && (
@@ -157,7 +157,7 @@ export default function Notes() {
   }
 
   async function handleCaptures(images) {
-    if (!images || images.length === 0) { toast.error('No images captured.'); return; }
+    if (!images || images.length === 0) { toast.error('Aucune image capturée.'); return; }
     setShowWebcam(false);
     try {
       const { data: faceData } = await authFetch.get('/get_face_id');
@@ -165,8 +165,8 @@ export default function Notes() {
       const response = await axios.post(ADD_FACE_URL, {
         face_id, images, name: currentUser.name,
       }, { headers: { 'Content-Type': 'application/json' } });
-      if (response.data.status === 'success') toast.success('Face added successfully');
-      else toast.error(response.data.message || 'Error adding face');
+      if (response.data.status === 'success') toast.success('Visage ajouté avec succès');
+      else toast.error(response.data.message || 'Erreur lors de l\'ajout du visage');
     } catch (err) {
       console.error('Face add error:', err);
       handleApiError(err, toast);
@@ -177,7 +177,7 @@ export default function Notes() {
     const res = await authFetch.patch('/profile', { name, avatar });
     if (res.data.status === 'success') {
       updateUser({ name: res.data.user.name, avatar: res.data.user.avatar });
-      toast.success('Profile updated');
+      toast.success('Profil mis à jour');
     }
   }
 
@@ -185,10 +185,10 @@ export default function Notes() {
     try {
       const res = await authFetch.post('/change_password', { password: newPassword });
       if (res.data.status === 'success') {
-        toast.success('Password changed successfully');
+        toast.success('Mot de passe modifié avec succès');
         setShowChangePassword(false);
       } else {
-        toast.error(res.data.message || 'Error changing password');
+        toast.error(res.data.message || 'Erreur lors du changement de mot de passe');
       }
     } catch (err) { handleApiError(err, toast); }
   }
@@ -295,12 +295,12 @@ export default function Notes() {
                   <div className="notes-stat-pill">
                     <LuFolder size={14} className="notes-stat-pill__icon" />
                     <span className="notes-stat-pill__count">{store.folders.length}</span>
-                    <span className="notes-stat-pill__label">Folders</span>
+                    <span className="notes-stat-pill__label">Dossiers</span>
                   </div>
                   <div className="notes-stat-pill">
                     <LuBookOpen size={14} className="notes-stat-pill__icon" />
                     <span className="notes-stat-pill__label">
-                      {store.activeFolder ? store.activeFolder.name : 'All Notes'}
+                      {store.activeFolder ? store.activeFolder.name : 'Toutes les notes'}
                     </span>
                   </div>
                 </div>
@@ -310,14 +310,14 @@ export default function Notes() {
               {searchQuery.trim() && (
                 <p className="notes-search-label">
                   {filteredNotes.length === 0
-                    ? `No notes match "${searchQuery}"`
-                    : `${filteredNotes.length} result${filteredNotes.length !== 1 ? 's' : ''} for "${searchQuery}"`}
+                    ? `Aucune note ne correspond à « ${searchQuery} »`
+                    : `${filteredNotes.length} résultat${filteredNotes.length !== 1 ? 's' : ''} pour « ${searchQuery} »`}
                 </p>
               )}
 
               {/* Loading */}
               {store.loading.notes && (
-                <p className="notes-grid__loading">Loading…</p>
+                <p className="notes-grid__loading">Chargement…</p>
               )}
 
               {/* Empty state */}
@@ -351,7 +351,7 @@ export default function Notes() {
                         <div className="notes-folder-group__header">
                           <LuFolder size={15} className="notes-folder-group__icon" />
                           <span className="notes-folder-group__name">
-                            {folder ? folder.name : 'No folder'}
+                            {folder ? folder.name : 'Sans dossier'}
                           </span>
                           <span className="notes-folder-group__count">{groupNotes.length}</span>
                         </div>
@@ -407,7 +407,7 @@ export default function Notes() {
               onCapture={handleCaptures}
               onError={(msg) => { toast.error(msg); setShowWebcam(false); }}
               onCancel={() => setShowWebcam(false)}
-              guidanceText="Look at the camera to add your face"
+              guidanceText="Regardez la caméra pour ajouter votre visage"
               autoStart
             />
           </div>
