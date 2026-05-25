@@ -61,7 +61,7 @@ function ThemeToggle() {
       whileHover={{ scale: 1.06 }}
       whileTap={{ scale: 0.94 }}
       transition={{ duration: 0.18, ease: "easeOut" }}
-      className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-neutral text-title hover:bg-section-alt transition-colors duration-200"
+      className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-neutral text-title hover:bg-section-alt transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]"
     >
       {isDarkMode
         ? <LuSun className="w-4 h-4" />

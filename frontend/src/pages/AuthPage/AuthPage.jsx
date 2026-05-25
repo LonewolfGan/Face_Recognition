@@ -57,7 +57,7 @@ function ThemeToggle() {
       whileHover={{ scale: 1.06 }}
       whileTap={{ scale: 0.94 }}
       transition={{ duration: 0.18 }}
-      className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-neutral text-title hover:bg-section-alt transition-colors duration-200"
+      className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-neutral text-title hover:bg-section-alt transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]"
     >
       {isDarkMode ? <LuSun className="w-4 h-4" /> : <LuMoon className="w-4 h-4" />}
     </motion.button>
@@ -130,7 +130,7 @@ function PasswordInput({ value, onChange, placeholder, autoFocus, required }) {
       <button
         type="button"
         onClick={() => setShow((s) => !s)}
-        className="absolute right-3 text-muted-token hover:text-title transition-colors"
+        className="absolute right-3 text-muted-token hover:text-title transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)] rounded"
         tabIndex={-1}
       >
         {show ? <LuEyeOff className="w-4 h-4" /> : <LuEye className="w-4 h-4" />}
@@ -302,7 +302,7 @@ function TabBar({ isLogin, onLogin, onSignup }) {
         type="button"
         onClick={onLogin}
         className={cn(
-          "h-9 text-[14px] font-semibold rounded-lg transition-all duration-200",
+          "h-9 text-[14px] font-semibold rounded-lg transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]",
           isLogin ? "bg-tech-violet text-zinc-50 shadow-sm" : "text-muted-token hover:text-title"
         )}
       >
@@ -312,7 +312,7 @@ function TabBar({ isLogin, onLogin, onSignup }) {
         type="button"
         onClick={onSignup}
         className={cn(
-          "h-9 text-[14px] font-semibold rounded-lg transition-all duration-200",
+          "h-9 text-[14px] font-semibold rounded-lg transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]",
           !isLogin ? "bg-tech-violet text-zinc-50 shadow-sm" : "text-muted-token hover:text-title"
         )}
       >
@@ -878,7 +878,7 @@ function LoginForm({
             <button
               type="button"
               onClick={() => setShowPasswordForm(true)}
-              className="w-full h-12 rounded-xl border border-neutral text-[14px] font-semibold text-title hover:bg-section-alt transition-colors duration-200"
+              className="w-full h-12 rounded-xl border border-neutral text-[14px] font-semibold text-title hover:bg-section-alt transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]"
             >
               Utiliser un mot de passe
             </button>

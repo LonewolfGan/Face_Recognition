@@ -44,7 +44,7 @@ export default function TopBar({
           <button
             onClick={handleClear}
             aria-label="Clear search"
-            className="absolute right-2.5 flex items-center justify-center w-5 h-5 rounded text-muted hover:text-fg hover:bg-muted-app transition-colors"
+            className="absolute right-2.5 flex items-center justify-center w-5 h-5 rounded text-muted hover:text-fg hover:bg-muted-app transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]"
           >
             <LuX size={12} />
           </button>
@@ -61,7 +61,8 @@ export default function TopBar({
             'flex items-center gap-1.5 h-9 px-4 rounded-lg',
             'bg-tech-violet text-white text-[13px] font-semibold font-heading',
             'hover:bg-violet-hover transition-colors duration-150',
-            'disabled:opacity-40 disabled:cursor-not-allowed',
+            'cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]',
             'max-sm:w-9 max-sm:px-0 max-sm:justify-center'
           )}
         >
