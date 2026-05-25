@@ -31,6 +31,7 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
   const saveTimerRef = useRef(null);
   const savedTimerRef = useRef(null);
   const noteIdRef = useRef(note?.note_id);
+  const folderIdRef = useRef(note?.folder_id ?? null);
 
   // Sync local state when note changes (switching between notes)
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
       setTitle(note.title ?? '');
       setContent(note.content ?? '');
       noteIdRef.current = note.note_id;
+      folderIdRef.current = note.folder_id ?? null;
       setSaveStatus('idle');
     }
   }, [note?.note_id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -75,7 +77,7 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
     setSaveStatus('saving');
 
     const doSave = () => {
-      onUpdate(noteIdRef.current, { title: newTitle, content: newContent }, { debounced: false });
+      onUpdate(noteIdRef.current, { title: newTitle, content: newContent, folder_id: folderIdRef.current }, { debounced: false });
       setSaveStatus('saved');
       savedTimerRef.current = setTimeout(() => setSaveStatus('idle'), 2500);
     };

@@ -194,7 +194,7 @@ export function useNotesStore() {
    * updateNote — immediate or debounced.
    * Pass debounced=true for keystroke saves, false for on-blur saves.
    */
-  const updateNote = useCallback(async (noteId, { title, content }, { debounced = false } = {}) => {
+  const updateNote = useCallback(async (noteId, { title, content, folder_id }, { debounced = false } = {}) => {
     // Optimistic UI update
     setState(prev => ({
       ...prev,
@@ -208,7 +208,9 @@ export function useNotesStore() {
     const doSave = async () => {
       setLoading('saving', true);
       try {
-        await authFetch.put(`/notes/${noteId}`, { title, content });
+        const payload = { title, content };
+        if (folder_id !== undefined) payload.folder_id = folder_id;
+        await authFetch.put(`/notes/${noteId}`, payload);
       } catch (err) {
         handleApiError(err, toast);
       } finally {

@@ -14,6 +14,9 @@ import {
   LuFolder,
   LuBookOpen,
   LuTrash2,
+  LuCopy,
+  LuCheck,
+  LuClock,
 } from 'react-icons/lu';
 
 import { useAuth } from '../../context/AuthContext';
@@ -73,12 +76,31 @@ function groupNotesByFolder(notes, folders) {
   return result;
 }
 
+function formatFullDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('fr-FR', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+}
+
+function formatTime(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
 /* ─── Note box card ──────────────────────────────────────────────────────── */
-function NoteBox({ note, onClick, onDelete, showFolder, folderName }) {
-  const preview = stripHtml(note.content || '').slice(0, 110);
-  const date = note.updated_at
-    ? new Date(note.updated_at).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })
-    : '';
+function NoteBox({ note, onClick, onDelete }) {
+  const [copied, setCopied] = useState(false);
+  const hasContent = !!(note.content && note.content.trim());
+
+  function handleCopy(e) {
+    e.stopPropagation();
+    if (!hasContent) return;
+    navigator.clipboard.writeText(note.content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    });
+  }
 
   return (
     <div className="note-box">
@@ -86,14 +108,25 @@ function NoteBox({ note, onClick, onDelete, showFolder, folderName }) {
         onKeyDown={e => e.key === 'Enter' && onClick()}
         aria-label={`Ouvrir la note : ${note.title || 'Sans titre'}`}
       >
-        <div className="note-box__title">{note.title || 'Sans titre'}</div>
-        <p className="note-box__preview">{preview || <span className="note-box__empty">Aucun contenu</span>}</p>
+        <div className="note-box__top-row">
+          <div className="note-box__title">{note.title || 'Sans titre'}</div>
+          <button
+            className={`note-box__copy-btn${!hasContent ? ' note-box__copy-btn--disabled' : ''}`}
+            onClick={handleCopy}
+            disabled={!hasContent}
+            aria-label="Copier le contenu"
+            title={hasContent ? 'Copier le contenu' : 'Aucun contenu'}
+          >
+            {copied ? <LuCheck size={13} /> : <LuCopy size={13} />}
+          </button>
+        </div>
       </div>
       <div className="note-box__footer">
-        {showFolder && folderName && (
-          <span className="note-box__folder-badge">{folderName}</span>
-        )}
-        <span className="note-box__date">{date}</span>
+        <LuClock size={11} className="note-box__clock-icon" />
+        <div className="note-box__date-block">
+          <span className="note-box__date">{formatFullDate(note.updated_at)}</span>
+          <span className="note-box__time">{formatTime(note.updated_at)}</span>
+        </div>
         <button
           className="note-box__delete-btn"
           onClick={e => { e.stopPropagation(); onDelete(note.note_id); }}
@@ -360,6 +393,29 @@ export default function Notes() {
                       <LuPlus size={16} />
                       Nouvelle note
                     </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Récents — 4 most recently updated notes (All Notes view only) */}
+              {!store.loading.notes && noteGroups !== null && store.notes.length > 0 && (
+                <div className="notes-recent-section">
+                  <div className="notes-folder-group__header">
+                    <LuClock size={15} className="notes-folder-group__icon" />
+                    <span className="notes-folder-group__name">Récents</span>
+                  </div>
+                  <div className="notes-cards-grid">
+                    {[...store.notes]
+                      .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+                      .slice(0, 4)
+                      .map(note => (
+                        <NoteBox
+                          key={note.note_id}
+                          note={note}
+                          onClick={() => store.setActiveNote(note.note_id)}
+                          onDelete={store.deleteNote}
+                        />
+                      ))}
                   </div>
                 </div>
               )}
