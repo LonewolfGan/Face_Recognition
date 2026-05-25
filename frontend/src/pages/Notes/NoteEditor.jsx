@@ -87,6 +87,12 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
     }
   }
 
+  function handleTitleFocus(e) {
+    if (e.target.value === 'Untitled' || e.target.value === 'Sans titre') {
+      e.target.select();
+    }
+  }
+
   function handleTitleChange(e) {
     const val = e.target.value;
     setTitle(val);
@@ -196,6 +202,7 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
           className="note-editor__title"
           value={title}
           onChange={handleTitleChange}
+          onFocus={handleTitleFocus}
           onBlur={handleTitleBlur}
           onKeyDown={handleTitleKeyDown}
           placeholder="Sans titre"

@@ -138,7 +138,13 @@ def update_note_route(note_id):
         # Sanitize string fields
         title = sanitize_string(data["title"])
         content = sanitize_string(data.get("content", ""))
-        folder_id = data.get("folder_id")
+
+        # Only update folder_id if explicitly included in the request body.
+        # If absent, preserve the note's current folder assignment.
+        if "folder_id" in data:
+            folder_id = data["folder_id"]
+        else:
+            folder_id = existing_note.get("folder_id")
 
         # If folder_id provided, verify ownership of folder
         if folder_id is not None:

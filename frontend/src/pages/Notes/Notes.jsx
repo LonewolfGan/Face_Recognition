@@ -13,6 +13,7 @@ import {
   LuFileText,
   LuFolder,
   LuBookOpen,
+  LuTrash2,
 } from 'react-icons/lu';
 
 import { useAuth } from '../../context/AuthContext';
@@ -73,27 +74,36 @@ function groupNotesByFolder(notes, folders) {
 }
 
 /* ─── Note box card ──────────────────────────────────────────────────────── */
-function NoteBox({ note, onClick, showFolder, folderName }) {
+function NoteBox({ note, onClick, onDelete, showFolder, folderName }) {
   const preview = stripHtml(note.content || '').slice(0, 110);
   const date = note.updated_at
     ? new Date(note.updated_at).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })
     : '';
 
   return (
-    <button
-      className="note-box"
-      onClick={onClick}
-      aria-label={`Ouvrir la note : ${note.title || 'Sans titre'}`}
-    >
-      <div className="note-box__title">{note.title || 'Sans titre'}</div>
-      {preview && <p className="note-box__preview">{preview}</p>}
+    <div className="note-box">
+      <div className="note-box__body" onClick={onClick} role="button" tabIndex={0}
+        onKeyDown={e => e.key === 'Enter' && onClick()}
+        aria-label={`Ouvrir la note : ${note.title || 'Sans titre'}`}
+      >
+        <div className="note-box__title">{note.title || 'Sans titre'}</div>
+        <p className="note-box__preview">{preview || <span className="note-box__empty">Aucun contenu</span>}</p>
+      </div>
       <div className="note-box__footer">
         {showFolder && folderName && (
           <span className="note-box__folder-badge">{folderName}</span>
         )}
-        {date && <span className="note-box__date">{date}</span>}
+        <span className="note-box__date">{date}</span>
+        <button
+          className="note-box__delete-btn"
+          onClick={e => { e.stopPropagation(); onDelete(note.note_id); }}
+          aria-label={`Supprimer la note : ${note.title || 'Sans titre'}`}
+          title="Supprimer"
+        >
+          <LuTrash2 size={13} />
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -375,6 +385,7 @@ export default function Notes() {
                               note={note}
                               showFolder={false}
                               onClick={() => store.setActiveNote(note.note_id)}
+                              onDelete={store.deleteNote}
                             />
                           ))}
                         </div>
@@ -389,6 +400,7 @@ export default function Notes() {
                           note={note}
                           showFolder={false}
                           onClick={() => store.setActiveNote(note.note_id)}
+                          onDelete={store.deleteNote}
                         />
                       ))}
                     </div>
