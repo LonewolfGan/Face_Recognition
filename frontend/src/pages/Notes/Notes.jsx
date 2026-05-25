@@ -22,7 +22,7 @@ import { useNotesStore } from '../../hooks/useNotesStore';
 import { ADD_FACE_URL } from '../../config';
 import { handleApiError } from '../../utils/errorHandler';
 
-import WebcamCapture from '../../components/WebcamCapture';
+import FaceCaptureOverlay from '../../components/FaceCaptureOverlay/FaceCaptureOverlay';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
 
 import Sidebar from './Sidebar';
@@ -267,7 +267,7 @@ export default function Notes() {
             <SettingsPanel
               currentUser={currentUser}
               onLogout={handleLogout}
-              onAddFace={() => { setShowSettingsPanel(false); setShowWebcam(true); }}
+              onAddFace={() => setShowWebcam(true)}
               onChangePassword={() => { setShowSettingsPanel(false); setShowChangePassword(true); }}
               isDarkMode={isDarkMode}
               toggleTheme={toggleTheme}
@@ -411,19 +411,13 @@ export default function Notes() {
         />
       )}
 
-      {/* Webcam overlay */}
+      {/* Face capture overlay */}
       {showWebcam && (
-        <div className="notes-overlay">
-          <div className="notes-overlay__content">
-            <WebcamCapture
-              onCapture={handleCaptures}
-              onError={(msg) => { toast.error(msg); setShowWebcam(false); }}
-              onCancel={() => setShowWebcam(false)}
-              guidanceText="Regardez la caméra pour ajouter votre visage"
-              autoStart
-            />
-          </div>
-        </div>
+        <FaceCaptureOverlay
+          onCapture={handleCaptures}
+          onError={(msg) => { toast.error(msg); setShowWebcam(false); }}
+          onCancel={() => setShowWebcam(false)}
+        />
       )}
 
       {/* Change password modal */}

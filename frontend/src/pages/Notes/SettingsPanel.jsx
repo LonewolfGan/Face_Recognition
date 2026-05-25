@@ -170,15 +170,9 @@ export default function SettingsPanel({
                     </div>
                     <div className="sp-profile-meta">
                       <p className="sp-profile-meta__name">{currentUser?.name || 'Utilisateur'}</p>
-                      <div className="sp-profile-meta__row">
-                        <span className="sp-badge sp-badge--success">
-                          <LuCircleCheck size={11} />
-                          Actif
-                        </span>
-                        {memberSince && (
-                          <span className="sp-profile-meta__sub">Membre depuis {memberSince}</span>
-                        )}
-                      </div>
+                      {memberSince && (
+                        <p className="sp-profile-meta__sub">Membre depuis {memberSince}</p>
+                      )}
                     </div>
                   </div>
 
