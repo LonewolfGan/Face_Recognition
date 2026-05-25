@@ -103,8 +103,8 @@ function Navbar({ onLogin, onSignup }) {
             style={{ height: 32, width: "auto", objectFit: "contain" }}
           />
           <span
-            className="text-[17px] font-bold tracking-[-0.02em] leading-none text-tech-violet dark:text-fg"
-            style={{ fontFamily: '"Syne", sans-serif' }}
+            className="text-[17px] font-bold tracking-[-0.02em] leading-none"
+            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? "#f4f4f5" : "#7A35F2" }}
           >
             PrivyNote
           </span>
@@ -173,6 +173,15 @@ function Hero({ onSignup, onLogin }) {
       {/* Mesh grid */}
       <div aria-hidden="true" className="absolute inset-0 hero-mesh pointer-events-none" />
 
+      {/* Decorative blobs */}
+      <div aria-hidden="true"
+        className="absolute top-1/4 left-[8%] w-72 h-72 rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(122,53,242,0.09) 0%, transparent 70%)" }}
+      />
+      <div aria-hidden="true"
+        className="absolute bottom-[15%] right-[6%] w-56 h-56 rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(155,112,229,0.08) 0%, transparent 70%)" }}
+      />
 
       <div className="relative z-1 w-full max-w-[860px] mx-auto px-6 flex flex-col items-center text-center gap-7">
         {/* Headline */}
@@ -353,8 +362,8 @@ function FeatureCard({ item, index }) {
   return (
     <motion.div
       {...cardReveal(index)}
-      whileHover={{ y: -3 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      whileHover={{ y: -5, scale: 1.012, boxShadow: "0 20px 40px rgba(122,53,242,0.13)" }}
+      transition={{ duration: 0.22, ease: "easeOut" }}
       className="rounded-xl"
       style={{ willChange: "transform" }}
     >

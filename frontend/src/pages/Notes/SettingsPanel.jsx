@@ -61,7 +61,7 @@ export default function SettingsPanel({
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) { setProfileError('Sélectionner un fichier image.'); return; }
-    if (file.size > 2 * 1024 * 1024) { setProfileError("L'image doit faire moins de 2 Mo."); return; }
+    if (file.size > 2 * 1024 * 1024) { setProfileError('Image must be under 2 MB.'); return; }
     setProfileError('');
     const reader = new FileReader();
     reader.onload = (ev) => setProfileAvatar(ev.target.result);

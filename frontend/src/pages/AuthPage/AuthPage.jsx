@@ -75,7 +75,7 @@ function Modal({ open, onClose, icon: Icon, title, children, actions }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "rgba(10,5,20,0.72)" }}
+          style={{ background: "rgba(10,5,20,0.65)", backdropFilter: "blur(8px)" }}
           onClick={onClose}
         >
           <motion.div

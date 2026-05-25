@@ -118,8 +118,8 @@ export default function Sidebar({
           <button
             className="sidebar__collapse-btn"
             onClick={() => setIsCollapsed(v => !v)}
-            aria-label={collapsed ? 'Déplier le panneau' : 'Replier le panneau'}
-            title={collapsed ? 'Déplier' : 'Replier'}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={collapsed ? 'Expand' : 'Collapse'}
           >
             {collapsed ? <LuChevronRight size={15} /> : <LuChevronLeft size={15} />}
           </button>
@@ -127,7 +127,7 @@ export default function Sidebar({
 
         {/* Mobile close */}
         {isMobile && (
-          <button className="sidebar__close-btn" onClick={onClose} aria-label="Fermer le panneau">
+          <button className="sidebar__close-btn" onClick={onClose} aria-label="Close sidebar">
             <LuX size={18} />
           </button>
         )}
@@ -135,16 +135,16 @@ export default function Sidebar({
 
       {/* ── Workspace section ── */}
       <div className="sidebar__section">
-        {!collapsed && <span className="sidebar__section-label">Espace de travail</span>}
+        {!collapsed && <span className="sidebar__section-label">Workspace</span>}
         <button
           className={`sidebar__item ${activeFolderId === null ? 'sidebar__item--active' : ''}`}
           onClick={() => handleFolderClick(null)}
-          title={collapsed ? 'Toutes les notes' : undefined}
+          title={collapsed ? 'All Notes' : undefined}
         >
           <span className="sidebar__item-icon">
             <LuFileText size={16} />
           </span>
-          {!collapsed && <span className="sidebar__item-name">Toutes les notes</span>}
+          {!collapsed && <span className="sidebar__item-name">All Notes</span>}
           {!collapsed && <span className="sidebar__item-count">{notes.length}</span>}
         </button>
       </div>
@@ -153,12 +153,12 @@ export default function Sidebar({
       <div className="sidebar__section sidebar__section--folders">
         {!collapsed && (
           <div className="sidebar__section-label">
-            <span>Dossiers</span>
+            <span>Folders</span>
             <button
               className="sidebar__section-add"
               onClick={() => setShowCreateModal(true)}
-              aria-label="Nouveau dossier"
-              title="Nouveau dossier"
+              aria-label="New folder"
+              title="New folder"
             >
               <LuPlus size={13} />
             </button>
@@ -215,8 +215,8 @@ export default function Sidebar({
                         e.stopPropagation();
                         setRenaming({ id: folder.folder_id, value: folder.name });
                       }}
-                      aria-label={`Renommer ${folder.name}`}
-                      title="Renommer"
+                      aria-label={`Rename ${folder.name}`}
+                      title="Rename"
                     >
                       <LuPencil size={13} />
                     </button>
@@ -226,8 +226,8 @@ export default function Sidebar({
                         e.stopPropagation();
                         onDeleteFolder(folder.folder_id);
                       }}
-                      aria-label={`Supprimer ${folder.name}`}
-                      title="Supprimer"
+                      aria-label={`Delete ${folder.name}`}
+                      title="Delete"
                     >
                       <LuTrash2 size={13} />
                     </button>
@@ -243,8 +243,7 @@ export default function Sidebar({
           <button
             className="sidebar__item"
             onClick={() => setShowCreateModal(true)}
-            title="Nouveau dossier"
-            aria-label="Nouveau dossier"
+            title="New folder"
           >
             <span className="sidebar__item-icon"><LuPlus size={16} /></span>
           </button>
@@ -254,7 +253,7 @@ export default function Sidebar({
             onClick={() => setShowCreateModal(true)}
           >
             <LuPlus size={14} />
-            Nouveau dossier
+            New folder
           </button>
         )}
       </div>
@@ -268,13 +267,13 @@ export default function Sidebar({
         <button
           className="sidebar__bottom-btn"
           onClick={toggleTheme}
-          title={isDarkMode ? 'Mode clair' : 'Mode sombre'}
-          aria-label={isDarkMode ? 'Mode clair' : 'Mode sombre'}
+          title={isDarkMode ? 'Light mode' : 'Dark mode'}
+          aria-label="Toggle theme"
         >
           <span className="sidebar__item-icon">
             {isDarkMode ? <LuSun size={17} /> : <LuMoon size={17} />}
           </span>
-          {!collapsed && <span>{isDarkMode ? 'Mode clair' : 'Mode sombre'}</span>}
+          {!collapsed && <span>{isDarkMode ? 'Light mode' : 'Dark mode'}</span>}
         </button>
 
         {/* Paramètres */}
