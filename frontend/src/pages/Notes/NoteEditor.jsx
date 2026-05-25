@@ -137,7 +137,7 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
         <button
           className="note-editor__back-btn"
           onClick={onBack}
-          aria-label="Back to notes"
+          aria-label="Retour aux notes"
         >
           <LuChevronLeft size={18} />
           Notes
@@ -149,11 +149,11 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
             className={`note-editor__save-status note-editor__save-status--${saveStatus}`}
             aria-live="polite"
           >
-            {saveStatus === 'saving' && 'Saving…'}
+            {saveStatus === 'saving' && 'Enregistrement…'}
             {saveStatus === 'saved' && (
               <>
                 <span className="note-editor__saved-dot" />
-                Saved
+                Enregistré
               </>
             )}
           </span>
@@ -163,25 +163,25 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
             <button
               className="note-editor__delete-btn"
               onClick={() => setShowDeleteConfirm(true)}
-              aria-label="Delete note"
+              aria-label="Supprimer la note"
             >
               <LuTrash2 size={16} />
-              Delete
+              Supprimer
             </button>
           ) : (
             <div className="note-editor__delete-confirm">
-              <span className="note-editor__delete-confirm-text">Delete this note?</span>
+              <span className="note-editor__delete-confirm-text">Supprimer cette note ?</span>
               <button
                 className="note-editor__delete-confirm-yes"
                 onClick={handleDeleteConfirm}
               >
-                Yes, delete
+                Oui, supprimer
               </button>
               <button
                 className="note-editor__delete-confirm-no"
                 onClick={() => setShowDeleteConfirm(false)}
               >
-                Cancel
+                Annuler
               </button>
             </div>
           )}
@@ -198,9 +198,9 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
           onChange={handleTitleChange}
           onBlur={handleTitleBlur}
           onKeyDown={handleTitleKeyDown}
-          placeholder="Untitled"
+          placeholder="Sans titre"
           rows={1}
-          aria-label="Note title"
+          aria-label="Titre de la note"
         />
 
         {/* Date / meta */}
@@ -232,8 +232,8 @@ export default function NoteEditor({ note, onUpdate, onDelete, onBack, saving })
           value={content}
           onChange={handleContentChange}
           onBlur={handleContentBlur}
-          placeholder="Start writing…"
-          aria-label="Note content"
+          placeholder="Commencez à écrire…"
+          aria-label="Contenu de la note"
         />
       </div>
     </div>

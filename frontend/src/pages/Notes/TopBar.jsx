@@ -29,10 +29,10 @@ export default function TopBar({
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search notes…"
+          placeholder="Rechercher des notes…"
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
-          aria-label="Search notes"
+          aria-label="Rechercher des notes"
           className={cn(
             'w-full h-9 pl-9 pr-9 bg-subtle border border-app rounded-lg',
             'font-mono text-sm text-fg placeholder:text-subtle',
@@ -43,7 +43,7 @@ export default function TopBar({
         {searchQuery && (
           <button
             onClick={handleClear}
-            aria-label="Clear search"
+            aria-label="Effacer la recherche"
             className="absolute right-2.5 flex items-center justify-center w-5 h-5 rounded text-muted hover:text-fg hover:bg-muted-app transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)]"
           >
             <LuX size={12} />
@@ -56,7 +56,7 @@ export default function TopBar({
         <button
           onClick={onNewNote}
           disabled={loading}
-          aria-label="New note"
+          aria-label="Nouvelle note"
           className={cn(
             'flex items-center gap-1.5 h-9 px-4 rounded-lg',
             'bg-tech-violet text-white text-[13px] font-semibold font-heading',
@@ -67,13 +67,13 @@ export default function TopBar({
           )}
         >
           <LuPlus size={15} />
-          <span className="sm:inline hidden">New Note</span>
+          <span className="sm:inline hidden">Nouvelle note</span>
         </button>
 
         <button
           onClick={onAvatarClick}
-          aria-label="Open profile"
-          title={currentUser?.name || 'Profile'}
+          aria-label="Ouvrir le profil"
+          title={currentUser?.name || 'Profil'}
           className={cn(
             'w-9 h-9 rounded-full shrink-0 flex items-center justify-center',
             'bg-gradient-to-br from-tech-violet to-biometric-glow text-white',
@@ -84,7 +84,7 @@ export default function TopBar({
           {currentUser?.avatar ? (
             <img
               src={currentUser.avatar}
-              alt="Profile"
+              alt="Photo de profil"
               className="w-full h-full object-cover"
             />
           ) : (

@@ -6,7 +6,7 @@ import './CreateFolderModal.css';
 /* ── Icon catalogue ─────────────────────────────────────────────────────── */
 const ICON_CATEGORIES = [
   {
-    label: 'Writing',
+    label: 'Écriture',
     icons: [
       'LuFileText', 'LuFile', 'LuFiles', 'LuFilePlus', 'LuBook',
       'LuBookOpen', 'LuBookMarked', 'LuNotebook', 'LuPen', 'LuPenLine',
@@ -14,7 +14,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Work',
+    label: 'Travail',
     icons: [
       'LuBriefcase', 'LuBuilding2', 'LuCalendar', 'LuCalendarDays',
       'LuCheckSquare', 'LuListTodo', 'LuKanban', 'LuTarget',
@@ -23,7 +23,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Technology',
+    label: 'Technologie',
     icons: [
       'LuCode', 'LuCode2', 'LuTerminal', 'LuGlobe', 'LuServer',
       'LuDatabase', 'LuCpu', 'LuWifi', 'LuBraces', 'LuBinary',
@@ -31,7 +31,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Media',
+    label: 'Médias',
     icons: [
       'LuCamera', 'LuImage', 'LuImages', 'LuMusic', 'LuMusic2',
       'LuVideo', 'LuFilm', 'LuHeadphones', 'LuMic', 'LuRadio',
@@ -39,7 +39,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Learning',
+    label: 'Apprentissage',
     icons: [
       'LuGraduationCap', 'LuFlaskConical', 'LuMicroscope',
       'LuAtom', 'LuCompass', 'LuRuler', 'LuDraftingCompass',
@@ -47,7 +47,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Personal',
+    label: 'Personnel',
     icons: [
       'LuHome', 'LuHeart', 'LuStar', 'LuUsers', 'LuUser',
       'LuBaby', 'LuMapPin', 'LuShopping', 'LuShoppingCart',
@@ -63,7 +63,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Travel',
+    label: 'Voyage',
     icons: [
       'LuPlane', 'LuCar', 'LuMap', 'LuNavigation', 'LuMountain',
       'LuSunrise', 'LuUmbrella', 'LuAnchor', 'LuTrain',
@@ -71,7 +71,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Health',
+    label: 'Santé',
     icons: [
       'LuHeart', 'LuActivity', 'LuDumbbell', 'LuApple',
       'LuLeaf', 'LuSalad', 'LuPill', 'LuStethoscope',
@@ -79,7 +79,7 @@ const ICON_CATEGORIES = [
     ],
   },
   {
-    label: 'Misc',
+    label: 'Divers',
     icons: [
       'LuTag', 'LuLayers', 'LuPackage', 'LuLock', 'LuShield',
       'LuBell', 'LuFlag', 'LuZap', 'LuCrown', 'LuGem',
@@ -112,7 +112,7 @@ export default function CreateFolderModal({ onClose, onCreate }) {
 
   // Filter icons
   const filteredCategories = query.trim()
-    ? [{ label: 'Results', icons: ALL_ICONS.filter(n => n.toLowerCase().replace('lu', '').includes(query.toLowerCase())) }]
+    ? [{ label: 'Résultats', icons: ALL_ICONS.filter(n => n.toLowerCase().replace('lu', '').includes(query.toLowerCase())) }]
     : ICON_CATEGORIES;
 
   async function handleSubmit(e) {
@@ -126,11 +126,11 @@ export default function CreateFolderModal({ onClose, onCreate }) {
 
   return (
     <div className="cfm-backdrop" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="cfm-modal" role="dialog" aria-modal="true" aria-label="Create folder">
+      <div className="cfm-modal" role="dialog" aria-modal="true" aria-label="Créer un dossier">
         {/* Header */}
         <div className="cfm-header">
-          <span className="cfm-title">New folder</span>
-          <button className="cfm-close" onClick={onClose} aria-label="Close"><LuX size={16} /></button>
+          <span className="cfm-title">Nouveau dossier</span>
+          <button className="cfm-close" onClick={onClose} aria-label="Fermer"><LuX size={16} /></button>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -144,7 +144,7 @@ export default function CreateFolderModal({ onClose, onCreate }) {
               className="cfm-name-input"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Folder name"
+              placeholder="Nom du dossier"
               maxLength={100}
               required
             />
@@ -157,7 +157,7 @@ export default function CreateFolderModal({ onClose, onCreate }) {
               className="cfm-search-input"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Search icons…"
+              placeholder="Rechercher des icônes…"
             />
           </div>
 
@@ -185,15 +185,15 @@ export default function CreateFolderModal({ onClose, onCreate }) {
               )
             ))}
             {filteredCategories[0]?.icons.length === 0 && (
-              <p className="cfm-no-results">No icons found</p>
+              <p className="cfm-no-results">Aucune icône trouvée</p>
             )}
           </div>
 
           {/* Actions */}
           <div className="cfm-actions">
-            <button type="button" className="cfm-btn-cancel" onClick={onClose}>Cancel</button>
+            <button type="button" className="cfm-btn-cancel" onClick={onClose}>Annuler</button>
             <button type="submit" className="cfm-btn-create" disabled={!name.trim() || submitting}>
-              {submitting ? 'Creating…' : 'Create folder'}
+              {submitting ? 'Création…' : 'Créer le dossier'}
             </button>
           </div>
         </form>

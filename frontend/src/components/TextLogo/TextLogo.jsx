@@ -6,7 +6,7 @@ export default function TextLogo({ className = '' }) {
   return (
     <Link
       to="/"
-      aria-label="PrivyNote — home"
+      aria-label="PrivyNote — accueil"
       className={`inline-flex items-center gap-2 no-underline ${className}`}
     >
       <img
