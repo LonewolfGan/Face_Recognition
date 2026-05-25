@@ -46,12 +46,12 @@
 :root {
   /* ── Backward-compat aliases (used by component CSS during migration) ── */
   --page-bg:           #ffffff;
-  --section-alt-bg:    rgba(122, 53, 242, 0.04);
+  --section-alt-bg:    rgba(122, 53, 242, 0.07);
   --text-title:        #0a0a0a;
   --text-body:         rgba(10, 10, 10, 0.75);
   --text-muted:        #6b6b6b;
   --surface-card:      #ffffff;
-  --surface-card-hover:#fafafa;
+  --surface-card-hover:#f5f3ff;
   --border-neutral:    rgba(0, 0, 0, 0.10);
   --divider-neutral:   rgba(0, 0, 0, 0.08);
   --accent-eyebrow:    #7A35F2;
@@ -83,7 +83,7 @@
   --accent-light: rgba(122, 53, 242, 0.08);
   --card:         #ffffff;
   --bg:           #ffffff;
-  --hover:        #f9f9f9;
+  --hover:        #f5f3ff;
   --error:        #dc2626;
   --success:      #10b981;
   --warning:      #f59e0b;
@@ -92,8 +92,8 @@
   --text-light:   #ffffff;
   --border:       rgba(0, 0, 0, 0.10);
   --bg:            #ffffff;
-  --bg-subtle:     #f9f9f9;
-  --bg-muted:      #f2f2f2;
+  --bg-subtle:     #f5f3ff;
+  --bg-muted:      #ede9ff;
 
   --fg:            #0a0a0a;
   --fg-muted:      #6b6b6b;
@@ -109,7 +109,7 @@
   --accent-border: rgba(122, 53, 242, 0.20);
 
   --card:          #ffffff;
-  --card-hover:    #fafafa;
+  --card-hover:    #f5f3ff;
 
   --ring:          rgba(122, 53, 242, 0.40);
 
@@ -127,7 +127,7 @@
 body.dark {
   /* ── Backward-compat aliases (dark) ── */
   --page-bg:           #0c0b14;
-  --section-alt-bg:    rgba(155, 112, 229, 0.05);
+  --section-alt-bg:    rgba(155, 112, 229, 0.12);
   --text-title:        #f0eeff;
   --text-body:         rgba(240, 238, 255, 0.82);
   --text-muted:        #7a7890;

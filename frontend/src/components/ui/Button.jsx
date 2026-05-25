@@ -8,8 +8,8 @@ import { cn } from '../../lib/utils';
  */
 const variants = {
   primary: 'bg-tech-violet text-white border-tech-violet hover:bg-violet-hover hover:border-violet-hover',
-  ghost:   'bg-transparent border-app text-fg hover:bg-subtle',
-  outline: 'bg-transparent border-app text-fg hover:bg-subtle',
+  ghost:   'bg-transparent border-app text-fg hover:bg-accent-muted',
+  outline: 'bg-transparent border-app text-fg hover:bg-accent-muted',
   danger:  'bg-transparent border-[rgba(220,38,38,0.3)] text-[#dc2626] hover:bg-[rgba(220,38,38,0.07)]',
 };
 
