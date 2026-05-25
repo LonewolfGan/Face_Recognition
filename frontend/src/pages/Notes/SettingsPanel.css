@@ -70,8 +70,14 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  justify-content: space-between;
   padding-top: 2px;
+}
+
+.sp-nav-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .sp-nav-item {
@@ -309,11 +315,37 @@
   border-color: rgba(122, 53, 242, 0.20);
 }
 
+/* ─── Nav logout ──────────────────────────────────────────────────────────── */
+
+.sp-nav-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: #ef4444;
+  text-align: left;
+  transition: background-color 130ms;
+  line-height: 1;
+  margin-top: 8px;
+}
+
+.sp-nav-logout:hover {
+  background-color: rgba(239, 68, 68, 0.07);
+}
+
 /* ─── Stats grid ──────────────────────────────────────────────────────────── */
 
 .sp-stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1px;
   background-color: var(--border-neutral);
   border: 1px solid var(--border-neutral);
@@ -702,6 +734,11 @@
 
   .sp-nav {
     width: 100%;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sp-nav-items {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 4px;
@@ -718,11 +755,16 @@
 
   .sp-nav-item__icon { display: none; }
 
+  .sp-nav-logout {
+    margin-top: 6px;
+    justify-content: center;
+  }
+
   .sp-content {
     overflow: visible;
   }
 
   .sp-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }

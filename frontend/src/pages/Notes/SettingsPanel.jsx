@@ -1,8 +1,7 @@
 /**
- * SettingsPanel — two-column settings layout.
- * Left: navigation sidebar. Right: content pane for active section.
- *
- * Tabs: Profil | Sécurité | Apparence | Compte
+ * SettingsPanel — clean two-column settings layout.
+ * Tabs: Profil | Sécurité | Apparence
+ * Logout pinned to bottom of left nav.
  */
 
 import React, { useRef, useState } from 'react';
@@ -15,7 +14,7 @@ import {
   LuMoon,
   LuUser,
   LuShield,
-  LuSettings,
+  LuPalette,
   LuFileText,
   LuFolder,
   LuCamera,
@@ -26,10 +25,9 @@ import {
 import './SettingsPanel.css';
 
 const NAV_ITEMS = [
-  { id: 'profil',    label: 'Profil',     icon: LuUser },
-  { id: 'securite',  label: 'Sécurité',   icon: LuShield },
-  { id: 'apparence', label: 'Apparence',  icon: LuSettings },
-  { id: 'compte',    label: 'Compte',     icon: LuUser },
+  { id: 'profil',    label: 'Profil',    icon: LuUser },
+  { id: 'securite',  label: 'Sécurité',  icon: LuShield },
+  { id: 'apparence', label: 'Apparence', icon: LuPalette },
 ];
 
 export default function SettingsPanel({
@@ -56,6 +54,10 @@ export default function SettingsPanel({
   const hasChanges =
     profileName.trim() !== (currentUser?.name || '') ||
     profileAvatar !== (currentUser?.avatar || null);
+
+  const memberSince = currentUser?.created_at
+    ? new Date(currentUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    : null;
 
   function handleFileChange(e) {
     const file = e.target.files?.[0];
@@ -86,11 +88,6 @@ export default function SettingsPanel({
     }
   }
 
-  /* ── Joined date ── */
-  const memberSince = currentUser?.created_at
-    ? new Date(currentUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
-    : null;
-
   return (
     <div className="sp-root">
 
@@ -108,17 +105,25 @@ export default function SettingsPanel({
 
         {/* ── Left nav ── */}
         <nav className="sp-nav" aria-label="Sections des paramètres">
-          {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              className={`sp-nav-item${activeTab === id ? ' sp-nav-item--active' : ''}`}
-              onClick={() => setActiveTab(id)}
-              aria-current={activeTab === id ? 'page' : undefined}
-            >
-              <Icon size={15} className="sp-nav-item__icon" />
-              {label}
-            </button>
-          ))}
+          <div className="sp-nav-items">
+            {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                className={`sp-nav-item${activeTab === id ? ' sp-nav-item--active' : ''}`}
+                onClick={() => setActiveTab(id)}
+                aria-current={activeTab === id ? 'page' : undefined}
+              >
+                <Icon size={15} className="sp-nav-item__icon" />
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Logout — always visible, pinned to bottom of nav */}
+          <button className="sp-nav-logout" onClick={onLogout} type="button">
+            <LuLogOut size={14} />
+            Se déconnecter
+          </button>
         </nav>
 
         {/* ── Right content ── */}
@@ -128,14 +133,15 @@ export default function SettingsPanel({
           {activeTab === 'profil' && (
             <div className="sp-section-stack">
 
-              {/* Profile identity card */}
+              {/* Single combined profile card */}
               <div className="sp-card">
                 <div className="sp-card__header">
-                  <span className="sp-card__title">Informations du profil</span>
+                  <span className="sp-card__title">Mon profil</span>
                 </div>
-                <div className="sp-card__body">
+                <div className="sp-card__body sp-card__body--form">
+
+                  {/* Avatar + identity */}
                   <div className="sp-profile-identity">
-                    {/* Avatar */}
                     <div className="sp-avatar-wrap">
                       <div className="sp-avatar">
                         {profileAvatar
@@ -159,31 +165,21 @@ export default function SettingsPanel({
                         onChange={handleFileChange}
                       />
                     </div>
-
-                    {/* Identity info */}
                     <div className="sp-profile-meta">
                       <p className="sp-profile-meta__name">{currentUser?.name || 'Utilisateur'}</p>
                       <div className="sp-profile-meta__row">
-                        <span className="sp-badge sp-badge--accent">Compte PrivyNote</span>
                         <span className="sp-badge sp-badge--success">
                           <LuCircleCheck size={11} />
                           Actif
                         </span>
+                        {memberSince && (
+                          <span className="sp-profile-meta__sub">Membre depuis {memberSince}</span>
+                        )}
                       </div>
-                      {memberSince && (
-                        <p className="sp-profile-meta__sub">Membre depuis {memberSince}</p>
-                      )}
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Edit name */}
-              <div className="sp-card">
-                <div className="sp-card__header">
-                  <span className="sp-card__title">Nom d'affichage</span>
-                </div>
-                <div className="sp-card__body sp-card__body--form">
+                  {/* Name field */}
                   <div className="sp-field">
                     <label className="sp-label" htmlFor="sp-name">Nom complet</label>
                     <input
@@ -197,6 +193,8 @@ export default function SettingsPanel({
                       maxLength={100}
                     />
                   </div>
+
+                  {/* Avatar actions (only when avatar is set) */}
                   {profileAvatar && (
                     <div className="sp-field">
                       <label className="sp-label">Photo de profil</label>
@@ -211,7 +209,9 @@ export default function SettingsPanel({
                       </div>
                     </div>
                   )}
+
                   {profileError && <p className="sp-error">{profileError}</p>}
+
                   <div className="sp-form-footer">
                     <button
                       className={`sp-save-btn${saved ? ' sp-save-btn--saved' : ''}`}
@@ -230,37 +230,27 @@ export default function SettingsPanel({
                 </div>
               </div>
 
-              {/* Stats */}
+              {/* Stats — lightweight */}
               <div className="sp-card">
                 <div className="sp-card__header">
-                  <span className="sp-card__title">Statistiques</span>
+                  <span className="sp-card__title">Mon espace</span>
                 </div>
                 <div className="sp-card__body">
                   <div className="sp-stats-grid">
                     <div className="sp-stat">
-                      <div className="sp-stat__icon-wrap">
-                        <LuFileText size={16} />
-                      </div>
+                      <div className="sp-stat__icon-wrap"><LuFileText size={16} /></div>
                       <span className="sp-stat__value">{notesCount}</span>
                       <span className="sp-stat__label">Notes</span>
                     </div>
                     <div className="sp-stat">
-                      <div className="sp-stat__icon-wrap">
-                        <LuFolder size={16} />
-                      </div>
+                      <div className="sp-stat__icon-wrap"><LuFolder size={16} /></div>
                       <span className="sp-stat__value">{foldersCount}</span>
                       <span className="sp-stat__label">Dossiers</span>
-                    </div>
-                    <div className="sp-stat">
-                      <div className="sp-stat__icon-wrap">
-                        <LuCircleCheck size={16} />
-                      </div>
-                      <span className="sp-stat__value sp-stat__value--accent">Actif</span>
-                      <span className="sp-stat__label">Statut</span>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           )}
 
@@ -279,7 +269,7 @@ export default function SettingsPanel({
                       </div>
                       <div className="sp-action-text">
                         <span className="sp-action-text__label">Reconnaissance faciale</span>
-                        <span className="sp-action-text__sub">Enregistrer une nouvelle signature biométrique via webcam</span>
+                        <span className="sp-action-text__sub">Enregistrer un nouveau visage via la caméra</span>
                       </div>
                     </div>
                     <button className="sp-row-btn" onClick={onAddFace} type="button">
@@ -310,7 +300,6 @@ export default function SettingsPanel({
                   </div>
                 </div>
               </div>
-
             </div>
           )}
 
@@ -349,74 +338,6 @@ export default function SettingsPanel({
                       <span className="sp-toggle__track" />
                       <span className="sp-toggle__thumb" />
                     </label>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          {/* ════════════════ COMPTE ════════════════ */}
-          {activeTab === 'compte' && (
-            <div className="sp-section-stack">
-              <div className="sp-card">
-                <div className="sp-card__header">
-                  <span className="sp-card__title">Informations du compte</span>
-                </div>
-                <div className="sp-card__body">
-                  <div className="sp-info-grid">
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Nom</span>
-                      <span className="sp-info-row__val">{currentUser?.name || '—'}</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Type de compte</span>
-                      <span className="sp-info-row__val">PrivyNote Standard</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Statut</span>
-                      <span className="sp-badge sp-badge--success">
-                        <LuCircleCheck size={11} />
-                        Actif
-                      </span>
-                    </div>
-                    {memberSince && (
-                      <div className="sp-info-row">
-                        <span className="sp-info-row__key">Membre depuis</span>
-                        <span className="sp-info-row__val">{memberSince}</span>
-                      </div>
-                    )}
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Notes</span>
-                      <span className="sp-info-row__val">{notesCount}</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Dossiers</span>
-                      <span className="sp-info-row__val">{foldersCount}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Danger zone */}
-              <div className="sp-card sp-card--danger">
-                <div className="sp-card__header">
-                  <span className="sp-card__title sp-card__title--danger">Zone de danger</span>
-                </div>
-                <div className="sp-card__body sp-card__body--rows">
-                  <div className="sp-action-row">
-                    <div className="sp-action-row__left">
-                      <div className="sp-action-icon sp-action-icon--danger">
-                        <LuLogOut size={16} />
-                      </div>
-                      <div className="sp-action-text">
-                        <span className="sp-action-text__label sp-action-text__label--danger">Se déconnecter</span>
-                        <span className="sp-action-text__sub">Fermer votre session sur cet appareil</span>
-                      </div>
-                    </div>
-                    <button className="sp-row-btn sp-row-btn--danger" onClick={onLogout} type="button">
-                      Déconnecter
-                    </button>
                   </div>
                 </div>
               </div>
