@@ -61,7 +61,7 @@ export default function SettingsPanel({
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) { setProfileError('Sélectionner un fichier image.'); return; }
-    if (file.size > 2 * 1024 * 1024) { setProfileError('Image must be under 2 MB.'); return; }
+    if (file.size > 2 * 1024 * 1024) { setProfileError("L'image doit faire moins de 2 Mo."); return; }
     setProfileError('');
     const reader = new FileReader();
     reader.onload = (ev) => setProfileAvatar(ev.target.result);
@@ -311,27 +311,6 @@ export default function SettingsPanel({
                 </div>
               </div>
 
-              <div className="sp-card">
-                <div className="sp-card__header">
-                  <span className="sp-card__title">Session en cours</span>
-                </div>
-                <div className="sp-card__body">
-                  <div className="sp-info-grid">
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Méthode d'auth</span>
-                      <span className="sp-info-row__val">JWT + Refresh token</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Chiffrement</span>
-                      <span className="sp-info-row__val">bcrypt + HS256</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Biométrie</span>
-                      <span className="sp-info-row__val">ArcFace — local</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
@@ -374,30 +353,6 @@ export default function SettingsPanel({
                 </div>
               </div>
 
-              <div className="sp-card">
-                <div className="sp-card__header">
-                  <span className="sp-card__title">Typographie &amp; couleurs</span>
-                </div>
-                <div className="sp-card__body">
-                  <div className="sp-info-grid">
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Police principale</span>
-                      <span className="sp-info-row__val sp-font-sample">Space Grotesk</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Police monospace</span>
-                      <span className="sp-info-row__val sp-font-sample sp-font-sample--mono">JetBrains Mono</span>
-                    </div>
-                    <div className="sp-info-row">
-                      <span className="sp-info-row__key">Couleur accent</span>
-                      <div className="sp-color-chip-row">
-                        <span className="sp-color-chip" style={{ background: '#7A35F2' }} />
-                        <span className="sp-info-row__val">#7A35F2</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
