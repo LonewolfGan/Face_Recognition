@@ -34,7 +34,7 @@ from ..validators import (
     validate_password_strength,
     validate_request,
 )
-from ..models.user import create_user, get_user_by_face_id, get_user_by_id
+from ..models.user import create_user, delete_user, get_user_by_face_id, get_user_by_id
 from ..services.face_service import FaceNotFoundError, FaceProcessingError
 
 auth_bp = Blueprint("auth", __name__)
@@ -396,6 +396,55 @@ def update_profile():
         })
 
     except Exception as e:
+        return _error_response(500, "internal_error", str(e))
+
+
+@auth_bp.route("/account", methods=["DELETE"])
+@token_required
+def delete_account():
+    """Permanently delete the authenticated user's account and all associated data."""
+    try:
+        db = _get_db()
+        cursor = db.cursor()
+
+        # Fetch face_id so we can remove from face service
+        cursor.execute("SELECT face_id FROM users WHERE user_id = ?", (g.user_id,))
+        row = cursor.fetchone()
+        if not row:
+            return _error_response(404, "not_found", "User not found")
+        face_id = row["face_id"]
+
+        # Delete all notes belonging to the user
+        cursor.execute("DELETE FROM notes WHERE user_id = ?", (g.user_id,))
+
+        # Delete all folders belonging to the user
+        cursor.execute("DELETE FROM folders WHERE user_id = ?", (g.user_id,))
+
+        # Invalidate all refresh tokens
+        invalidate_all_user_tokens(db, g.user_id)
+
+        # Delete the user record
+        deleted = delete_user(db, g.user_id)
+        if not deleted:
+            return _error_response(404, "not_found", "User not found")
+
+        # Remove biometric data from face service (best-effort)
+        try:
+            face_service = current_app.config.get("FACE_SERVICE") or getattr(current_app, "face_service", None)
+            if face_service and face_id:
+                face_service.delete_face(face_id)
+        except Exception as e:
+            logger.warning("Face service cleanup failed for face_id=%s: %s", face_id, e)
+
+        response = make_response(jsonify({
+            "status": "success",
+            "message": "Compte supprimé avec succès",
+        }))
+        response.set_cookie("refresh_token", value="", httponly=True, secure=True, samesite="Strict", max_age=0)
+        return response
+
+    except Exception as e:
+        logger.exception("Unhandled error in DELETE /account: %s", str(e))
         return _error_response(500, "internal_error", str(e))
 
 

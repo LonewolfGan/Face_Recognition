@@ -1,7 +1,6 @@
 /**
  * SettingsPanel — clean two-column settings layout.
  * Tabs: Profil | Sécurité | Apparence
- * Logout pinned to bottom of left nav.
  */
 
 import React, { useRef, useState } from 'react';
@@ -9,7 +8,6 @@ import {
   LuChevronLeft,
   LuScanFace,
   LuKeyRound,
-  LuLogOut,
   LuSun,
   LuMoon,
   LuUser,
@@ -21,6 +19,7 @@ import {
   LuCheck,
   LuLoader,
   LuCircleCheck,
+  LuTriangleAlert,
 } from 'react-icons/lu';
 import './SettingsPanel.css';
 
@@ -32,7 +31,6 @@ const NAV_ITEMS = [
 
 export default function SettingsPanel({
   currentUser,
-  onLogout,
   onAddFace,
   onChangePassword,
   isDarkMode,
@@ -41,6 +39,7 @@ export default function SettingsPanel({
   notesCount = 0,
   foldersCount = 0,
   onProfileSave,
+  onDeleteAccount,
 }) {
   const [activeTab, setActiveTab] = useState('profil');
   const [profileName, setProfileName] = useState(currentUser?.name || '');
@@ -48,6 +47,8 @@ export default function SettingsPanel({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [profileError, setProfileError] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const fileRef = useRef(null);
 
   const initials = (currentUser?.name || 'PN').slice(0, 2).toUpperCase();
@@ -88,6 +89,16 @@ export default function SettingsPanel({
     }
   }
 
+  async function handleDeleteAccount() {
+    setDeleting(true);
+    try {
+      await onDeleteAccount?.();
+    } catch {
+      setDeleting(false);
+      setDeleteConfirm(false);
+    }
+  }
+
   return (
     <div className="sp-root">
 
@@ -105,25 +116,17 @@ export default function SettingsPanel({
 
         {/* ── Left nav ── */}
         <nav className="sp-nav" aria-label="Sections des paramètres">
-          <div className="sp-nav-items">
-            {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                className={`sp-nav-item${activeTab === id ? ' sp-nav-item--active' : ''}`}
-                onClick={() => setActiveTab(id)}
-                aria-current={activeTab === id ? 'page' : undefined}
-              >
-                <Icon size={15} className="sp-nav-item__icon" />
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {/* Logout — always visible, pinned to bottom of nav */}
-          <button className="sp-nav-logout" onClick={onLogout} type="button">
-            <LuLogOut size={14} />
-            Se déconnecter
-          </button>
+          {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              className={`sp-nav-item${activeTab === id ? ' sp-nav-item--active' : ''}`}
+              onClick={() => setActiveTab(id)}
+              aria-current={activeTab === id ? 'page' : undefined}
+            >
+              <Icon size={15} className="sp-nav-item__icon" />
+              {label}
+            </button>
+          ))}
         </nav>
 
         {/* ── Right content ── */}
@@ -230,7 +233,7 @@ export default function SettingsPanel({
                 </div>
               </div>
 
-              {/* Stats — lightweight */}
+              {/* Stats */}
               <div className="sp-card">
                 <div className="sp-card__header">
                   <span className="sp-card__title">Mon espace</span>
@@ -247,6 +250,59 @@ export default function SettingsPanel({
                       <span className="sp-stat__value">{foldersCount}</span>
                       <span className="sp-stat__label">Dossiers</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Danger zone — account deletion */}
+              <div className="sp-card sp-card--danger">
+                <div className="sp-card__header">
+                  <span className="sp-card__title sp-card__title--danger">Zone de danger</span>
+                </div>
+                <div className="sp-card__body sp-card__body--rows">
+                  <div className="sp-action-row">
+                    <div className="sp-action-row__left">
+                      <div className="sp-action-icon sp-action-icon--danger">
+                        <LuTriangleAlert size={16} />
+                      </div>
+                      <div className="sp-action-text">
+                        <span className="sp-action-text__label sp-action-text__label--danger">Supprimer mon compte</span>
+                        <span className="sp-action-text__sub">
+                          {deleteConfirm
+                            ? 'Cette action est irréversible. Toutes vos notes seront perdues.'
+                            : 'Supprime définitivement votre compte et toutes vos notes'
+                          }
+                        </span>
+                      </div>
+                    </div>
+                    {!deleteConfirm ? (
+                      <button
+                        className="sp-row-btn sp-row-btn--danger"
+                        onClick={() => setDeleteConfirm(true)}
+                        type="button"
+                      >
+                        Supprimer
+                      </button>
+                    ) : (
+                      <div className="sp-delete-actions">
+                        <button
+                          className="sp-row-btn sp-row-btn--danger-solid"
+                          onClick={handleDeleteAccount}
+                          disabled={deleting}
+                          type="button"
+                        >
+                          {deleting ? 'Suppression…' : 'Confirmer'}
+                        </button>
+                        <button
+                          className="sp-row-btn"
+                          onClick={() => setDeleteConfirm(false)}
+                          disabled={deleting}
+                          type="button"
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

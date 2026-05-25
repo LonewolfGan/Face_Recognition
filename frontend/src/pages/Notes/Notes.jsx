@@ -156,6 +156,17 @@ export default function Notes() {
     navigate('/login');
   }
 
+  async function handleDeleteAccount() {
+    try {
+      await authFetch.delete('/account');
+      logout();
+      navigate('/login');
+    } catch (err) {
+      handleApiError(err, toast);
+      throw err;
+    }
+  }
+
   async function handleCaptures(images) {
     if (!images || images.length === 0) { toast.error('Aucune image capturée.'); return; }
     setShowWebcam(false);
@@ -264,6 +275,7 @@ export default function Notes() {
               notesCount={store.notes.length}
               foldersCount={store.folders.length}
               onProfileSave={handleProfileSave}
+              onDeleteAccount={handleDeleteAccount}
             />
           ) : activeNote ? (
             <NoteEditor
