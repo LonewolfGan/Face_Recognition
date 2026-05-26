@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1
+    startCommand: gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300
     envVars:
       - key: FLASK_ENV
         value: production
