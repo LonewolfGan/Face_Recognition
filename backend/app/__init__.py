@@ -301,10 +301,15 @@ def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
         _warmup_status["state"] = "warming"
 
     try:
+        import time
         import tempfile
         import numpy as np
         import cv2
         from deepface import DeepFace
+
+        # Wait for gunicorn to bind the port and pass Render's health check
+        # before loading heavy ML model weights (~300MB peak).
+        time.sleep(60)
 
         logger.info("DeepFace warmup started (model=%s, detector=%s)", model_name, detector_backend)
 

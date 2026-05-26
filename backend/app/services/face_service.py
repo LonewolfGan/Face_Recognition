@@ -13,7 +13,6 @@ import logging
 
 import cv2
 import numpy as np
-from deepface import DeepFace
 
 from .embedding_service import EmbeddingStore
 
@@ -84,6 +83,7 @@ class FaceService:
                 # Write to a temporary file for DeepFace processing
                 temp_path = self._write_temp_image(processed_image)
 
+                from deepface import DeepFace  # lazy — keeps TF out of startup memory
                 result = DeepFace.represent(
                     img_path=temp_path,
                     model_name=self._model_name,
@@ -204,6 +204,7 @@ class FaceService:
         try:
             temp_path = self._write_temp_image(processed_image)
 
+            from deepface import DeepFace  # lazy — keeps TF out of startup memory
             representation = DeepFace.represent(
                 img_path=temp_path,
                 model_name=self._model_name,
