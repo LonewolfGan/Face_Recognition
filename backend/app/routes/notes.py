@@ -67,9 +67,9 @@ def add_note():
         if not valid:
             return _error_response(400, "validation_error", errors)
 
-        # Sanitize string fields
+        # Sanitize string fields — title only; content is rich HTML from Quill
         title = sanitize_string(data["title"])
-        content = sanitize_string(data.get("content", ""))
+        content = data.get("content", "")
         folder_id = data.get("folder_id")
 
         db_path = _get_db_path()
@@ -83,7 +83,7 @@ def add_note():
                 conn.close()
             if not folder:
                 return _error_response(
-                    403, "forbidden", "You do not have access to this resource"
+                    404, "not_found", "Folder not found"
                 )
 
         note_id = create_note(db_path, g.user_id, title, content, folder_id)
@@ -135,9 +135,9 @@ def update_note_route(note_id):
                 403, "forbidden", "You do not have access to this resource"
             )
 
-        # Sanitize string fields
+        # Sanitize string fields — title only; content is rich HTML from Quill
         title = sanitize_string(data["title"])
-        content = sanitize_string(data.get("content", ""))
+        content = data.get("content", "")
 
         # Only update folder_id if explicitly included in the request body.
         # If absent, preserve the note's current folder assignment.
@@ -155,7 +155,7 @@ def update_note_route(note_id):
                 conn.close()
             if not folder:
                 return _error_response(
-                    403, "forbidden", "You do not have access to this resource"
+                    404, "not_found", "Folder not found"
                 )
 
         success = update_note(db_path, note_id, g.user_id, title, content, folder_id)

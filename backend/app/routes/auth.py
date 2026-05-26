@@ -375,9 +375,19 @@ def update_profile():
         if len(name) > 100:
             return _error_response(400, "validation_error", "Name is too long")
 
-        # Basic avatar size guard (max ~2 MB base64)
-        if avatar and len(avatar) > 2_800_000:
-            return _error_response(400, "validation_error", "Avatar image is too large")
+        # Avatar validation: type check and size guard (max ~2 MB base64)
+        if avatar is not None:
+            allowed_prefixes = (
+                "data:image/jpeg;base64,",
+                "data:image/jpg;base64,",
+                "data:image/png;base64,",
+                "data:image/gif;base64,",
+                "data:image/webp;base64,",
+            )
+            if not any(avatar.startswith(p) for p in allowed_prefixes):
+                return _error_response(400, "validation_error", "Avatar must be a valid image (JPEG, PNG, GIF or WebP)")
+            if len(avatar) > 2_800_000:
+                return _error_response(400, "validation_error", "Avatar image is too large")
 
         db = _get_db()
         cursor = db.cursor()
