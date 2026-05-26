@@ -1,0 +1,50 @@
+2026-05-26T11:59:44.72400024Z Using cached filelock-3.29.0-py3-none-any.whl (39 kB)
+2026-05-26T11:59:44.725644534Z Using cached namex-0.1.0-py3-none-any.whl (5.9 kB)
+2026-05-26T11:59:44.727245487Z Using cached optree-0.19.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (447 kB)
+2026-05-26T11:59:44.729449603Z Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+2026-05-26T11:59:44.731451465Z Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-05-26T11:59:44.733084189Z Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+2026-05-26T11:59:44.735461888Z Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+2026-05-26T11:59:44.738967901Z Using cached PySocks-1.7.1-py3-none-any.whl (16 kB)
+2026-05-26T11:59:44.740497323Z Using cached soupsieve-2.8.4-py3-none-any.whl (37 kB)
+2026-05-26T11:59:44.742043285Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-05-26T11:59:46.047492362Z Installing collected packages: namex, mpmath, libclang, flatbuffers, wrapt, urllib3, typing_extensions, tqdm, termcolor, sympy, soupsieve, six, python-dotenv, PySocks, PyJWT, pygments, psycopg2-binary, protobuf, pillow, packaging, opt_einsum, numpy, mdurl, markupsafe, lz4, joblib, itsdangerous, idna, gast, filelock, click, charset_normalizer, certifi, blinker, bcrypt, absl-py, wheel, werkzeug, requests, python-dateutil, optree, opencv-python-headless, opencv-python, mtcnn, ml_dtypes, markdown-it-py, lightecc, jinja2, h5py, gunicorn, grpcio, google_pasta, fire, faiss-cpu, beautifulsoup4, rich, pandas, lightphe, lightdsa, flask, astunparse, keras, gdown, flask-cors, tensorflow, tf-keras, retina-face, deepface
+2026-05-26T12:00:38.465630811Z Successfully installed PyJWT-2.13.0 PySocks-1.7.1 absl-py-2.4.0 astunparse-1.6.3 bcrypt-5.0.0 beautifulsoup4-4.14.3 blinker-1.9.0 certifi-2026.5.20 charset_normalizer-3.4.7 click-8.4.1 deepface-0.0.100 faiss-cpu-1.14.2 filelock-3.29.0 fire-0.7.1 flask-3.1.3 flask-cors-6.0.2 flatbuffers-25.12.19 gast-0.7.0 gdown-6.0.0 google_pasta-0.2.0 grpcio-1.80.0 gunicorn-26.0.0 h5py-3.14.0 idna-3.16 itsdangerous-2.2.0 jinja2-3.1.6 joblib-1.5.3 keras-3.14.1 libclang-18.1.1 lightdsa-0.0.3 lightecc-0.0.6 lightphe-0.0.25 lz4-4.4.5 markdown-it-py-4.2.0 markupsafe-3.0.3 mdurl-0.1.2 ml_dtypes-0.5.4 mpmath-1.3.0 mtcnn-1.0.0 namex-0.1.0 numpy-2.4.6 opencv-python-4.13.0.92 opencv-python-headless-4.13.0.92 opt_einsum-3.4.0 optree-0.19.1 packaging-26.2 pandas-3.0.3 pillow-12.2.0 protobuf-7.35.0 psycopg2-binary-2.9.12 pygments-2.20.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.2 requests-2.34.2 retina-face-0.0.17 rich-15.0.0 six-1.17.0 soupsieve-2.8.4 sympy-1.14.0 tensorflow-2.21.0 termcolor-3.3.0 tf-keras-2.21.0 tqdm-4.67.3 typing_extensions-4.15.0 urllib3-2.7.0 werkzeug-3.1.8 wheel-0.47.0 wrapt-2.2.1
+2026-05-26T12:00:38.503840035Z 
+2026-05-26T12:00:38.503857986Z [notice] A new release of pip is available: 24.0 -> 26.1.1
+2026-05-26T12:00:38.503861826Z [notice] To update, run: pip install --upgrade pip
+2026-05-26T12:00:44.716011856Z ==> Uploading build...
+2026-05-26T12:01:23.008103512Z ==> Uploaded in 28.2s. Compression took 10.1s
+2026-05-26T12:01:23.262241433Z ==> Build successful 🎉
+2026-05-26T12:01:52.078506901Z ==> Deploying...
+2026-05-26T12:01:52.186207596Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-26T12:03:41.205015588Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:03:41.36432826Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:03:46.824863901Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:04:08.014912598Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:04:08.014931649Z I0000 00:00:1779797048.014792      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:04:08.424779496Z I0000 00:00:1779797048.424645      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:04:08.424796507Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:04:42.421788245Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:04:42.614378179Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:04:55.722764261Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:04:55.722781601Z I0000 00:00:1779797095.721928      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:05:34.528561088Z E0000 00:00:1779797134.527755      74 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:05:35.422019427Z [2026-05-26 12:05:35 +0000] [57] [INFO] Starting gunicorn 26.0.0
+2026-05-26T12:05:35.422038738Z [2026-05-26 12:05:35 +0000] [57] [INFO] Listening at: http://0.0.0.0:10000 (57)
+2026-05-26T12:05:35.42209755Z [2026-05-26 12:05:35 +0000] [57] [INFO] Using worker: sync
+2026-05-26T12:05:35.617777335Z [2026-05-26 12:05:35 +0000] [92] [INFO] Booting worker with pid: 92
+2026-05-26T12:05:35.81247851Z 26-05-26 12:05:34 - Directory /opt/render/.deepface has been created
+2026-05-26T12:05:35.812496211Z 26-05-26 12:05:34 - Directory /opt/render/.deepface/weights has been created
+2026-05-26T12:05:35.812501181Z 127.0.0.1 - - [26/May/2026:12:05:35 +0000] "HEAD / HTTP/1.1" 404 0 "-" "Go-http-client/1.1"
+2026-05-26T12:05:36.017532894Z [2026-05-26 12:05:36 +0000] [57] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+2026-05-26T12:05:44.013244897Z 10.219.26.8 - - [26/May/2026:12:05:44 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+2026-05-26T12:05:44.912143774Z 10.219.26.8 - - [26/May/2026:12:05:44 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+2026-05-26T12:05:45.788435158Z ==> Your service is live 🎉
+2026-05-26T12:05:45.91462613Z 127.0.0.1 - - [26/May/2026:12:05:45 +0000] "GET / HTTP/1.1" 404 207 "-" "Go-http-client/2.0"
+2026-05-26T12:05:46.015928099Z ==> 
+2026-05-26T12:05:46.020077949Z ==> ///////////////////////////////////////////////////////////
+2026-05-26T12:05:46.024037545Z ==> 
+2026-05-26T12:05:46.031345738Z ==> Available at your primary URL https://face-recognition-api-vlwk.onrender.com
+2026-05-26T12:05:46.035177692Z ==> 
+2026-05-26T12:05:46.038494717Z ==> ///////////////////////////////////////////////////////////

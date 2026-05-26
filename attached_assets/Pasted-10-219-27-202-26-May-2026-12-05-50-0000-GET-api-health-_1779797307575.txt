@@ -1,0 +1,33 @@
+10.219.27.202 - - [26/May/2026:12:05:50 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.26.8 - - [26/May/2026:12:05:50 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+W0000 00:00:1779797151.111783      74 cpu_allocator_impl.cc:82] Allocation of 51380224 exceeds 10% of free system memory.
+10.219.27.202 - - [26/May/2026:12:05:55 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:00 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+10.219.27.202 - - [26/May/2026:12:06:05 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:10 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:15 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:20 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779797182.826163      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1779797183.222207      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+10.219.27.202 - - [26/May/2026:12:06:25 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:30 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:35 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+10.219.27.202 - - [26/May/2026:12:06:40 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+[2026-05-26 12:06:45 +0000] [39] [INFO] Handling signal: term
+[2026-05-26 12:06:45 +0000] [74] [INFO] Worker exiting (pid: 74)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779797222.740486      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1779797253.344848      74 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[2026-05-26 12:07:34 +0000] [39] [INFO] Starting gunicorn 26.0.0
+[2026-05-26 12:07:34 +0000] [39] [INFO] Listening at: http://0.0.0.0:10000 (39)
+[2026-05-26 12:07:34 +0000] [39] [INFO] Using worker: sync
+[2026-05-26 12:07:34 +0000] [92] [INFO] Booting worker with pid: 92
+[2026-05-26 12:07:34 +0000] [39] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+26-05-26 12:07:32 - Directory /opt/render/.deepface has been created
+26-05-26 12:07:32 - Directory /opt/render/.deepface/weights has been created
+127.0.0.1 - - [26/May/2026:12:07:34 +0000] "HEAD / HTTP/1.1" 404 0 "-" "Go-http-client/1.1"
+10.219.26.8 - - [26/May/2026:12:07:43 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.26.8 - - [26/May/2026:12:07:44 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
