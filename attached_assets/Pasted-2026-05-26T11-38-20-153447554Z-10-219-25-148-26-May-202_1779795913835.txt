@@ -1,0 +1,104 @@
+2026-05-26T11:38:20.153447554Z 10.219.25.148 - - [26/May/2026:11:38:20 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:25.107391783Z 10.219.25.148 - - [26/May/2026:11:38:25 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:30.108866447Z 10.219.25.148 - - [26/May/2026:11:38:30 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:34.550189876Z 10.219.25.148 - - [26/May/2026:11:38:34 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:35.149431282Z 10.219.25.148 - - [26/May/2026:11:38:35 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:35.45012523Z ==> Deploying...
+2026-05-26T11:38:35.50833624Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-26T11:38:40.16690913Z 10.219.25.148 - - [26/May/2026:11:38:40 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:45.126835952Z 10.219.25.148 - - [26/May/2026:11:38:45 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:50.160722186Z 10.219.25.148 - - [26/May/2026:11:38:50 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:38:55.064667969Z 10.219.25.148 - - [26/May/2026:11:38:55 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:00.088321785Z 10.219.25.148 - - [26/May/2026:11:39:00 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:04.494560429Z 10.219.25.148 - - [26/May/2026:11:39:04 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:05.11646866Z 10.219.25.148 - - [26/May/2026:11:39:05 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:10.150202859Z 10.219.25.148 - - [26/May/2026:11:39:10 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:15.100341024Z 10.219.25.148 - - [26/May/2026:11:39:15 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:20.091232451Z 10.219.25.148 - - [26/May/2026:11:39:20 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:25.110768097Z 10.219.25.148 - - [26/May/2026:11:39:25 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:29.007192171Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T11:39:30.14722314Z 10.219.25.148 - - [26/May/2026:11:39:30 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:34.541496504Z 10.219.25.148 - - [26/May/2026:11:39:34 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:35.182779302Z 10.219.25.148 - - [26/May/2026:11:39:35 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:38.027042826Z ==> No open ports detected, continuing to scan...
+2026-05-26T11:39:38.214849597Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T11:39:40.078151876Z 10.219.25.148 - - [26/May/2026:11:39:40 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:45.116020084Z 10.219.25.148 - - [26/May/2026:11:39:45 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:50.088749311Z 10.219.25.148 - - [26/May/2026:11:39:50 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:39:52.517218166Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T11:39:52.517242007Z I0000 00:00:1779795592.516461      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T11:39:53.025907472Z I0000 00:00:1779795593.025739      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T11:39:53.025934082Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T11:39:55.109363532Z 10.219.25.148 - - [26/May/2026:11:39:55 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:00.109293464Z 10.219.25.148 - - [26/May/2026:11:40:00 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:04.490551863Z 10.219.25.148 - - [26/May/2026:11:40:04 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:05.100735552Z 10.219.25.148 - - [26/May/2026:11:40:05 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:10.099729612Z 10.219.25.148 - - [26/May/2026:11:40:10 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:15.112335588Z 10.219.25.148 - - [26/May/2026:11:40:15 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:20.155672955Z 10.219.25.148 - - [26/May/2026:11:40:20 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:23.917000856Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T11:40:23.917037987Z I0000 00:00:1779795623.916900      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T11:40:25.063030347Z 10.219.25.148 - - [26/May/2026:11:40:25 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:30.14940475Z 10.219.25.148 - - [26/May/2026:11:40:30 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:34.556448289Z 10.219.25.148 - - [26/May/2026:11:40:34 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:35.096307024Z 10.219.25.148 - - [26/May/2026:11:40:35 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:38.90787924Z ==> No open ports detected, continuing to scan...
+2026-05-26T11:40:39.027633316Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T11:40:40.163060054Z 10.219.25.148 - - [26/May/2026:11:40:40 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:45.183364075Z 10.219.25.148 - - [26/May/2026:11:40:45 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:50.141911029Z 10.219.25.148 - - [26/May/2026:11:40:50 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:51.306287921Z [2026-05-26 11:40:51 +0000] [57] [INFO] Starting gunicorn 26.0.0
+2026-05-26T11:40:51.306333252Z [2026-05-26 11:40:51 +0000] [57] [INFO] Listening at: http://0.0.0.0:10000 (57)
+2026-05-26T11:40:51.306339002Z [2026-05-26 11:40:51 +0000] [57] [INFO] Using worker: sync
+2026-05-26T11:40:51.416592489Z [2026-05-26 11:40:51 +0000] [74] [INFO] Booting worker with pid: 74
+2026-05-26T11:40:51.604511367Z [2026-05-26 11:40:51 +0000] [57] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+2026-05-26T11:40:51.631134664Z 26-05-26 11:40:50 - Directory /opt/render/.deepface has been created
+2026-05-26T11:40:51.631156985Z 26-05-26 11:40:50 - Directory /opt/render/.deepface/weights has been created
+2026-05-26T11:40:51.631162035Z 127.0.0.1 - - [26/May/2026:11:40:51 +0000] "HEAD / HTTP/1.1" 404 0 "-" "Go-http-client/1.1"
+2026-05-26T11:40:55.106716522Z 10.219.25.148 - - [26/May/2026:11:40:55 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:56.337343976Z 10.219.25.152 - - [26/May/2026:11:40:56 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:56.811502532Z 10.219.25.152 - - [26/May/2026:11:40:56 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:40:57.52098318Z ==> Your service is live 🎉
+2026-05-26T11:40:57.615480357Z 127.0.0.1 - - [26/May/2026:11:40:57 +0000] "GET / HTTP/1.1" 404 207 "-" "Go-http-client/2.0"
+2026-05-26T11:40:57.667998042Z ==> 
+2026-05-26T11:40:57.670755168Z ==> ///////////////////////////////////////////////////////////
+2026-05-26T11:40:57.672943625Z ==> 
+2026-05-26T11:40:57.674669784Z ==> Available at your primary URL https://face-recognition-api-vlwk.onrender.com
+2026-05-26T11:40:57.676633997Z ==> 
+2026-05-26T11:40:57.678522798Z ==> ///////////////////////////////////////////////////////////
+2026-05-26T11:41:00.139125294Z 10.219.25.148 - - [26/May/2026:11:41:00 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:01.874030099Z 10.219.25.152 - - [26/May/2026:11:41:01 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:05.133638234Z 10.219.25.148 - - [26/May/2026:11:41:05 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:06.337191666Z 10.219.25.152 - - [26/May/2026:11:41:06 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:06.861279231Z 10.219.25.152 - - [26/May/2026:11:41:06 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:10.110966749Z 10.219.25.148 - - [26/May/2026:11:41:10 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:11.866114802Z 10.219.25.152 - - [26/May/2026:11:41:11 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:15.079265456Z 10.219.25.148 - - [26/May/2026:11:41:15 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:16.874096487Z 10.219.25.152 - - [26/May/2026:11:41:16 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:20.157698376Z 10.219.25.148 - - [26/May/2026:11:41:20 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:21.889172957Z 10.219.25.152 - - [26/May/2026:11:41:21 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:25.143247228Z 10.219.25.148 - - [26/May/2026:11:41:25 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:26.906940201Z 10.219.25.152 - - [26/May/2026:11:41:26 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:30.11092765Z 10.219.25.148 - - [26/May/2026:11:41:30 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:31.888676661Z 10.219.25.152 - - [26/May/2026:11:41:31 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:35.125828278Z 10.219.25.148 - - [26/May/2026:11:41:35 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:36.322351329Z 10.219.25.152 - - [26/May/2026:11:41:36 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:36.865005375Z 10.219.25.152 - - [26/May/2026:11:41:36 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:40.075601908Z 10.219.25.148 - - [26/May/2026:11:41:40 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:41.308840881Z 127.0.0.1 - - [26/May/2026:11:41:41 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+2026-05-26T11:41:41.836240283Z 10.219.25.152 - - [26/May/2026:11:41:41 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:45.108026679Z 10.219.25.148 - - [26/May/2026:11:41:45 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:46.803070801Z 10.219.25.152 - - [26/May/2026:11:41:46 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:48.011792865Z E0000 00:00:1779795708.011696      57 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T11:41:50.15333202Z 10.219.25.148 - - [26/May/2026:11:41:50 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:55.127493527Z 10.219.25.148 - - [26/May/2026:11:41:55 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:41:57.034855881Z [2026-05-26 11:41:57 +0000] [57] [INFO] Handling signal: term
+2026-05-26T11:41:57.037379252Z [2026-05-26 11:41:57 +0000] [74] [INFO] Worker exiting (pid: 74)
+2026-05-26T11:42:16.611392194Z [2026-05-26 11:42:16 +0000] [57] [INFO] Shutting down: Master
+2026-05-26T11:42:16.612195933Z 26-05-26 11:29:49 - Directory /opt/render/.deepface has been created
+2026-05-26T11:42:16.612208794Z 26-05-26 11:29:49 - Directory /opt/render/.deepface/weights has been created
+2026-05-26T11:43:49.455181063Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T11:44:13.959028503Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T11:44:13.959076055Z I0000 00:00:1779795853.958867      40 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T11:44:14.474891551Z I0000 00:00:1779795854.472845      40 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T11:44:14.474923822Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
