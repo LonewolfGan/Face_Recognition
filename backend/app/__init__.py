@@ -266,35 +266,35 @@ def _register_blueprints(app: Flask) -> None:
     try:
         from .routes.auth import auth_bp
 
-        app.register_blueprint(auth_bp)
+        app.register_blueprint(auth_bp, url_prefix='/api')
     except (ImportError, AttributeError):
         pass
 
     try:
         from .routes.notes import notes_bp
 
-        app.register_blueprint(notes_bp)
+        app.register_blueprint(notes_bp, url_prefix='/api')
     except (ImportError, AttributeError):
         pass
 
     try:
         from .routes.folders import folders_bp
 
-        app.register_blueprint(folders_bp)
+        app.register_blueprint(folders_bp, url_prefix='/api')
     except (ImportError, AttributeError):
         pass
 
     try:
         from .routes.faces import faces_bp
 
-        app.register_blueprint(faces_bp)
+        app.register_blueprint(faces_bp, url_prefix='/api')
     except (ImportError, AttributeError):
         pass
 
     try:
         from .routes.health import health_bp
 
-        app.register_blueprint(health_bp)
+        app.register_blueprint(health_bp, url_prefix='/api')
     except (ImportError, AttributeError):
         pass
 

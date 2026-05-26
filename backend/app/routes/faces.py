@@ -2,17 +2,22 @@
 
 Provides the faces_bp Blueprint handling /add_face, /recognize, and /get_face_id
 endpoints. Calls FaceService directly (no HTTP to separate services).
+
+All routes require a valid JWT access token.
 """
 
 import logging
+import sqlite3
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, g, jsonify, request
 
+from ..auth import token_required
 from ..services.face_service import (
     FaceNotFoundError,
     FaceProcessingError,
     FaceService,
 )
+from ..validators import sanitize_string
 
 logger = logging.getLogger(__name__)
 
@@ -20,17 +25,7 @@ faces_bp = Blueprint("faces", __name__)
 
 
 def _get_face_service() -> FaceService:
-    """Get or create the FaceService instance from the current app.
-
-    Lazily creates a FaceService using current_app.embedding_store
-    and caches it on the app instance.
-
-    Returns:
-        The shared FaceService instance.
-
-    Raises:
-        RuntimeError: If the embedding store is not available.
-    """
+    """Get or create the FaceService instance from the current app."""
     if not hasattr(current_app, "_face_service") or current_app._face_service is None:
         embedding_store = getattr(current_app, "embedding_store", None)
         if embedding_store is None:
@@ -43,9 +38,18 @@ def _get_face_service() -> FaceService:
     return current_app._face_service
 
 
+def _get_db():
+    """Get a fresh database connection using the app's configured path."""
+    db_path = current_app.config.get("DATABASE_PATH", "")
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
 @faces_bp.route("/add_face", methods=["POST"])
+@token_required
 def add_face():
-    """Add a new face with images.
+    """Add a new face for the authenticated user.
 
     Expects JSON body:
         {
@@ -63,7 +67,7 @@ def add_face():
         if not data:
             return jsonify({"status": "error", "message": "Request body is required"}), 400
 
-        name = data.get("name")
+        name = sanitize_string(str(data.get("name", "")).strip())
         images = data.get("images")
 
         if not name:
@@ -87,13 +91,14 @@ def add_face():
         return jsonify({"status": "error", "message": str(e)}), 400
     except RuntimeError as e:
         logger.error("Runtime error in /add_face: %s", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": "Face service unavailable"}), 500
     except Exception as e:
         logger.error("Unexpected error in /add_face: %s", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": "Une erreur interne est survenue"}), 500
 
 
 @faces_bp.route("/recognize", methods=["POST"])
+@token_required
 def recognize():
     """Recognize a face from an image.
 
@@ -135,50 +140,41 @@ def recognize():
         return jsonify({"status": "error", "message": str(e)}), 401
     except RuntimeError as e:
         logger.error("Runtime error in /recognize: %s", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": "Face service unavailable"}), 500
     except Exception as e:
         logger.error("Unexpected error in /recognize: %s", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": "Une erreur interne est survenue"}), 500
 
 
-@faces_bp.route("/get_face_id", methods=["POST"])
+@faces_bp.route("/get_face_id", methods=["GET"])
+@token_required
 def get_face_id():
-    """Get face_id for a user by name.
+    """Return the face_id for the currently authenticated user.
 
-    Expects JSON body:
-        {
-            "name": str
-        }
+    Uses g.user_id from the verified JWT token — no request body needed.
 
     Returns:
         200: {"status": "success", "face_id": str}
-        400: {"status": "error", "message": str} if name missing
-        401: {"status": "error", "message": str} if user not found
+        404: {"status": "error", "message": str} if user not found
         500: {"status": "error", "message": str} on internal error
     """
     try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"status": "error", "message": "Request body is required"}), 400
+        db = _get_db()
+        try:
+            cursor = db.cursor()
+            cursor.execute("SELECT face_id FROM users WHERE user_id = ?", (g.user_id,))
+            row = cursor.fetchone()
+        finally:
+            db.close()
 
-        name = data.get("name")
-        if not name:
-            return jsonify({"status": "error", "message": "Name is required"}), 400
-
-        # Look up user by name in the database
-        from ..models.user import get_user_by_name
-
-        db_path = current_app.config.get("DATABASE_PATH", "")
-        user = get_user_by_name(db_path, name)
-
-        if not user:
-            return jsonify({"status": "error", "message": "User not found"}), 401
+        if not row:
+            return jsonify({"status": "error", "message": "User not found"}), 404
 
         return jsonify({
             "status": "success",
-            "face_id": user["face_id"],
+            "face_id": row["face_id"],
         })
 
     except Exception as e:
         logger.error("Unexpected error in /get_face_id: %s", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": "Une erreur interne est survenue"}), 500

@@ -163,7 +163,7 @@ def register():
 
     except Exception as e:
         logger.exception("Unhandled error in /register: %s", str(e))
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -274,7 +274,7 @@ def login():
         return response
 
     except Exception as e:
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/refresh-token", methods=["POST"])
@@ -310,7 +310,7 @@ def refresh_token_endpoint():
         return response
 
     except Exception as e:
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/logout", methods=["POST"])
@@ -337,7 +337,7 @@ def logout():
         return response
 
     except Exception as e:
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/profile", methods=["GET"])
@@ -357,7 +357,7 @@ def get_profile():
         user = dict(row)
         return jsonify({"status": "success", "user": user})
     except Exception as e:
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/profile", methods=["PATCH"])
@@ -366,7 +366,7 @@ def update_profile():
     """Update the authenticated user's name and/or avatar."""
     try:
         data = request.json or {}
-        name = data.get("name", "").strip()
+        name = sanitize_string(data.get("name", "").strip())
         avatar = data.get("avatar")  # base64 data-URL or None
 
         if not name:
@@ -396,7 +396,7 @@ def update_profile():
         })
 
     except Exception as e:
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/account", methods=["DELETE"])
@@ -445,7 +445,7 @@ def delete_account():
 
     except Exception as e:
         logger.exception("Unhandled error in DELETE /account: %s", str(e))
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
 
 @auth_bp.route("/change_password", methods=["POST"])
@@ -481,4 +481,4 @@ def change_password():
         })
 
     except Exception as e:
-        return _error_response(500, "internal_error", str(e))
+        return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
