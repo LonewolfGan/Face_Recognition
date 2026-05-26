@@ -493,7 +493,7 @@ export default function AuthPage() {
                   const response = await axios.post(
                     `${API_URL}${REGISTER_ENDPOINT}`,
                     { name, password: signupPassword, images: capturedImages },
-                    { withCredentials: true }
+                    { withCredentials: true, timeout: 180000 }
                   );
                   const result = response.data;
                   if (result.status === "success" || result.access_token) {
