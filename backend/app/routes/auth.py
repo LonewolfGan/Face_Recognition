@@ -81,7 +81,12 @@ def _log_auth_failure(failure_type: str, endpoint: str) -> None:
 
 
 def _set_refresh_cookie(response, refresh_token: str):
-    """Set the refresh_token as an httpOnly secure cookie on the response."""
+    """Set the refresh_token as an httpOnly secure cookie on the response.
+
+    Uses SameSite=None in production so the cookie is sent on cross-origin
+    requests (e.g. Vercel frontend → Render backend). Requires Secure=True.
+    Uses SameSite=Lax in development (same-origin via Vite proxy).
+    """
     import os
     is_prod = os.getenv("FLASK_ENV", "development") == "production"
     response.set_cookie(
@@ -89,7 +94,7 @@ def _set_refresh_cookie(response, refresh_token: str):
         value=refresh_token,
         httponly=True,
         secure=is_prod,
-        samesite="Lax",
+        samesite="None" if is_prod else "Lax",
         max_age=604800,
         path="/",
     )

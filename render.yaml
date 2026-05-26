@@ -7,15 +7,21 @@ services:
     envVars:
       - key: FLASK_ENV
         value: production
+      - key: SECRET_KEY
+        generateValue: true
       - key: JWT_SECRET_KEY
-        sync: false
+        generateValue: true
       - key: DATABASE_PATH
         value: /opt/render/project/src/backend/data/users.db
-      - key: CORS_ORIGINS
-        sync: false
       - key: DATA_DIR
         value: /opt/render/project/src/backend/data/
+      - key: CORS_ORIGINS
+        sync: false
+      - key: MODEL_NAME
+        value: ArcFace
+      - key: DETECTOR_BACKEND
+        value: ssd
       - key: PYTHON_VERSION
         value: "3.11"
-    healthCheckPath: /health
+    healthCheckPath: /api/health
     autoDeploy: true

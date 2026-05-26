@@ -14,20 +14,21 @@ def init_cors(app: Flask) -> None:
     Reads CORS_ORIGINS from the app's configuration (set by config.py classes).
     In debug mode, ensures common development origins are included.
 
-    Flask-CORS automatically omits the Access-Control-Allow-Origin header
-    for non-matching origins when a specific origins list is provided (not '*').
+    NOTE: browsers forbid Access-Control-Allow-Credentials: true when the
+    origin is '*', so we disable credentials for wildcard mode.
 
     Args:
         app: The Flask application instance to configure CORS on.
     """
     origins = _get_allowed_origins(app)
+    wildcard = origins == ["*"]
 
     CORS(
         app,
         origins=origins,
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["Content-Type", "Authorization"],
-        supports_credentials=True,
+        supports_credentials=not wildcard,
     )
 
 
@@ -53,8 +54,10 @@ def _get_allowed_origins(app: Flask) -> list:
         origins = [o.strip() for o in raw_origins if isinstance(o, str) and o.strip()]
     elif isinstance(raw_origins, str):
         # Parse comma-separated string (e.g., from env var)
-        if not raw_origins or raw_origins.strip() == "" or raw_origins.strip() == "*":
+        if not raw_origins or raw_origins.strip() == "":
             origins = ["http://localhost:5173"]
+        elif raw_origins.strip() == "*":
+            origins = ["*"]
         else:
             origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
     else:

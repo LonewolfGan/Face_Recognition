@@ -1,7 +1,8 @@
 // Configuration des URLs d'API
+// In production, set VITE_API_URL to your backend URL e.g. https://your-api.onrender.com/api
 const API_URL = import.meta.env.VITE_API_URL || '/api';
-const ADD_FACE_URL = `${API_URL.replace(':5000', ':5001')}/add_face`;
-const RECOGNIZE_URL = `${API_URL.replace(':5000', ':5002')}/recognize`;
+const ADD_FACE_URL = `${API_URL}/add_face`;
+const RECOGNIZE_URL = `${API_URL}/recognize`;
 
 // Points de terminaison de l'API
 const ENDPOINTS = {
