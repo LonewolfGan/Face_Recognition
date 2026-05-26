@@ -268,6 +268,15 @@ body.dark {
   /* Accent surface */
   .bg-accent-muted  { background-color: var(--accent-muted); }
 
+  /* ── Semantic page/card tokens used across AuthPage & other views ── */
+  .bg-page          { background-color: var(--page-bg); }
+  .bg-section-alt   { background-color: var(--section-alt-bg); }
+  .text-title       { color: var(--text-title); }
+  .text-body        { color: var(--text-body); }
+  .text-muted-token { color: var(--text-muted); }
+  .surface-card     { background-color: var(--surface-card); }
+  .border-neutral   { border-color: var(--border-neutral); }
+
   /* Sidebar tokens */
   .sidebar-bg     { background-color: var(--sidebar-bg); }
   .sidebar-fg     { color: var(--sidebar-fg); }

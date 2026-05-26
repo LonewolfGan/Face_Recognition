@@ -372,9 +372,11 @@ export default function AuthPage() {
   const [showDuplicateFaceModal, setShowDuplicateFaceModal] = useState(false);
   const [showSignupErrorModal, setShowSignupErrorModal] = useState(false);
   const [signupErrorMsg, setSignupErrorMsg] = useState("");
+  const [bgLoaded, setBgLoaded] = useState(false);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const loginStreamRef = useRef(null);
   const navigate = useNavigate();
   const { login, logout, isAuthenticated, user } = useAuth();
   const LOGIN_ENDPOINT = "/login";
@@ -395,6 +397,24 @@ export default function AuthPage() {
     }
   };
 
+  const handleCancelLogin = () => {
+    if (loginStreamRef.current) {
+      loginStreamRef.current.getTracks().forEach((t) => t.stop());
+      loginStreamRef.current = null;
+    }
+    if (videoRef.current?.srcObject) {
+      videoRef.current.srcObject = null;
+    }
+    setShowCamera(false);
+    setLoading(false);
+  };
+
+  const handleCancelCapture = () => {
+    setShowCapture(false);
+    setCaptureProgress(0);
+    setProcessingSignup(false);
+  };
+
   const handleFaceLogin = async () => {
     setShowCamera(true);
     setError("");
@@ -404,6 +424,7 @@ export default function AuthPage() {
       stream = await navigator.mediaDevices.getUserMedia({
         video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
       });
+      loginStreamRef.current = stream;
       if (!videoRef.current) throw new Error("Caméra non disponible");
       videoRef.current.srcObject = stream;
       await videoRef.current.play();
@@ -575,14 +596,18 @@ export default function AuthPage() {
 
       {/* Right form panel */}
       <div className="flex-1 flex flex-col relative overflow-hidden">
-        {/* Background image */}
+        {/* Background image — hidden until fully loaded to avoid progressive JPEG flicker */}
         <img
           src="/face.png"
           alt=""
           aria-hidden="true"
           loading="eager"
+          onLoad={() => setBgLoaded(true)}
           className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover z-0"
-          style={{ opacity: isDarkMode ? 0.22 : 0.32, filter: "saturate(0.6)" }}
+          style={{
+            opacity: bgLoaded ? (isDarkMode ? 0.22 : 0.32) : 0,
+            filter: "saturate(0.6)",
+          }}
         />
         {/* Subtle grid */}
         <div
@@ -693,6 +718,7 @@ export default function AuthPage() {
                     handleFullSignup={handleFullSignup}
                     onSwitchToLogin={() => handleTabSwitch(true)}
                     signupError={signupError}
+                    onCancelCapture={handleCancelCapture}
                   />
                 </motion.div>
               )}
@@ -881,6 +907,15 @@ function LoginForm({
                 </span>
               ) : "Restez immobile, analyse en cours..."}
             </p>
+            {!loginSuccess && (
+              <button
+                type="button"
+                onClick={handleCancelLogin}
+                className="mt-1 inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-token hover:text-title transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)] rounded-lg px-3 py-1.5 border border-neutral hover:bg-section-alt"
+              >
+                <LuX className="w-3.5 h-3.5" /> Annuler
+              </button>
+            )}
           </motion.div>
         ) : showPasswordForm ? (
           <motion.form
@@ -968,6 +1003,7 @@ function SignupForm({
   isDarkMode, loading, name, setName, signupPassword, setSignupPassword,
   showCapture, captureProgress, processingSignup, success,
   videoRef, canvasRef, handleFullSignup, onSwitchToLogin, signupError,
+  onCancelCapture,
 }) {
   return (
     <div className="surface-card border border-neutral rounded-2xl p-8 flex flex-col gap-5">
@@ -1016,6 +1052,15 @@ function SignupForm({
                 }
               </p>
             </div>
+            {!processingSignup && !success && (
+              <button
+                type="button"
+                onClick={onCancelCapture}
+                className="inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-token hover:text-title transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)] rounded-lg px-3 py-1.5 border border-neutral hover:bg-section-alt"
+              >
+                <LuX className="w-3.5 h-3.5" /> Annuler
+              </button>
+            )}
           </motion.div>
         ) : (
           <motion.form
