@@ -46,6 +46,7 @@ def create_app(config_name: str | None = None) -> Flask:
     if not app.config.get("DATABASE_URL") and not app.config.get("DATABASE_PATH"):
         app.config["DATABASE_PATH"] = os.path.join(data_dir, "users.db")
 
+    _configure_tensorflow()
     _init_cors(app)
     _init_rate_limiter(app)
     _init_database(app)
@@ -265,6 +266,24 @@ def _create_schema_postgresql(conn) -> None:
     # Migrations: add columns if missing
     conn.add_column_if_missing("folders", "icon", "TEXT DEFAULT NULL")
     conn.add_column_if_missing("users", "avatar", "TEXT DEFAULT NULL")
+
+
+def _configure_tensorflow() -> None:
+    """Limit TensorFlow's memory and thread usage on constrained hosts.
+
+    Called once at import time. Safe to call on machines without a GPU.
+    Reducing parallelism threads cuts per-process RAM by ~50-80MB.
+    """
+    try:
+        import tensorflow as tf
+        # Use only 1 thread per operation — reduces thread-pool overhead
+        tf.config.threading.set_inter_op_parallelism_threads(1)
+        tf.config.threading.set_intra_op_parallelism_threads(1)
+        # Allow memory growth on any visible GPUs (no-op on CPU-only hosts)
+        for gpu in tf.config.list_physical_devices("GPU"):
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except Exception:
+        pass  # TF not available or already configured — silently skip
 
 
 def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:

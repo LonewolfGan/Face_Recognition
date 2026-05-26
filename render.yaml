@@ -21,7 +21,7 @@ services:
       - key: MODEL_NAME
         value: ArcFace
       - key: DETECTOR_BACKEND
-        value: ssd
+        value: opencv
       - key: PYTHON_VERSION
         value: "3.11"
     healthCheckPath: /api/health
