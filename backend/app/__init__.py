@@ -295,21 +295,22 @@ def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
     """
     global _warmup_status
 
+    # Sleep FIRST — before any imports — so TF never loads during gunicorn
+    # startup.  Render needs ~10-30 s to detect the open port and pass its
+    # health check; loading TF/ArcFace in that window causes an OOM crash.
+    import time
+    time.sleep(90)
+
     with _warmup_lock:
         if _warmup_status["state"] != "pending":
             return
         _warmup_status["state"] = "warming"
 
     try:
-        import time
         import tempfile
         import numpy as np
         import cv2
         from deepface import DeepFace
-
-        # Wait for gunicorn to bind the port and pass Render's health check
-        # before loading heavy ML model weights (~300MB peak).
-        time.sleep(60)
 
         logger.info("DeepFace warmup started (model=%s, detector=%s)", model_name, detector_backend)
 
