@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
-    "bcrypt==4.0.1",
-    "deepface==0.0.93",
+    "bcrypt>=4.0.1",
+    "deepface>=0.0.93",
     "tf-keras>=2.21.0",
     "faiss-cpu>=1.14.2",
     "flask>=3.1.3",
