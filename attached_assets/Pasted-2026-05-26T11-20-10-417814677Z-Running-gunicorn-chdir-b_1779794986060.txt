@@ -1,0 +1,34 @@
+2026-05-26T11:20:10.417814677Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1'
+2026-05-26T11:20:29.61635123Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T11:20:29.616376811Z I0000 00:00:1779794429.616203      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T11:20:31.025965932Z I0000 00:00:1779794431.025800      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T11:20:31.025992623Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T11:21:04.216934755Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T11:21:04.216960766Z I0000 00:00:1779794464.216152      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T11:21:17.116290698Z [2026-05-26 11:21:17 +0000] [57] [INFO] Starting gunicorn 26.0.0
+2026-05-26T11:21:17.118080259Z [2026-05-26 11:21:17 +0000] [57] [INFO] Listening at: http://0.0.0.0:10000 (57)
+2026-05-26T11:21:17.118106039Z [2026-05-26 11:21:17 +0000] [57] [INFO] Using worker: sync
+2026-05-26T11:21:17.319452002Z [2026-05-26 11:21:17 +0000] [74] [INFO] Booting worker with pid: 74
+2026-05-26T11:21:17.517597474Z 26-05-26 11:21:16 - Directory /opt/render/.deepface has been created
+2026-05-26T11:21:17.517626815Z 26-05-26 11:21:16 - Directory /opt/render/.deepface/weights has been created
+2026-05-26T11:21:17.517634465Z 127.0.0.1 - - [26/May/2026:11:21:17 +0000] "HEAD / HTTP/1.1" 404 0 "-" "Go-http-client/1.1"
+2026-05-26T11:21:17.609565289Z [2026-05-26 11:21:17 +0000] [57] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+2026-05-26T11:21:18.217978321Z 10.219.27.134 - - [26/May/2026:11:21:18 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:18.718742604Z 10.219.27.134 - - [26/May/2026:11:21:18 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:19.573850393Z 127.0.0.1 - - [26/May/2026:11:21:19 +0000] "GET / HTTP/1.1" 404 207 "-" "Go-http-client/2.0"
+2026-05-26T11:21:23.746040202Z 10.219.27.134 - - [26/May/2026:11:21:23 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:28.725451705Z 10.219.27.134 - - [26/May/2026:11:21:28 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:33.715616913Z 10.219.27.134 - - [26/May/2026:11:21:33 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:37.970111465Z 10.219.27.134 - - [26/May/2026:11:21:37 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:38.711928696Z 10.219.27.134 - - [26/May/2026:11:21:38 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:43.720987743Z 10.219.27.134 - - [26/May/2026:11:21:43 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:48.735880474Z 10.219.27.134 - - [26/May/2026:11:21:48 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:50.7040115Z 127.0.0.1 - - [26/May/2026:11:21:50 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+2026-05-26T11:21:53.787334972Z 10.219.27.134 - - [26/May/2026:11:21:53 +0000] "GET /api/health HTTP/1.1" 200 39 "-" "Render/1.0"
+2026-05-26T11:21:58.314171172Z E0000 00:00:1779794518.314025      57 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T11:22:59.029956014Z [2026-05-26 11:22:30 +0000] [57] [CRITICAL] WORKER TIMEOUT (pid:74)
+2026-05-26T11:23:28.310464733Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1'
+2026-05-26T11:23:47.610999133Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T11:23:47.611037824Z I0000 00:00:1779794627.610819      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T11:23:48.916369772Z I0000 00:00:1779794628.916187      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T11:23:48.916399233Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
