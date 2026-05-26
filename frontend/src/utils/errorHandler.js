@@ -6,13 +6,17 @@
  * @param {Error} error - The axios error object
  * @param {object} toast - The toast context with error/warning methods
  */
-export function handleApiError(error, toast) {
+export function handleApiError(error, toast, { onForbidden } = {}) {
   const status = error.response?.status;
   const errorCode = error.response?.data?.error;
   const message = error.response?.data?.message;
 
   if (status === 403 || errorCode === 'forbidden') {
-    toast.error('Accès refusé : vous n\'avez pas la permission d\'accéder à cette ressource.');
+    if (onForbidden) {
+      onForbidden();
+    } else {
+      toast.error('Accès refusé : vous n\'avez pas la permission d\'accéder à cette ressource.');
+    }
     return;
   }
 

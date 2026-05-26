@@ -17,6 +17,8 @@ import {
   LuCopy,
   LuCheck,
   LuClock,
+  LuTriangleAlert,
+  LuShieldOff,
 } from 'react-icons/lu';
 
 import { useAuth } from '../../context/AuthContext';
@@ -154,6 +156,9 @@ export default function Notes() {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showFaceErrorModal, setShowFaceErrorModal] = useState(false);
+  const [faceErrorMsg, setFaceErrorMsg] = useState('');
+  const [showForbiddenModal, setShowForbiddenModal] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -206,7 +211,7 @@ export default function Notes() {
       logout();
       navigate('/login');
     } catch (err) {
-      handleApiError(err, toast);
+      handleApiError(err, toast, { onForbidden: () => setShowForbiddenModal(true) });
       throw err;
     }
   }
@@ -220,11 +225,15 @@ export default function Notes() {
       const response = await axios.post(ADD_FACE_URL, {
         face_id, images, name: currentUser.name,
       }, { headers: { 'Content-Type': 'application/json' } });
-      if (response.data.status === 'success') toast.success('Visage ajouté avec succès');
-      else toast.error(response.data.message || 'Erreur lors de l\'ajout du visage');
+      if (response.data.status === 'success') {
+        toast.success('Visage ajouté avec succès');
+      } else {
+        setFaceErrorMsg(response.data.message || 'Le serveur n\'a pas pu enregistrer votre visage. Veuillez réessayer.');
+        setShowFaceErrorModal(true);
+      }
     } catch (err) {
       console.error('Face add error:', err);
-      handleApiError(err, toast);
+      handleApiError(err, toast, { onForbidden: () => setShowForbiddenModal(true) });
     }
   }
 
@@ -484,7 +493,7 @@ export default function Notes() {
       {showWebcam && (
         <FaceCaptureOverlay
           onCapture={handleCaptures}
-          onError={(msg) => { toast.error(msg); setShowWebcam(false); }}
+          onError={(msg) => { setFaceErrorMsg(msg); setShowFaceErrorModal(true); setShowWebcam(false); }}
           onCancel={() => setShowWebcam(false)}
         />
       )}
@@ -496,6 +505,46 @@ export default function Notes() {
           onChangePassword={handleChangePassword}
           loading={store.loading.saving}
         />
+      )}
+
+      {/* Face add error modal */}
+      {showFaceErrorModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,5,20,0.65)', backdropFilter: 'blur(8px)' }}>
+          <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-neutral)', borderRadius: 16, padding: '28px 24px', maxWidth: 360, width: '100%', margin: '0 16px', boxShadow: '0 24px 60px rgba(0,0,0,0.28)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <LuTriangleAlert size={18} style={{ color: '#ef4444', flexShrink: 0 }} />
+              <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-title)', fontFamily: 'var(--font-heading)' }}>Erreur lors de l'ajout du visage</h3>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>{faceErrorMsg}</p>
+            <button
+              onClick={() => setShowFaceErrorModal(false)}
+              style={{ alignSelf: 'flex-end', height: 36, padding: '0 18px', borderRadius: 8, border: '1px solid var(--border-neutral)', background: 'none', color: 'var(--text-title)', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Forbidden (403) error modal */}
+      {showForbiddenModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,5,20,0.65)', backdropFilter: 'blur(8px)' }}>
+          <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-neutral)', borderRadius: 16, padding: '28px 24px', maxWidth: 360, width: '100%', margin: '0 16px', boxShadow: '0 24px 60px rgba(0,0,0,0.28)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <LuShieldOff size={18} style={{ color: '#ef4444', flexShrink: 0 }} />
+              <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-title)', fontFamily: 'var(--font-heading)' }}>Accès refusé</h3>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>
+              Vous n'avez pas la permission d'effectuer cette action. Si le problème persiste, déconnectez-vous et reconnectez-vous.
+            </p>
+            <button
+              onClick={() => setShowForbiddenModal(false)}
+              style={{ alignSelf: 'flex-end', height: 36, padding: '0 18px', borderRadius: 8, border: '1px solid var(--border-neutral)', background: 'none', color: 'var(--text-title)', fontSize: '0.875rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

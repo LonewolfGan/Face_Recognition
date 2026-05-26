@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
 import './ChangePasswordModal.css';
-import { useToastContext } from '../../context/ToastContext';
 
 const ChangePasswordModal = ({ onClose, onChangePassword, loading }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const toast = useToastContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
     if (newPassword !== confirmPassword) {
-      toast.error('Les mots de passe ne correspondent pas.');
       setError('Les mots de passe ne correspondent pas.');
       return;
     }
 
     if (newPassword.trim() === '') {
-      toast.error('Le nouveau mot de passe ne peut pas être vide.');
       setError('Le nouveau mot de passe ne peut pas être vide.');
       return;
     }
 
     if (newPassword.length < 8 || newPassword.length > 128) {
-      toast.error('Le mot de passe doit contenir entre 8 et 128 caractères.');
       setError('Le mot de passe doit contenir entre 8 et 128 caractères.');
       return;
     }

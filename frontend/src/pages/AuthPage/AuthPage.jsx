@@ -25,7 +25,6 @@ import {
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-import { useToastContext } from "../../context/ToastContext";
 import { API_URL } from "../../config";
 import { Button } from "../../components/ui";
 import { cn } from "../../lib/utils";
@@ -367,13 +366,17 @@ export default function AuthPage() {
   const [captureProgress, setCaptureProgress] = useState(0);
   const [processingSignup, setProcessingSignup] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const [showCameraErrorModal, setShowCameraErrorModal] = useState(false);
+  const [cameraErrorMsg, setCameraErrorMsg] = useState("");
+  const [showDuplicateFaceModal, setShowDuplicateFaceModal] = useState(false);
+  const [showSignupErrorModal, setShowSignupErrorModal] = useState(false);
+  const [signupErrorMsg, setSignupErrorMsg] = useState("");
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const navigate = useNavigate();
   const { login, logout, isAuthenticated, user } = useAuth();
-  const toast = useToastContext();
-
   const LOGIN_ENDPOINT = "/login";
   const REGISTER_ENDPOINT = "/register";
 
@@ -386,7 +389,6 @@ export default function AuthPage() {
       setLoginSuccess(true);
     } catch (err) {
       const message = err.response?.data?.message || err.message;
-      toast.error("Erreur lors de la connexion : " + message);
       setError(message);
     } finally {
       setLoading(false);
@@ -442,7 +444,6 @@ export default function AuthPage() {
         }
       } else {
         setError(err.message);
-        toast.error(err.message);
       }
       if (stream) stream.getTracks().forEach((t) => t.stop());
     } finally {
@@ -453,10 +454,13 @@ export default function AuthPage() {
 
   const handleFullSignup = async (e) => {
     e.preventDefault();
-    if (!name) return toast.error("Nom requis");
-    if (!signupPassword) return toast.error("Mot de passe requis");
-    if (signupPassword.length < 8 || signupPassword.length > 128)
-      return toast.error("Le mot de passe doit contenir entre 8 et 128 caracteres.");
+    setSignupError("");
+    if (!name) { setSignupError("Le nom est requis."); return; }
+    if (!signupPassword) { setSignupError("Le mot de passe est requis."); return; }
+    if (signupPassword.length < 8 || signupPassword.length > 128) {
+      setSignupError("Le mot de passe doit contenir entre 8 et 128 caractères.");
+      return;
+    }
     setCaptureProgress(0);
     setProcessingSignup(false);
     setShowCapture(true);
@@ -503,12 +507,10 @@ export default function AuthPage() {
                   const errorCode = err.response?.data?.error || "";
                   const msg = err.response?.data?.message || err.message;
                   if (errorCode === "face_already_registered") {
-                    toast.error("Ce visage est déjà enregistré. Connectez-vous plutôt.");
-                    setShowCapture(false);
-                    setIsLogin(true);
-                    navigate("/login");
+                    setShowDuplicateFaceModal(true);
                   } else {
-                    toast.error("Erreur lors de l'inscription: " + msg);
+                    setSignupErrorMsg(msg || "Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+                    setShowSignupErrorModal(true);
                   }
                   setProcessingSignup(false);
                   setShowCapture(false);
@@ -527,7 +529,8 @@ export default function AuthPage() {
           }, 1200);
         }
       } catch (err) {
-        toast.error("Erreur camera: " + err.message);
+        setCameraErrorMsg(err.message || "Impossible d'accéder à la caméra.");
+        setShowCameraErrorModal(true);
         setShowCapture(false);
       }
     };
@@ -536,7 +539,7 @@ export default function AuthPage() {
       if (captureInterval) clearInterval(captureInterval);
       if (stream) stream.getTracks().forEach((t) => t.stop());
     };
-  }, [showCapture, loading, name, signupPassword, login, navigate, toast]);
+  }, [showCapture, loading, name, signupPassword, login, navigate]); // eslint-disable-line
 
   useEffect(() => {
     return () => {
@@ -557,6 +560,7 @@ export default function AuthPage() {
     setFlipDirection(toLogin ? -1 : 1);
     setIsLogin(toLogin);
     setError("");
+    setSignupError("");
     setShowPasswordForm(false);
     setShowCamera(false);
     navigate(toLogin ? "/login" : "/signup");
@@ -688,6 +692,7 @@ export default function AuthPage() {
                     canvasRef={canvasRef}
                     handleFullSignup={handleFullSignup}
                     onSwitchToLogin={() => handleTabSwitch(true)}
+                    signupError={signupError}
                   />
                 </motion.div>
               )}
@@ -745,6 +750,72 @@ export default function AuthPage() {
         }
       >
         Votre visage n'a pas ete reconnu. Voulez-vous reessayer ou utiliser votre mot de passe ?
+      </Modal>
+
+      <Modal
+        open={showCameraErrorModal}
+        onClose={() => setShowCameraErrorModal(false)}
+        icon={LuCamera}
+        title="Accès à la caméra refusé"
+        actions={
+          <Button
+            variant="primary" size="md"
+            onClick={() => setShowCameraErrorModal(false)}
+            className="flex-1 rounded-xl!"
+          >
+            Fermer
+          </Button>
+        }
+      >
+        {cameraErrorMsg
+          ? `Erreur : ${cameraErrorMsg}`
+          : "Impossible d'accéder à la caméra."}
+        {" "}Vérifiez les autorisations dans les paramètres de votre navigateur et réessayez.
+      </Modal>
+
+      <Modal
+        open={showDuplicateFaceModal}
+        onClose={() => setShowDuplicateFaceModal(false)}
+        icon={LuTriangleAlert}
+        title="Visage déjà enregistré"
+        actions={
+          <>
+            <Button
+              variant="ghost" size="md"
+              onClick={() => setShowDuplicateFaceModal(false)}
+              className="flex-1 rounded-xl!"
+            >
+              Rester ici
+            </Button>
+            <Button
+              variant="primary" size="md"
+              onClick={() => { setShowDuplicateFaceModal(false); handleTabSwitch(true); }}
+              className="flex-1 rounded-xl!"
+            >
+              Se connecter
+            </Button>
+          </>
+        }
+      >
+        Ce visage est déjà associé à un compte existant. Connectez-vous plutôt avec votre visage ou votre mot de passe.
+      </Modal>
+
+      <Modal
+        open={showSignupErrorModal}
+        onClose={() => setShowSignupErrorModal(false)}
+        icon={LuX}
+        title="Erreur lors de l'inscription"
+        actions={
+          <Button
+            variant="primary" size="md"
+            onClick={() => setShowSignupErrorModal(false)}
+            className="flex-1 rounded-xl!"
+          >
+            Fermer
+          </Button>
+        }
+      >
+        {signupErrorMsg || "Une erreur est survenue lors de l'inscription. Veuillez réessayer."}
       </Modal>
     </div>
   );
@@ -896,7 +967,7 @@ function LoginForm({
 function SignupForm({
   isDarkMode, loading, name, setName, signupPassword, setSignupPassword,
   showCapture, captureProgress, processingSignup, success,
-  videoRef, canvasRef, handleFullSignup, onSwitchToLogin,
+  videoRef, canvasRef, handleFullSignup, onSwitchToLogin, signupError,
 }) {
   return (
     <div className="surface-card border border-neutral rounded-2xl p-8 flex flex-col gap-5">
@@ -971,6 +1042,17 @@ function SignupForm({
               placeholder="Mot de passe (min. 8 caracteres)"
               required
             />
+            {signupError && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[13px] flex items-center gap-2 m-0 px-1"
+                style={{ color: "#ef4444" }}
+              >
+                <LuTriangleAlert className="w-3.5 h-3.5 shrink-0" />
+                {signupError}
+              </motion.p>
+            )}
             <Button
               variant="primary" size="lg" type="submit"
               disabled={loading}
