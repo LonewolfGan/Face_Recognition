@@ -46,7 +46,6 @@ def create_app(config_name: str | None = None) -> Flask:
     if not app.config.get("DATABASE_URL") and not app.config.get("DATABASE_PATH"):
         app.config["DATABASE_PATH"] = os.path.join(data_dir, "users.db")
 
-    _configure_tensorflow()
     _init_cors(app)
     _init_rate_limiter(app)
     _init_database(app)
@@ -310,6 +309,17 @@ def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
         import tempfile
         import numpy as np
         import cv2
+
+        # Configure TF threading before DeepFace triggers the TF import.
+        try:
+            import tensorflow as tf
+            tf.config.threading.set_inter_op_parallelism_threads(1)
+            tf.config.threading.set_intra_op_parallelism_threads(1)
+            for gpu in tf.config.list_physical_devices("GPU"):
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except Exception:
+            pass
+
         from deepface import DeepFace
 
         logger.info("DeepFace warmup started (model=%s, detector=%s)", model_name, detector_backend)

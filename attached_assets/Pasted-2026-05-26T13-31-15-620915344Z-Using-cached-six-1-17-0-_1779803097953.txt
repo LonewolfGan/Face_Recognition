@@ -1,0 +1,50 @@
+2026-05-26T13:31:15.620915344Z Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-05-26T13:31:15.62254312Z Using cached tensorflow-2.21.0-cp311-cp311-manylinux_2_27_x86_64.whl (572.4 MB)
+2026-05-26T13:31:16.603596886Z Using cached termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+2026-05-26T13:31:16.605367914Z Using cached tqdm-4.67.3-py3-none-any.whl (78 kB)
+2026-05-26T13:31:16.607179714Z Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+2026-05-26T13:31:16.608844031Z Using cached werkzeug-3.1.8-py3-none-any.whl (226 kB)
+2026-05-26T13:31:16.610770284Z Using cached wrapt-2.2.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (159 kB)
+2026-05-26T13:31:16.612580094Z Using cached packaging-26.2-py3-none-any.whl (100 kB)
+2026-05-26T13:31:16.614267091Z Using cached certifi-2026.5.20-py3-none-any.whl (134 kB)
+2026-05-26T13:31:16.616202004Z Using cached charset_normalizer-3.4.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (214 kB)
+2026-05-26T13:31:16.618087405Z Using cached idna-3.16-py3-none-any.whl (74 kB)
+2026-05-26T13:31:16.619716231Z Using cached joblib-1.5.3-py3-none-any.whl (309 kB)
+2026-05-26T13:31:16.621732986Z Using cached lightecc-0.0.6-py3-none-any.whl (51 kB)
+2026-05-26T13:31:16.623325641Z Using cached lz4-4.4.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+2026-05-26T13:31:16.627149955Z Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2026-05-26T13:31:16.629079818Z Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+2026-05-26T13:31:16.640928959Z Using cached urllib3-2.7.0-py3-none-any.whl (131 kB)
+2026-05-26T13:31:16.642643747Z Using cached wheel-0.47.0-py3-none-any.whl (32 kB)
+2026-05-26T13:31:16.644213552Z Using cached beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+2026-05-26T13:31:16.645909799Z Using cached filelock-3.29.0-py3-none-any.whl (39 kB)
+2026-05-26T13:31:16.647512014Z Using cached namex-0.1.0-py3-none-any.whl (5.9 kB)
+2026-05-26T13:31:16.649162931Z Using cached optree-0.19.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (447 kB)
+2026-05-26T13:31:16.651540723Z Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+2026-05-26T13:31:16.653548948Z Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-05-26T13:31:16.655157253Z Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+2026-05-26T13:31:16.658159109Z Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+2026-05-26T13:31:16.662645948Z Using cached PySocks-1.7.1-py3-none-any.whl (16 kB)
+2026-05-26T13:31:16.664250274Z Using cached soupsieve-2.8.4-py3-none-any.whl (37 kB)
+2026-05-26T13:31:16.666125735Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-05-26T13:31:18.494120027Z Installing collected packages: namex, mpmath, libclang, flatbuffers, wrapt, urllib3, typing_extensions, tqdm, termcolor, sympy, soupsieve, six, python-dotenv, PySocks, PyJWT, pygments, psycopg2-binary, protobuf, pillow, packaging, opt_einsum, numpy, mdurl, markupsafe, lz4, joblib, itsdangerous, idna, gast, filelock, click, charset_normalizer, certifi, blinker, bcrypt, absl-py, wheel, werkzeug, requests, python-dateutil, optree, opencv-python-headless, opencv-python, mtcnn, ml_dtypes, markdown-it-py, lightecc, jinja2, h5py, gunicorn, grpcio, google_pasta, fire, faiss-cpu, beautifulsoup4, rich, pandas, lightphe, lightdsa, flask, astunparse, keras, gdown, flask-cors, tensorflow-cpu, tensorflow, tf-keras, retina-face, deepface
+2026-05-26T13:32:19.18116666Z Successfully installed PyJWT-2.13.0 PySocks-1.7.1 absl-py-2.4.0 astunparse-1.6.3 bcrypt-5.0.0 beautifulsoup4-4.14.3 blinker-1.9.0 certifi-2026.5.20 charset_normalizer-3.4.7 click-8.4.1 deepface-0.0.100 faiss-cpu-1.14.2 filelock-3.29.0 fire-0.7.1 flask-3.1.3 flask-cors-6.0.2 flatbuffers-25.12.19 gast-0.7.0 gdown-6.0.0 google_pasta-0.2.0 grpcio-1.80.0 gunicorn-26.0.0 h5py-3.14.0 idna-3.16 itsdangerous-2.2.0 jinja2-3.1.6 joblib-1.5.3 keras-3.14.1 libclang-18.1.1 lightdsa-0.0.3 lightecc-0.0.6 lightphe-0.0.25 lz4-4.4.5 markdown-it-py-4.2.0 markupsafe-3.0.3 mdurl-0.1.2 ml_dtypes-0.5.4 mpmath-1.3.0 mtcnn-1.0.0 namex-0.1.0 numpy-2.4.6 opencv-python-4.13.0.92 opencv-python-headless-4.13.0.92 opt_einsum-3.4.0 optree-0.19.1 packaging-26.2 pandas-3.0.3 pillow-12.2.0 protobuf-7.35.0 psycopg2-binary-2.9.12 pygments-2.20.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.2 requests-2.34.2 retina-face-0.0.17 rich-15.0.0 six-1.17.0 soupsieve-2.8.4 sympy-1.14.0 tensorflow-2.21.0 tensorflow-cpu-2.21.0 termcolor-3.3.0 tf-keras-2.21.0 tqdm-4.67.3 typing_extensions-4.15.0 urllib3-2.7.0 werkzeug-3.1.8 wheel-0.47.0 wrapt-2.2.1
+2026-05-26T13:32:19.236248745Z 
+2026-05-26T13:32:19.236279956Z [notice] A new release of pip is available: 24.0 -> 26.1.1
+2026-05-26T13:32:19.236284986Z [notice] To update, run: pip install --upgrade pip
+2026-05-26T13:32:21.806537271Z ==> Uploading build...
+2026-05-26T13:32:53.19452515Z ==> Uploaded in 23.7s. Compression took 7.7s
+2026-05-26T13:32:53.422965759Z ==> Build successful 🎉
+2026-05-26T13:32:55.559675924Z ==> Deploying...
+2026-05-26T13:32:55.625136376Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-26T13:33:55.068739984Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T13:34:00.857689364Z ==> No open ports detected, continuing to scan...
+2026-05-26T13:34:00.95012484Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T13:34:05.157574997Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T13:34:05.157599467Z I0000 00:00:1779802445.157428      58 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T13:34:46.078234404Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T13:34:46.078254795Z I0000 00:00:1779802486.076693      58 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T13:35:01.758958061Z ==> No open ports detected, continuing to scan...
+2026-05-26T13:35:01.867110612Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T13:35:06.533438298Z ==> Exited with status 139
+2026-05-26T13:35:06.536909967Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
