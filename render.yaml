@@ -22,6 +22,10 @@ services:
         value: ArcFace
       - key: DETECTOR_BACKEND
         value: opencv
+      - key: CUDA_VISIBLE_DEVICES
+        value: "-1"
+      - key: TF_CPP_MIN_LOG_LEVEL
+        value: "3"
       - key: PYTHON_VERSION
         value: "3.11"
     healthCheckPath: /api/health

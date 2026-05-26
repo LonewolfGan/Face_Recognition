@@ -1,0 +1,102 @@
+2026-05-26T12:17:04.39093817Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:17:04.390984632Z I0000 00:00:1779797824.390770      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:17:04.89012437Z I0000 00:00:1779797824.885025      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:17:04.890146331Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:17:44.400273268Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:17:44.400304849Z I0000 00:00:1779797864.400141      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:18:19.185043305Z E0000 00:00:1779797899.184919      55 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:18:19.783039538Z [2026-05-26 12:18:19 +0000] [39] [INFO] Starting gunicorn 26.0.0
+2026-05-26T12:18:19.783626905Z [2026-05-26 12:18:19 +0000] [39] [INFO] Listening at: http://0.0.0.0:10000 (39)
+2026-05-26T12:18:19.783667977Z [2026-05-26 12:18:19 +0000] [39] [INFO] Using worker: sync
+2026-05-26T12:18:19.887839164Z [2026-05-26 12:18:19 +0000] [73] [INFO] Booting worker with pid: 73
+2026-05-26T12:18:20.187076998Z [2026-05-26 12:18:20 +0000] [39] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+2026-05-26T12:18:23.482856857Z 26-05-26 12:18:18 - Directory /opt/render/.deepface has been created
+2026-05-26T12:18:23.482881278Z 26-05-26 12:18:18 - Directory /opt/render/.deepface/weights has been created
+2026-05-26T12:18:23.482887708Z 10.219.26.8 - - [26/May/2026:12:18:23 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+2026-05-26T12:18:24.179209859Z 10.219.26.8 - - [26/May/2026:12:18:24 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+2026-05-26T12:18:29.479289881Z 10.219.26.8 - - [26/May/2026:12:18:29 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+2026-05-26T12:19:38.397068105Z ==> Deploying...
+2026-05-26T12:19:38.478369075Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-26T12:20:36.204402121Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:20:44.350881414Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:20:44.523893758Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:20:46.706133112Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:20:46.706162735Z I0000 00:00:1779798046.705909      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:20:47.123002369Z I0000 00:00:1779798047.122820      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:20:47.123034062Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:21:30.91462633Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:21:30.914653753Z I0000 00:00:1779798090.914458      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:21:38.215904749Z E0000 00:00:1779798098.215753      57 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:21:45.883050135Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:21:45.987506337Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:21:48.517977773Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:21:58.110186943Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:21:58.110205075Z I0000 00:00:1779798118.110045      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:21:58.507202704Z I0000 00:00:1779798118.506785      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:21:58.507224835Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:22:43.842294437Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:22:43.84232828Z I0000 00:00:1779798163.842133      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:22:47.036674789Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:22:47.211002094Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:22:50.313985333Z E0000 00:00:1779798170.313798      39 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:23:11.505503768Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:23:20.203271519Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:23:20.203298242Z I0000 00:00:1779798200.203099      58 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:23:20.514651574Z I0000 00:00:1779798200.514464      58 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:23:20.514680656Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:23:49.78731745Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:23:49.941362245Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:24:04.405772169Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:24:04.405805501Z I0000 00:00:1779798244.405631      58 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:24:10.705325802Z E0000 00:00:1779798250.705166      58 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:24:46.482057446Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:24:47.741558996Z ==> Deploying...
+2026-05-26T12:24:47.821630538Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-26T12:24:54.884332909Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:24:54.884487442Z I0000 00:00:1779798294.884168      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:24:55.28360801Z I0000 00:00:1779798295.283438      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:24:55.283636452Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:25:39.405380794Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:25:39.405410517Z I0000 00:00:1779798339.405245      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:25:48.293166422Z E0000 00:00:1779798348.293010      39 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:25:48.612937438Z free(): invalid pointer
+2026-05-26T12:25:49.172532816Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:25:52.730947176Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:25:52.927215142Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:26:00.283220696Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:26:00.283292948Z I0000 00:00:1779798360.283088      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:26:00.772592255Z I0000 00:00:1779798360.772468      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:26:00.772612056Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:26:40.073515098Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:26:40.073549178Z I0000 00:00:1779798400.073373      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:26:45.837252908Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:26:56.145152938Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:26:56.269175992Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:26:56.929183624Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:26:56.929203105Z I0000 00:00:1779798416.928536      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:26:57.432554028Z I0000 00:00:1779798417.432004      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:26:57.43258006Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:26:59.276237124Z E0000 00:00:1779798419.276082      57 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:27:03.741307804Z ==> Exited with status 139
+2026-05-26T12:27:03.743879099Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2026-05-26T12:27:11.193742884Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:27:16.25413654Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+2026-05-26T12:27:18.399217396Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:27:18.399246647Z I0000 00:00:1779798438.399067      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:27:18.794998312Z I0000 00:00:1779798438.794852      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:27:18.795023992Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:27:39.168791649Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:27:39.168884762Z I0000 00:00:1779798459.167798      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:27:39.652707611Z I0000 00:00:1779798459.652516      39 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T12:27:39.652784984Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T12:27:46.920802399Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:27:46.920828911Z I0000 00:00:1779798466.920662      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:27:54.946957328Z E0000 00:00:1779798474.943982      39 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:27:55.278019588Z free(): invalid pointer
+2026-05-26T12:27:57.717129978Z ==> No open ports detected, continuing to scan...
+2026-05-26T12:27:57.995424973Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:27:57.995459414Z I0000 00:00:1779798477.995320      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T12:27:57.996026778Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T12:28:17.796410094Z E0000 00:00:1779798497.795601      39 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2026-05-26T12:28:20.260515393Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T12:28:20.260536663Z I0000 00:00:1779798500.260401      39 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
