@@ -10,8 +10,8 @@ import os
 class BaseConfig:
     """Shared configuration defaults across all environments."""
 
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret-key-change-in-production")
+    SECRET_KEY: str = os.getenv("SECRET_KEY", os.getenv("SESSION_SECRET", "dev-secret-key-change-in-production"))
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", os.getenv("SESSION_SECRET", "dev-jwt-secret-key-change-in-production"))
     JWT_ACCESS_TOKEN_EXPIRES: int = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", "900"))
     JWT_REFRESH_TOKEN_EXPIRES: int = int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES", "604800"))
 

@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web", "bash", "python-3.11"]
+modules = ["python-3.11", "nodejs-20", "web", "bash"]
 [agent]
 expertMode = true
 stack = "FLASK_VANILLA_JS"
@@ -60,8 +60,8 @@ localPort = 8000
 externalPort = 8000
 
 [deployment]
-deploymentTarget = "vm"
-run = ["bash", "-c", "FLASK_ENV=production gunicorn --bind 0.0.0.0:5000 --workers 1 --reuse-port main:app"]
+deploymentTarget = "autoscale"
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
 build = ["bash", "-c", "cd frontend && npm install && npm run build"]
 
 [userenv]
@@ -74,3 +74,4 @@ MODEL_NAME = "ArcFace"
 DETECTOR_BACKEND = "ssd"
 FLASK_DEBUG = "false"
 PORT = "8000"
+CORS_ORIGINS = "*"
