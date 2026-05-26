@@ -216,11 +216,8 @@ def validate_refresh_token(db, token: str) -> dict | None:
         If token reuse is detected (already invalidated), all tokens for
         that user are invalidated and None is returned.
     """
-    import sqlite3
-
     token_hash = hash_refresh_token(token)
 
-    db.row_factory = sqlite3.Row
     cursor = db.cursor()
     cursor.execute(
         "SELECT * FROM refresh_tokens WHERE token_hash = ?",

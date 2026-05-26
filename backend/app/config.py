@@ -20,6 +20,7 @@ class BaseConfig:
 
     DATA_DIR: str = os.getenv("DATA_DIR", "data/")
     DATABASE_PATH: str = os.getenv("DATABASE_PATH", "")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "")
     RATE_LIMITING_ENABLED: bool = True
     CORS_ORIGINS: list = ["*"]
 

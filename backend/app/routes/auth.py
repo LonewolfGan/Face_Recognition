@@ -1,14 +1,5 @@
-"""Auth Blueprint — handles registration, login, token refresh, logout, and password change.
+"""Auth Blueprint — registration, login, token refresh, logout, password change."""
 
-Routes:
-    POST /register       — Register a new user with face images and password
-    POST /login          — Login via face recognition or password
-    POST /refresh-token  — Rotate refresh token and issue new access token
-    POST /logout         — Invalidate all refresh tokens for the user
-    POST /change_password — Change the authenticated user's password
-"""
-
-import sqlite3
 import logging
 import datetime
 
@@ -18,9 +9,7 @@ from ..auth import (
     generate_access_token,
     generate_refresh_token,
     hash_password,
-    hash_refresh_token,
     invalidate_all_user_tokens,
-    invalidate_refresh_token,
     rotate_refresh_token,
     store_refresh_token,
     token_required,
@@ -34,40 +23,27 @@ from ..validators import (
     validate_password_strength,
     validate_request,
 )
-from ..models.user import create_user, delete_user, get_user_by_face_id, get_user_by_id
+from ..models.user import create_user, delete_user, get_user_by_face_id
 from ..services.face_service import FaceNotFoundError, FaceProcessingError
+from ..db import open_connection
 
 auth_bp = Blueprint("auth", __name__)
-
 logger = logging.getLogger(__name__)
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-
-def _get_db() -> sqlite3.Connection:
-    """Get or create a database connection for the current request context."""
+def _get_db():
+    """Get or create a request-scoped database connection."""
     db = getattr(g, "_database", None)
     if db is None:
-        db_path = current_app.config["DATABASE_PATH"]
-        db = g._database = sqlite3.connect(db_path)
-        db.row_factory = sqlite3.Row
+        db = g._database = open_connection(current_app.config)
     return db
 
 
 def _error_response(status_code: int, error_code: str, message):
-    """Return a consistent error JSON structure."""
-    return jsonify({
-        "status": "error",
-        "error": error_code,
-        "message": message,
-    }), status_code
+    return jsonify({"status": "error", "error": error_code, "message": message}), status_code
 
 
 def _log_auth_failure(failure_type: str, endpoint: str) -> None:
-    """Log authentication failures with client IP, endpoint, and timestamp."""
     client_ip = request.headers.get("X-Forwarded-For", request.remote_addr or "unknown")
     if client_ip and "," in client_ip:
         client_ip = client_ip.split(",")[0].strip()
@@ -81,10 +57,9 @@ def _log_auth_failure(failure_type: str, endpoint: str) -> None:
 
 
 def _set_refresh_cookie(response, refresh_token: str):
-    """Set the refresh_token as an httpOnly secure cookie on the response.
+    """Set the refresh_token as an httpOnly secure cookie.
 
-    Uses SameSite=None in production so the cookie is sent on cross-origin
-    requests (e.g. Vercel frontend → Render backend). Requires Secure=True.
+    Uses SameSite=None in production for cross-origin (Vercel → Render).
     Uses SameSite=Lax in development (same-origin via Vite proxy).
     """
     import os
@@ -101,52 +76,32 @@ def _set_refresh_cookie(response, refresh_token: str):
     return response
 
 
-# ---------------------------------------------------------------------------
-# Routes
-# ---------------------------------------------------------------------------
-
-
 @auth_bp.route("/register", methods=["POST"])
 def register():
-    """Register a new user with face images and password."""
     try:
         data = request.json
-
-        # Input validation
         valid, errors = validate_request(data, REGISTER_SCHEMA)
         if not valid:
             return _error_response(400, "validation_error", errors)
 
-        # Validate password strength
         password = data.get("password")
         pw_valid, pw_msg = validate_password_strength(password)
         if not pw_valid:
             return _error_response(400, "validation_error", pw_msg)
 
-        # Sanitize name
         name = sanitize_string(data["name"])
 
-        # Process face images via FaceService (direct function call, no HTTP)
-        face_service = current_app.config.get("FACE_SERVICE")
+        face_service = current_app.config.get("FACE_SERVICE") or getattr(current_app, "face_service", None)
         if face_service is None:
-            # Fallback: try to get from app attribute
-            face_service = getattr(current_app, "face_service", None)
-
-        if face_service is None:
-            logger.error("FACE_SERVICE is None in /register — embedding_store: %s, config FACE_SERVICE: %s",
-                         getattr(current_app, 'embedding_store', 'MISSING'),
-                         current_app.config.get('FACE_SERVICE', 'MISSING'))
             return _error_response(500, "internal_error", "Face service not available")
 
-        # Reject registration if this face is already registered to another account
         try:
             existing_face_id, _ = face_service.recognize_best(data["images"])
             if existing_face_id:
-                logger.warning("Registration blocked: face already registered as face_id=%s", existing_face_id)
                 return _error_response(409, "face_already_registered",
                     "Un compte avec ce visage existe déjà. Connectez-vous plutôt.")
         except (FaceNotFoundError, FaceProcessingError):
-            pass  # No existing match — safe to proceed
+            pass
 
         try:
             face_id, _ = face_service.add_face(name, data["images"])
@@ -154,7 +109,6 @@ def register():
             logger.exception("face_service.add_face failed: %s", str(e))
             return _error_response(400, "registration_failed", "Échec de l'enregistrement du visage")
 
-        # Create user in database with password hash
         password_hash = hash_password(password)
         db = _get_db()
         user_id = create_user(db, name, face_id, password_hash=password_hash)
@@ -173,16 +127,12 @@ def register():
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    """Login via face recognition or password."""
     try:
         data = request.json
-
-        # Input validation
         valid, errors = validate_request(data, LOGIN_SCHEMA)
         if not valid:
             return _error_response(400, "validation_error", errors)
 
-        # Password-based login
         if data.get("password"):
             db = _get_db()
             cursor = db.cursor()
@@ -192,8 +142,7 @@ def login():
             users = cursor.fetchall()
 
             authenticated_user = None
-            for user_row in users:
-                user_dict = dict(user_row)
+            for user_dict in users:
                 if user_dict.get("password_hash") and verify_password(
                     data["password"], user_dict["password_hash"]
                 ):
@@ -204,11 +153,8 @@ def login():
                 _log_auth_failure("invalid_credentials", "/login")
                 return _error_response(401, "invalid_credentials", "Invalid credentials")
 
-            # Generate tokens
             access_token = generate_access_token(authenticated_user["user_id"])
             refresh_token = generate_refresh_token()
-
-            # Store hashed refresh token in DB
             store_refresh_token(db, authenticated_user["user_id"], refresh_token)
 
             response = make_response(jsonify({
@@ -224,20 +170,15 @@ def login():
             _set_refresh_cookie(response, refresh_token)
             return response
 
-        # Face recognition-based login — supports single image or multi-frame array
-        images_list = data.get("images")   # multi-frame: list of base64 strings
-        single_image = data.get("image")   # legacy single-frame
+        images_list = data.get("images")
+        single_image = data.get("image")
 
         if not images_list and not single_image:
             return _error_response(400, "validation_error", "Image ou mot de passe requis")
 
         images_to_try = images_list if images_list else [single_image]
 
-        # Use FaceService for recognition (direct function call, no HTTP)
-        face_service = current_app.config.get("FACE_SERVICE")
-        if face_service is None:
-            face_service = getattr(current_app, "face_service", None)
-
+        face_service = current_app.config.get("FACE_SERVICE") or getattr(current_app, "face_service", None)
         if face_service is None:
             return _error_response(500, "internal_error", "Face service not available")
 
@@ -247,22 +188,18 @@ def login():
             _log_auth_failure("face_recognition_failed", "/login")
             err_msg = str(e)
             if "no_face_in_image" in err_msg:
-                return _error_response(401, "no_face_detected", "Aucun visage détecté dans l'image. Placez votre visage face à la caméra.")
+                return _error_response(401, "no_face_detected",
+                    "Aucun visage détecté dans l'image. Placez votre visage face à la caméra.")
             return _error_response(401, "invalid_credentials", "Visage non reconnu")
 
-        # Get user by face_id
         db = _get_db()
         user = get_user_by_face_id(db, face_id)
-
         if not user:
             _log_auth_failure("user_not_found", "/login")
             return _error_response(401, "invalid_credentials", "Invalid credentials")
 
-        # Generate tokens
         access_token = generate_access_token(user["user_id"])
         refresh_token = generate_refresh_token()
-
-        # Store hashed refresh token in DB
         store_refresh_token(db, user["user_id"], refresh_token)
 
         response = make_response(jsonify({
@@ -284,7 +221,6 @@ def login():
 
 @auth_bp.route("/refresh-token", methods=["POST"])
 def refresh_token_endpoint():
-    """Validate cookie token, rotate (invalidate old + issue new), detect reuse."""
     try:
         refresh_token = request.cookies.get("refresh_token")
         if not refresh_token:
@@ -292,19 +228,14 @@ def refresh_token_endpoint():
             return _error_response(401, "invalid_refresh", "Re-authentication required")
 
         db = _get_db()
-
-        # Validate the refresh token (handles reuse detection and expiry)
         token_record = validate_refresh_token(db, refresh_token)
 
         if not token_record:
             _log_auth_failure("invalid_refresh_token", "/refresh-token")
             return _error_response(401, "invalid_refresh", "Re-authentication required")
 
-        # Rotate: invalidate old token and issue new one
         user_id = token_record["user_id"]
         new_refresh_token = rotate_refresh_token(db, token_record["id"], user_id)
-
-        # Issue new access token
         new_access_token = generate_access_token(user_id)
 
         response = make_response(jsonify({
@@ -321,16 +252,11 @@ def refresh_token_endpoint():
 @auth_bp.route("/logout", methods=["POST"])
 @token_required
 def logout():
-    """Invalidate all refresh tokens for the authenticated user."""
     try:
         db = _get_db()
         invalidate_all_user_tokens(db, g.user_id)
 
-        response = make_response(jsonify({
-            "status": "success",
-            "message": "Logged out successfully",
-        }))
-        # Clear the refresh token cookie
+        response = make_response(jsonify({"status": "success", "message": "Logged out successfully"}))
         response.set_cookie(
             "refresh_token",
             value="",
@@ -348,7 +274,6 @@ def logout():
 @auth_bp.route("/profile", methods=["GET"])
 @token_required
 def get_profile():
-    """Return the authenticated user's profile."""
     try:
         db = _get_db()
         cursor = db.cursor()
@@ -359,8 +284,7 @@ def get_profile():
         row = cursor.fetchone()
         if not row:
             return _error_response(404, "not_found", "User not found")
-        user = dict(row)
-        return jsonify({"status": "success", "user": user})
+        return jsonify({"status": "success", "user": row})
     except Exception as e:
         return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")
 
@@ -368,19 +292,16 @@ def get_profile():
 @auth_bp.route("/profile", methods=["PATCH"])
 @token_required
 def update_profile():
-    """Update the authenticated user's name and/or avatar."""
     try:
         data = request.json or {}
         name = sanitize_string(data.get("name", "").strip())
-        avatar = data.get("avatar")  # base64 data-URL or None
+        avatar = data.get("avatar")
 
         if not name:
             return _error_response(400, "validation_error", "Name is required")
-
         if len(name) > 100:
             return _error_response(400, "validation_error", "Name is too long")
 
-        # Avatar validation: type check and size guard (max ~2 MB base64)
         if avatar is not None:
             allowed_prefixes = (
                 "data:image/jpeg;base64,",
@@ -417,33 +338,23 @@ def update_profile():
 @auth_bp.route("/account", methods=["DELETE"])
 @token_required
 def delete_account():
-    """Permanently delete the authenticated user's account and all associated data."""
     try:
         db = _get_db()
         cursor = db.cursor()
 
-        # Fetch face_id so we can remove from face service
         cursor.execute("SELECT face_id FROM users WHERE user_id = ?", (g.user_id,))
         row = cursor.fetchone()
         if not row:
             return _error_response(404, "not_found", "User not found")
         face_id = row["face_id"]
 
-        # Delete all notes belonging to the user
         cursor.execute("DELETE FROM notes WHERE user_id = ?", (g.user_id,))
-
-        # Delete all folders belonging to the user
         cursor.execute("DELETE FROM folders WHERE user_id = ?", (g.user_id,))
-
-        # Invalidate all refresh tokens
         invalidate_all_user_tokens(db, g.user_id)
-
-        # Delete the user record
         deleted = delete_user(db, g.user_id)
         if not deleted:
             return _error_response(404, "not_found", "User not found")
 
-        # Remove biometric data from face service (best-effort)
         try:
             face_service = current_app.config.get("FACE_SERVICE") or getattr(current_app, "face_service", None)
             if face_service and face_id:
@@ -451,10 +362,7 @@ def delete_account():
         except Exception as e:
             logger.warning("Face service cleanup failed for face_id=%s: %s", face_id, e)
 
-        response = make_response(jsonify({
-            "status": "success",
-            "message": "Compte supprimé avec succès",
-        }))
+        response = make_response(jsonify({"status": "success", "message": "Compte supprimé avec succès"}))
         response.set_cookie("refresh_token", value="", httponly=True, secure=True, samesite="Strict", max_age=0)
         return response
 
@@ -466,18 +374,15 @@ def delete_account():
 @auth_bp.route("/change_password", methods=["POST"])
 @token_required
 def change_password():
-    """Change the authenticated user's password."""
     try:
         data = request.json
         if not data or "password" not in data:
             return _error_response(400, "validation_error", "Password is required")
 
-        # Validate new password strength
         pw_valid, pw_msg = validate_password_strength(data["password"])
         if not pw_valid:
             return _error_response(400, "validation_error", pw_msg)
 
-        # Hash and store new password
         new_hash = hash_password(data["password"])
         db = _get_db()
         cursor = db.cursor()
@@ -490,10 +395,7 @@ def change_password():
         if cursor.rowcount == 0:
             return _error_response(404, "not_found", "User not found")
 
-        return jsonify({
-            "status": "success",
-            "message": "Mot de passe mis à jour avec succès",
-        })
+        return jsonify({"status": "success", "message": "Mot de passe mis à jour avec succès"})
 
     except Exception as e:
         return _error_response(500, "internal_error", "Une erreur interne est survenue. Veuillez réessayer.")

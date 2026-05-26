@@ -12,8 +12,8 @@ services:
         generateValue: true
       - key: JWT_SECRET_KEY
         generateValue: true
-      - key: DATABASE_PATH
-        value: /opt/render/project/src/backend/data/users.db
+      - key: DATABASE_URL
+        sync: false
       - key: DATA_DIR
         value: /opt/render/project/src/backend/data/
       - key: CORS_ORIGINS
