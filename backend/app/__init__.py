@@ -2,6 +2,7 @@
 
 import os
 import sqlite3
+import threading
 
 from flask import Flask, g
 
@@ -9,6 +10,13 @@ from .config import config
 
 
 VALID_CONFIG_NAMES = {"testing", "development", "production"}
+
+# Module-level warmup state — shared across all threads in the worker process
+_warmup_status = {
+    "state": "pending",   # pending | warming | ready | failed
+    "error": None,
+}
+_warmup_lock = threading.Lock()
 
 
 def create_app(config_name: str | None = None) -> Flask:
@@ -259,6 +267,52 @@ def _create_schema_postgresql(conn) -> None:
     conn.add_column_if_missing("users", "avatar", "TEXT DEFAULT NULL")
 
 
+def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
+    """Run in a background thread to pre-load DeepFace model weights.
+
+    Calls DeepFace.represent() on a tiny dummy image so the ArcFace weights
+    are downloaded and cached before the first real user request arrives.
+    This eliminates the cold-start delay on the first registration/login.
+    """
+    global _warmup_status
+
+    with _warmup_lock:
+        if _warmup_status["state"] != "pending":
+            return
+        _warmup_status["state"] = "warming"
+
+    try:
+        import tempfile
+        import numpy as np
+        import cv2
+        from deepface import DeepFace
+
+        logger.info("DeepFace warmup started (model=%s, detector=%s)", model_name, detector_backend)
+
+        dummy = np.zeros((112, 112, 3), dtype=np.uint8)
+        fd, tmp = tempfile.mkstemp(suffix=".jpg")
+        os.close(fd)
+        cv2.imwrite(tmp, dummy)
+
+        DeepFace.represent(
+            img_path=tmp,
+            model_name=model_name,
+            detector_backend=detector_backend,
+            enforce_detection=False,
+        )
+        os.remove(tmp)
+
+        with _warmup_lock:
+            _warmup_status["state"] = "ready"
+        logger.info("DeepFace warmup complete — model is hot and ready.")
+
+    except Exception as e:
+        with _warmup_lock:
+            _warmup_status["state"] = "failed"
+            _warmup_status["error"] = str(e)
+        logger.warning("DeepFace warmup failed (model will load on first request): %s", e)
+
+
 def _init_embedding_store(app: Flask) -> None:
     try:
         from .services.embedding_service import EmbeddingStore
@@ -275,14 +329,26 @@ def _init_embedding_store(app: Flask) -> None:
         embedding_store = EmbeddingStore(data_dir)
         app.embedding_store = embedding_store
 
+        model_name = app.config.get("MODEL_NAME", "ArcFace")
+        detector_backend = app.config.get("DETECTOR_BACKEND", "ssd")
+
         face_service = FaceService(
             embedding_store,
-            model_name=app.config.get("MODEL_NAME", "ArcFace"),
-            detector_backend=app.config.get("DETECTOR_BACKEND", "ssd"),
+            model_name=model_name,
+            detector_backend=detector_backend,
         )
         app.config["FACE_SERVICE"] = face_service
         app.face_service = face_service
         app.logger.info("FaceService initialized successfully.")
+
+        # Kick off background warmup — doesn't block gunicorn startup
+        t = threading.Thread(
+            target=_warmup_deepface,
+            args=(model_name, detector_backend, app.logger),
+            daemon=True,
+            name="deepface-warmup",
+        )
+        t.start()
 
     except ImportError as e:
         app.logger.warning("FaceService import error (faiss/deepface missing?): %s", e)
