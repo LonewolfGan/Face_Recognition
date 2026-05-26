@@ -1,13 +1,12 @@
 """Health check Blueprint.
 
-Provides a GET /health endpoint that verifies application and database
-connectivity. No authentication required. Used by deployment platforms
-(Render) and monitoring tools to confirm the application is operational.
+Provides GET /health — used by Render and monitoring tools.
+No authentication required. Exempt from rate limiting.
 """
 
-import sqlite3
-
 from flask import Blueprint, current_app, jsonify
+
+from ..db import open_connection
 
 health_bp = Blueprint("health", __name__)
 
@@ -16,23 +15,14 @@ health_bp = Blueprint("health", __name__)
 def health_check():
     """Check application health by verifying database connectivity.
 
-    Returns:
-        200 with {"status": "healthy"} when the database is reachable.
-        503 with {"status": "unhealthy", "reason": "database_unavailable"}
-        when the database cannot be reached.
+    Returns 200 {"status": "healthy"} when the database is reachable,
+    503 {"status": "unhealthy"} otherwise.
     """
     try:
-        db_path = current_app.config.get("DATABASE_PATH", "")
-        if not db_path:
-            return jsonify({"status": "unhealthy", "reason": "database_unavailable"}), 503
-
-        conn = sqlite3.connect(db_path, timeout=5)
+        conn = open_connection(current_app.config)
         cursor = conn.cursor()
         cursor.execute("SELECT 1")
-        cursor.close()
         conn.close()
-
-        return jsonify({"status": "healthy"}), 200
-
-    except Exception:
-        return jsonify({"status": "unhealthy", "reason": "database_unavailable"}), 503
+        return jsonify({"status": "healthy", "db": conn.backend}), 200
+    except Exception as e:
+        return jsonify({"status": "unhealthy", "reason": str(e)}), 503

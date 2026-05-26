@@ -99,12 +99,18 @@ class RateLimiter:
 
         Auth-related endpoints get a stricter limit (20/hour).
         All other endpoints get the general limit (50/hour).
+        Health check endpoints are always exempt.
         """
         if not self._enabled:
             return None
 
         client_key = self._get_client_key(request)
         endpoint = request.endpoint or ""
+
+        # Always exempt health checks — Render pings every 10s and would
+        # exhaust the rate limit bucket within minutes.
+        if "health" in endpoint.lower():
+            return None
 
         # Determine limit based on endpoint type
         if self._is_auth_endpoint(endpoint):

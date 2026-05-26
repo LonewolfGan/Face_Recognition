@@ -1,0 +1,100 @@
+2026-05-26T10:34:06.328987111Z Downloading idna-3.16-py3-none-any.whl (74 kB)
+2026-05-26T10:34:06.341350873Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.2/74.2 kB 7.6 MB/s eta 0:00:00
+2026-05-26T10:34:06.353131952Z Downloading joblib-1.5.3-py3-none-any.whl (309 kB)
+2026-05-26T10:34:06.368328166Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 309.1/309.1 kB 27.9 MB/s eta 0:00:00
+2026-05-26T10:34:06.381369563Z Downloading lightecc-0.0.6-py3-none-any.whl (51 kB)
+2026-05-26T10:34:06.399329628Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.5/51.5 kB 3.6 MB/s eta 0:00:00
+2026-05-26T10:34:06.412361614Z Downloading lz4-4.4.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+2026-05-26T10:34:06.439844839Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 53.7 MB/s eta 0:00:00
+2026-05-26T10:34:06.450063944Z Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2026-05-26T10:34:06.464145333Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 19.8 MB/s eta 0:00:00
+2026-05-26T10:34:06.475501693Z Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+2026-05-26T10:34:06.561537595Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 75.7 MB/s eta 0:00:00
+2026-05-26T10:34:06.572993777Z Downloading urllib3-2.7.0-py3-none-any.whl (131 kB)
+2026-05-26T10:34:06.589168393Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.1/131.1 kB 10.1 MB/s eta 0:00:00
+2026-05-26T10:34:06.600130024Z Downloading wheel-0.47.0-py3-none-any.whl (32 kB)
+2026-05-26T10:34:06.618720222Z Downloading beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+2026-05-26T10:34:06.629310706Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 107.7/107.7 kB 12.9 MB/s eta 0:00:00
+2026-05-26T10:34:06.642469785Z Downloading filelock-3.29.0-py3-none-any.whl (39 kB)
+2026-05-26T10:34:06.661365331Z Downloading namex-0.1.0-py3-none-any.whl (5.9 kB)
+2026-05-26T10:34:06.684897478Z Downloading optree-0.19.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (447 kB)
+2026-05-26T10:34:06.700294457Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 447.1/447.1 kB 38.8 MB/s eta 0:00:00
+2026-05-26T10:34:06.711258008Z Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+2026-05-26T10:34:06.724377196Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 310.7/310.7 kB 29.3 MB/s eta 0:00:00
+2026-05-26T10:34:06.735546482Z Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-05-26T10:34:06.74729002Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 91.7/91.7 kB 10.8 MB/s eta 0:00:00
+2026-05-26T10:34:06.757806772Z Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+2026-05-26T10:34:06.773280552Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 42.6 MB/s eta 0:00:00
+2026-05-26T10:34:06.784134111Z Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+2026-05-26T10:34:06.862965824Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 16.0 MB/s eta 0:00:00
+2026-05-26T10:34:06.873641629Z Downloading PySocks-1.7.1-py3-none-any.whl (16 kB)
+2026-05-26T10:34:07.296372006Z Downloading soupsieve-2.8.4-py3-none-any.whl (37 kB)
+2026-05-26T10:34:07.641665059Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-05-26T10:34:10.06346266Z Installing collected packages: namex, mpmath, libclang, flatbuffers, wrapt, urllib3, typing_extensions, tqdm, termcolor, sympy, soupsieve, six, python-dotenv, PySocks, PyJWT, pygments, psycopg2-binary, protobuf, pillow, packaging, opt_einsum, numpy, mdurl, markupsafe, lz4, joblib, itsdangerous, idna, gast, filelock, click, charset_normalizer, certifi, blinker, bcrypt, absl-py, wheel, werkzeug, requests, python-dateutil, optree, opencv-python-headless, opencv-python, mtcnn, ml_dtypes, markdown-it-py, lightecc, jinja2, h5py, gunicorn, grpcio, google_pasta, fire, faiss-cpu, beautifulsoup4, rich, pandas, lightphe, lightdsa, flask, astunparse, keras, gdown, flask-cors, tensorflow, tf-keras, retina-face, deepface
+2026-05-26T10:35:03.955556661Z Successfully installed PyJWT-2.13.0 PySocks-1.7.1 absl-py-2.4.0 astunparse-1.6.3 bcrypt-5.0.0 beautifulsoup4-4.14.3 blinker-1.9.0 certifi-2026.5.20 charset_normalizer-3.4.7 click-8.4.1 deepface-0.0.100 faiss-cpu-1.14.2 filelock-3.29.0 fire-0.7.1 flask-3.1.3 flask-cors-6.0.2 flatbuffers-25.12.19 gast-0.7.0 gdown-6.0.0 google_pasta-0.2.0 grpcio-1.80.0 gunicorn-26.0.0 h5py-3.14.0 idna-3.16 itsdangerous-2.2.0 jinja2-3.1.6 joblib-1.5.3 keras-3.14.1 libclang-18.1.1 lightdsa-0.0.3 lightecc-0.0.6 lightphe-0.0.25 lz4-4.4.5 markdown-it-py-4.2.0 markupsafe-3.0.3 mdurl-0.1.2 ml_dtypes-0.5.4 mpmath-1.3.0 mtcnn-1.0.0 namex-0.1.0 numpy-2.4.6 opencv-python-4.13.0.92 opencv-python-headless-4.13.0.92 opt_einsum-3.4.0 optree-0.19.1 packaging-26.2 pandas-3.0.3 pillow-12.2.0 protobuf-7.35.0 psycopg2-binary-2.9.12 pygments-2.20.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.2 requests-2.34.2 retina-face-0.0.17 rich-15.0.0 six-1.17.0 soupsieve-2.8.4 sympy-1.14.0 tensorflow-2.21.0 termcolor-3.3.0 tf-keras-2.21.0 tqdm-4.67.3 typing_extensions-4.15.0 urllib3-2.7.0 werkzeug-3.1.8 wheel-0.47.0 wrapt-2.2.1
+2026-05-26T10:35:04.249395505Z 
+2026-05-26T10:35:04.249423416Z [notice] A new release of pip is available: 24.0 -> 26.1.1
+2026-05-26T10:35:04.249428586Z [notice] To update, run: pip install --upgrade pip
+2026-05-26T10:35:08.646182658Z ==> Uploading build...
+2026-05-26T10:35:53.285531445Z ==> Uploaded in 29.8s. Compression took 14.9s
+2026-05-26T10:35:53.514905011Z ==> Build successful 🎉
+2026-05-26T10:36:02.031230374Z ==> Deploying...
+2026-05-26T10:36:02.113610997Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-26T10:37:07.213284002Z ==> No open ports detected, continuing to scan...
+2026-05-26T10:37:07.289811891Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T10:37:12.851970619Z ==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1'
+2026-05-26T10:37:39.180744943Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-05-26T10:37:39.180764793Z I0000 00:00:1779791859.180624      58 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-05-26T10:37:42.145757646Z I0000 00:00:1779791862.145623      58 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-05-26T10:37:42.14587558Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-26T10:38:08.150375079Z ==> No open ports detected, continuing to scan...
+2026-05-26T10:38:08.256270937Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-26T10:43:54.62395295Z 10.219.26.197 - - [26/May/2026:10:43:54 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:44:04.624028677Z 10.219.26.197 - - [26/May/2026:10:44:04 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:44:14.624138785Z 10.219.26.197 - - [26/May/2026:10:44:14 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:44:24.623875883Z 10.219.26.197 - - [26/May/2026:10:44:24 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:44:34.624463125Z 10.219.26.197 - - [26/May/2026:10:44:34 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:44:44.626303124Z 10.219.26.197 - - [26/May/2026:10:44:44 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:44:54.62424127Z 10.219.26.197 - - [26/May/2026:10:44:54 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:45:04.624620807Z 10.219.26.197 - - [26/May/2026:10:45:04 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:45:14.625270661Z 10.219.26.197 - - [26/May/2026:10:45:14 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:45:24.624028872Z 10.219.26.197 - - [26/May/2026:10:45:24 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:45:34.623562884Z 10.219.26.197 - - [26/May/2026:10:45:34 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:45:44.623827169Z 10.219.26.197 - - [26/May/2026:10:45:44 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:45:54.623954759Z 10.219.26.197 - - [26/May/2026:10:45:54 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:46:04.624248014Z 10.219.26.197 - - [26/May/2026:10:46:04 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:46:14.623946533Z 10.219.26.197 - - [26/May/2026:10:46:14 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:46:24.624306681Z 10.219.26.197 - - [26/May/2026:10:46:24 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:46:34.624075611Z 10.219.26.197 - - [26/May/2026:10:46:34 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:46:44.626134858Z 10.219.26.197 - - [26/May/2026:10:46:44 +0000] "GET /api/health HTTP/1.1" 503 55 "-" "Render/1.0"
+2026-05-26T10:46:54.623778247Z 10.219.26.197 - - [26/May/2026:10:46:54 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:47:04.630052398Z 10.219.26.197 - - [26/May/2026:10:47:04 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:47:14.624582536Z 10.219.26.197 - - [26/May/2026:10:47:14 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:47:24.623897794Z 10.219.26.197 - - [26/May/2026:10:47:24 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:47:34.624314505Z 10.219.26.197 - - [26/May/2026:10:47:34 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:47:44.62452457Z 10.219.26.197 - - [26/May/2026:10:47:44 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:47:54.624482516Z 10.219.26.197 - - [26/May/2026:10:47:54 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:48:04.623863257Z 10.219.26.197 - - [26/May/2026:10:48:04 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:48:14.624852605Z 10.219.26.197 - - [26/May/2026:10:48:14 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:48:24.623633148Z 10.219.26.197 - - [26/May/2026:10:48:24 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:48:34.624468301Z 10.219.26.197 - - [26/May/2026:10:48:34 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:48:44.625277215Z 10.219.26.197 - - [26/May/2026:10:48:44 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:48:54.624220384Z 10.219.26.197 - - [26/May/2026:10:48:54 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:49:04.624053338Z 10.219.26.197 - - [26/May/2026:10:49:04 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:49:14.624182011Z 10.219.26.197 - - [26/May/2026:10:49:14 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:49:24.624761908Z 10.219.26.197 - - [26/May/2026:10:49:24 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:49:34.624306434Z 10.219.26.197 - - [26/May/2026:10:49:34 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:49:44.623750807Z 10.219.26.197 - - [26/May/2026:10:49:44 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:49:54.624966063Z 10.219.26.197 - - [26/May/2026:10:49:54 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:50:04.62385141Z 10.219.26.197 - - [26/May/2026:10:50:04 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:50:14.624219932Z 10.219.26.197 - - [26/May/2026:10:50:14 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:50:24.624375406Z 10.219.26.197 - - [26/May/2026:10:50:24 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:50:34.623843851Z 10.219.26.197 - - [26/May/2026:10:50:34 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:50:44.62478651Z 10.219.26.197 - - [26/May/2026:10:50:44 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:50:54.624633756Z 10.219.26.197 - - [26/May/2026:10:50:54 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:51:03.847284408Z ==> Timed Out
+2026-05-26T10:51:03.849616944Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2026-05-26T10:51:04.62402697Z 10.219.26.197 - - [26/May/2026:10:51:04 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:51:14.624183245Z 10.219.26.197 - - [26/May/2026:10:51:14 +0000] "GET /api/health HTTP/1.1" 429 87 "-" "Render/1.0"
+2026-05-26T10:51:19.127246773Z ==> Detected service running on port 10000
+2026-05-26T10:51:19.325018624Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
