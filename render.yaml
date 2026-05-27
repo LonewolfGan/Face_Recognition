@@ -18,7 +18,7 @@ services:
       - key: DATA_DIR
         value: /opt/render/project/src/backend/data/
       - key: CORS_ORIGINS
-        sync: false
+        value: https://face-recognition-lovat-eight.vercel.app
       - key: MODEL_NAME
         value: ArcFace
       - key: DETECTOR_BACKEND

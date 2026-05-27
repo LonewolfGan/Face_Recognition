@@ -83,9 +83,25 @@ class ProductionConfig(BaseConfig):
 
     def __init__(self):
         super().__init__()
-        # In production, CORS_ORIGINS must come from environment
-        env_cors = os.getenv("CORS_ORIGINS", "")
-        self.CORS_ORIGINS = [o.strip() for o in env_cors.split(",") if o.strip()]
+        # CORS_ORIGINS must be set to your frontend domain(s), e.g.:
+        #   https://your-app.vercel.app
+        # Comma-separate multiple origins. withCredentials=True requires
+        # explicit origins — a wildcard * will NOT work for credentialed requests.
+        env_cors = os.getenv("CORS_ORIGINS", "").strip()
+        if not env_cors:
+            import warnings
+            warnings.warn(
+                "CORS_ORIGINS env var is not set in production. "
+                "All cross-origin requests will be blocked. "
+                "Set CORS_ORIGINS to your frontend URL in the Render dashboard.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            # Fall back to wildcard so the server at least responds (credentials
+            # won't work until CORS_ORIGINS is set to a specific origin).
+            self.CORS_ORIGINS = ["*"]
+        else:
+            self.CORS_ORIGINS = [o.strip() for o in env_cors.split(",") if o.strip()]
 
         env_db_path = os.getenv("DATABASE_PATH")
         if env_db_path:

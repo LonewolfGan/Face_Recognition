@@ -1,0 +1,81 @@
+==> 
+==> Available at your primary URL https://face-recognition-api-vlwk.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+10.219.24.198 - - [27/May/2026:00:36:11 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:15 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:16 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:21 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:26 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:31 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:36 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:41 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:45 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:46 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:51 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:36:56 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:01 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:06 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:11 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:15 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:16 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:21 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:26 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779842249.243072      72 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+10.219.24.198 - - [27/May/2026:00:37:31 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+127.0.0.1 - - [27/May/2026:00:37:32 +0000] "OPTIONS /api/refresh-token HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+[2026-05-27 00:37:33,349] WARNING in auth: Auth failure: type=missing_refresh_token, ip=196.121.128.245, endpoint=/refresh-token, timestamp=2026-05-27T00:37:33.349009
+127.0.0.1 - - [27/May/2026:00:37:33 +0000] "POST /api/refresh-token HTTP/1.1" 401 84 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+10.219.24.198 - - [27/May/2026:00:37:36 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:41 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:46 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:46 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:51 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:37:56 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:38:01 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:38:06 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:38:11 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:38:16 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779842296.547587      72 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+10.219.24.198 - - [27/May/2026:00:38:16 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:38:21 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:38:26 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+127.0.0.1 - - [27/May/2026:00:38:26 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779842321.643020      73 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+[2026-05-27 00:40:21 +0000] [57] [INFO] Handling signal: term
+==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+==> Detected service running on port 10000
+==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+[2026-05-27 00:41:11 +0000] [40] [INFO] Starting gunicorn 26.0.0
+[2026-05-27 00:41:11 +0000] [40] [INFO] Listening at: http://0.0.0.0:10000 (40)
+[2026-05-27 00:41:11 +0000] [40] [INFO] Using worker: sync
+[2026-05-27 00:41:11 +0000] [75] [INFO] Booting worker with pid: 75
+127.0.0.1 - - [27/May/2026:00:41:11 +0000] "HEAD / HTTP/1.1" 200 0 "-" "Go-http-client/1.1"
+[2026-05-27 00:41:12 +0000] [40] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+10.219.24.198 - - [27/May/2026:00:41:15 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:16 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:21 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:26 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:31 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:36 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:41 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:45 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:46 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:51 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:41:56 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:01 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:06 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:11 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:15 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:16 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:21 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:26 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.198 - - [27/May/2026:00:42:31 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+127.0.0.1 - - [27/May/2026:00:42:32 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779842560.346446      75 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779842562.937309      74 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.

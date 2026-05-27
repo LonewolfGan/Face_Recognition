@@ -63,6 +63,19 @@ def _get_allowed_origins(app: Flask) -> list:
     else:
         origins = ["http://localhost:5173"]
 
+    # Guard: empty list means nothing was configured — fall back to wildcard
+    # so OPTIONS preflights at least respond.  Credentialed requests will still
+    # fail in this state; set CORS_ORIGINS to fix properly.
+    if not origins:
+        import warnings
+        warnings.warn(
+            "CORS_ORIGINS resolved to an empty list — falling back to wildcard. "
+            "Set CORS_ORIGINS to your frontend origin for credentialed requests.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        origins = ["*"]
+
     # Cap at 20 entries
     origins = origins[:20]
 
