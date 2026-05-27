@@ -88,13 +88,13 @@ export function useNotesStore() {
 
   const createFolder = useCallback(async (name, icon = null) => {
     if (!name.trim()) {
-      toast.error('Folder name is required');
+      toast.error('Le nom du dossier est requis');
       return null;
     }
     try {
       const res = await authFetch.post('/folders', { name: name.trim(), icon: icon || null });
       if (res.data.status === 'success') {
-        toast.success('Folder created');
+        toast.success('Dossier créé');
         await loadFolders();
         return res.data;
       }
@@ -106,13 +106,13 @@ export function useNotesStore() {
 
   const renameFolder = useCallback(async (folderId, newName) => {
     if (!newName.trim()) {
-      toast.error('Folder name is required');
+      toast.error('Le nom du dossier est requis');
       return false;
     }
     try {
       const res = await authFetch.put(`/folders/${folderId}`, { name: newName.trim() });
       if (res.data.status === 'success') {
-        toast.success('Folder renamed');
+        toast.success('Dossier renommé');
         await loadFolders();
         return true;
       }
@@ -126,7 +126,7 @@ export function useNotesStore() {
     try {
       const res = await authFetch.delete(`/folders/${folderId}`);
       if (res.data.status === 'success') {
-        toast.success('Folder deleted');
+        toast.success('Dossier supprimé');
         // If the deleted folder was active, reset to all notes
         setState(prev => ({
           ...prev,
@@ -245,7 +245,7 @@ export function useNotesStore() {
         allNotes: prev.allNotes.filter(n => n.note_id !== noteId),
         activeNoteId: prev.activeNoteId === noteId ? null : prev.activeNoteId,
       }));
-      toast.success('Note deleted');
+      toast.success('Note supprimée');
       return true;
     } catch (err) {
       handleApiError(err, toast);

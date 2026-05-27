@@ -26,6 +26,7 @@ import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { API_URL } from "../../config";
+import { parseApiError } from "../../utils/errorHandler";
 import { Button } from "../../components/ui";
 import { cn } from "../../lib/utils";
 import { useTheme } from "../../theme";
@@ -390,8 +391,7 @@ export default function AuthPage() {
       await login({ password });
       setLoginSuccess(true);
     } catch (err) {
-      const message = err.response?.data?.message || err.message;
-      setError(message);
+      setError(parseApiError(err));
     } finally {
       setLoading(false);
     }
@@ -464,7 +464,7 @@ export default function AuthPage() {
           setError(msg || "Visage non reconnu");
         }
       } else {
-        setError(err.message);
+        setError(parseApiError(err));
       }
       if (stream) stream.getTracks().forEach((t) => t.stop());
     } finally {
@@ -526,11 +526,10 @@ export default function AuthPage() {
                   }
                 } catch (err) {
                   const errorCode = err.response?.data?.error || "";
-                  const msg = err.response?.data?.message || err.message;
                   if (errorCode === "face_already_registered") {
                     setShowDuplicateFaceModal(true);
                   } else {
-                    setSignupErrorMsg(msg || "Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+                    setSignupErrorMsg(parseApiError(err));
                     setShowSignupErrorModal(true);
                   }
                   setProcessingSignup(false);
@@ -550,7 +549,14 @@ export default function AuthPage() {
           }, 1200);
         }
       } catch (err) {
-        setCameraErrorMsg(err.message || "Impossible d'accéder à la caméra.");
+        const camMsg = err.name === "NotAllowedError"
+          ? "Permission caméra refusée. Autorisez l'accès à la caméra dans les paramètres de votre navigateur."
+          : err.name === "NotFoundError"
+          ? "Aucune caméra détectée. Vérifiez qu'une webcam est bien connectée."
+          : err.name === "NotReadableError"
+          ? "La caméra est déjà utilisée par une autre application."
+          : "Impossible d'accéder à la caméra. Vérifiez les permissions.";
+        setCameraErrorMsg(camMsg);
         setShowCameraErrorModal(true);
         setShowCapture(false);
       }
