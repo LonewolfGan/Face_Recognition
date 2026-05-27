@@ -1,0 +1,80 @@
+26-05-27 01:34:57 - Directory /opt/render/.deepface has been created
+26-05-27 01:34:57 - Directory /opt/render/.deepface/weights has been created
+[warmup] DeepFace warmup started (model=SFace, detector=opencv)
+Downloading...
+From: https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx
+To: /opt/render/.deepface/weights/face_recognition_sface_2021dec.onnx
+26-05-27 01:34:57 - 🔗 face_recognition_sface_2021dec.onnx will be downloaded from https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx to /opt/render/.deepface/weights/face_recognition_sface_2021dec.onnx...
+
+  0%|          | 0.00/38.7M [00:00<?, ?B/s]
+  3%|▎         | 1.05M/38.7M [00:00<00:03, 10.4MB/s]
+  9%|▉         | 3.67M/38.7M [00:00<00:01, 19.1MB/s]
+ 19%|█▉        | 7.34M/38.7M [00:00<00:01, 25.6MB/s]
+ 28%|██▊       | 11.0M/38.7M [00:00<00:00, 29.7MB/s]
+ 39%|███▉      | 15.2M/38.7M [00:00<00:00, 33.9MB/s]
+ 51%|█████▏    | 19.9M/38.7M [00:00<00:00, 38.3MB/s]
+ 62%|██████▏   | 24.1M/38.7M [00:00<00:00, 39.4MB/s]
+ 77%|███████▋  | 29.9M/38.7M [00:00<00:00, 45.0MB/s]
+ 92%|█████████▏| 35.7M/38.7M [00:00<00:00, 48.8MB/s]
+100%|██████████| 38.7M/38.7M [00:00<00:00, 41.2MB/s]
+[warmup] DeepFace warmup complete — model is hot and ready.
+10.219.24.203 - - [27/May/2026:01:35:02 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:07 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:12 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:17 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:22 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:32 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:37 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:42 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:47 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:52 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:57 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:35:57 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:02 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:07 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:12 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:17 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:22 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:32 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:37 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:42 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:47 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:52 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:57 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:36:57 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:02 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:07 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:12 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:17 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:22 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:37:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+127.0.0.1 - - [27/May/2026:01:37:31 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779845855.322844      73 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+[warmup] DeepFace warmup thread started — sleeping 5 s before loading model.
+[2026-05-27 01:38:00 +0000] [39] [INFO] Starting gunicorn 26.0.0
+[2026-05-27 01:38:00 +0000] [39] [INFO] Listening at: http://0.0.0.0:10000 (39)
+[2026-05-27 01:38:00 +0000] [39] [INFO] Using worker: sync
+[2026-05-27 01:38:00 +0000] [73] [INFO] Booting worker with pid: 73
+127.0.0.1 - - [27/May/2026:01:38:01 +0000] "HEAD / HTTP/1.1" 200 0 "-" "Go-http-client/1.1"
+[2026-05-27 01:38:01 +0000] [39] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779845886.919478      72 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+10.219.24.203 - - [27/May/2026:01:38:07 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:38:08 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:38:12 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:38:18 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:38:23 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.24.203 - - [27/May/2026:01:38:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779845907.624908      72 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+10.219.24.203 - - [27/May/2026:01:38:27 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+127.0.0.1 - - [27/May/2026:01:38:28 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779845930.920287      73 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
