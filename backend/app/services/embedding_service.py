@@ -251,6 +251,15 @@ class EmbeddingStore:
             # In-memory state is retained on failure
             return False
 
+    def delete_embeddings(self, face_id: str) -> None:
+        """Remove all embeddings for a face_id and rebuild the FAISS index."""
+        with self._lock:
+            if face_id not in self._embeddings_map:
+                return
+            del self._embeddings_map[face_id]
+            self._rebuild_index()
+            self._persist_internal()
+
     def reload(self) -> None:
         """Reload state from disk files.
 

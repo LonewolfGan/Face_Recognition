@@ -7,7 +7,6 @@ No authentication required. Exempt from rate limiting.
 from flask import Blueprint, current_app, jsonify
 
 from ..db import open_connection
-from .. import _warmup_status, _warmup_lock
 
 health_bp = Blueprint("health", __name__)
 
@@ -18,7 +17,7 @@ def health_check():
 
     Returns 200 {"status": "healthy"} when the database is reachable,
     503 {"status": "unhealthy"} otherwise.
-    Includes DeepFace warmup state so callers know when the model is hot.
+    Includes face model readiness so callers know when inference is available.
     """
     try:
         conn = open_connection(current_app.config)
@@ -26,13 +25,13 @@ def health_check():
         cursor.execute("SELECT 1")
         conn.close()
 
-        with _warmup_lock:
-            warmup = dict(_warmup_status)
+        face_service = current_app.config.get("FACE_SERVICE") or getattr(current_app, "face_service", None)
+        model_state = "ready" if (face_service and face_service._models_ready) else "unavailable"
 
         return jsonify({
             "status": "healthy",
             "db": conn.backend,
-            "model": warmup["state"],
+            "model": model_state,
         }), 200
     except Exception as e:
         return jsonify({"status": "unhealthy", "reason": str(e)}), 503

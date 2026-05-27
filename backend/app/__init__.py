@@ -286,67 +286,9 @@ def _configure_tensorflow() -> None:
 
 
 def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
-    """Run in a background thread to pre-load DeepFace model weights.
-
-    Calls DeepFace.represent() on a tiny dummy image so the ArcFace weights
-    are downloaded and cached before the first real user request arrives.
-    This eliminates the cold-start delay on the first registration/login.
-    """
-    global _warmup_status
-
-    # Brief sleep to let gunicorn pass its health check before model loads.
-    # SFace uses OpenCV DNN (no TensorFlow), so startup is fast and lightweight.
-    import time
-    print("[warmup] DeepFace warmup thread started — sleeping 5 s before loading model.", flush=True)
-    time.sleep(5)
-
-    with _warmup_lock:
-        if _warmup_status["state"] != "pending":
-            print("[warmup] Warmup already ran in another thread — exiting.", flush=True)
-            return
-        _warmup_status["state"] = "warming"
-
-    try:
-        import tempfile
-        import numpy as np
-        import cv2
-
-        # Configure TF threading before DeepFace triggers the TF import.
-        try:
-            import tensorflow as tf
-            tf.config.threading.set_inter_op_parallelism_threads(1)
-            tf.config.threading.set_intra_op_parallelism_threads(1)
-            for gpu in tf.config.list_physical_devices("GPU"):
-                tf.config.experimental.set_memory_growth(gpu, True)
-        except Exception:
-            pass
-
-        from deepface import DeepFace
-
-        print(f"[warmup] DeepFace warmup started (model={model_name}, detector={detector_backend})", flush=True)
-
-        dummy = np.zeros((112, 112, 3), dtype=np.uint8)
-        fd, tmp = tempfile.mkstemp(suffix=".jpg")
-        os.close(fd)
-        cv2.imwrite(tmp, dummy)
-
-        DeepFace.represent(
-            img_path=tmp,
-            model_name=model_name,
-            detector_backend=detector_backend,
-            enforce_detection=False,
-        )
-        os.remove(tmp)
-
-        with _warmup_lock:
-            _warmup_status["state"] = "ready"
-        print("[warmup] DeepFace warmup complete — model is hot and ready.", flush=True)
-
-    except Exception as e:
-        with _warmup_lock:
-            _warmup_status["state"] = "failed"
-            _warmup_status["error"] = str(e)
-        print(f"[warmup] DeepFace warmup FAILED — model will load on first request: {e}", flush=True)
+    """No-op: kept for backward compatibility. Models are now loaded synchronously
+    at startup via FaceService.__init__ using OpenCV DNN (no TensorFlow)."""
+    pass
 
 
 def _init_embedding_store(app: Flask) -> None:
@@ -365,29 +307,21 @@ def _init_embedding_store(app: Flask) -> None:
         embedding_store = EmbeddingStore(data_dir)
         app.embedding_store = embedding_store
 
-        model_name = app.config.get("MODEL_NAME", "ArcFace")
-        detector_backend = app.config.get("DETECTOR_BACKEND", "ssd")
+        model_name = app.config.get("MODEL_NAME", "SFace")
+        detector_backend = app.config.get("DETECTOR_BACKEND", "opencv")
 
         face_service = FaceService(
             embedding_store,
             model_name=model_name,
             detector_backend=detector_backend,
+            data_dir=data_dir,
         )
         app.config["FACE_SERVICE"] = face_service
         app.face_service = face_service
-        app.logger.info("FaceService initialized successfully.")
-
-        # Kick off background warmup — doesn't block gunicorn startup
-        t = threading.Thread(
-            target=_warmup_deepface,
-            args=(model_name, detector_backend, app.logger),
-            daemon=True,
-            name="deepface-warmup",
-        )
-        t.start()
+        app.logger.info("FaceService initialized (OpenCV DNN, TensorFlow-free).")
 
     except ImportError as e:
-        app.logger.warning("FaceService import error (faiss/deepface missing?): %s", e)
+        app.logger.warning("FaceService import error (faiss/opencv missing?): %s", e)
         app.embedding_store = None
         app.config["FACE_SERVICE"] = None
     except Exception as e:

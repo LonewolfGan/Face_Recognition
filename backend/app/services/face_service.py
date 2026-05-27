@@ -1,15 +1,14 @@
 """Face detection, embedding generation, and recognition service.
 
-Provides the FaceService class that handles face addition and recognition
-using DeepFace for embedding generation and a shared EmbeddingStore for
-storage and similarity search.
+Uses OpenCV DNN directly (YuNet + SFace) — NO TensorFlow dependency.
+Memory footprint: ~50MB vs ~400MB with TensorFlow/ArcFace.
 """
 
 import os
 import base64
 import uuid
-import tempfile
 import logging
+import urllib.request
 
 import cv2
 import numpy as np
@@ -18,134 +17,160 @@ from .embedding_service import EmbeddingStore
 
 logger = logging.getLogger(__name__)
 
+SFACE_URL = "https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx"
+YUNET_URL = "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+SFACE_FILENAME = "face_recognition_sface_2021dec.onnx"
+YUNET_FILENAME = "face_detection_yunet_2023mar.onnx"
+
 
 class FaceProcessingError(Exception):
-    """Raised when face processing (detection/embedding) fails."""
     pass
 
 
 class FaceNotFoundError(Exception):
-    """Raised when no matching face is found during recognition."""
     pass
+
+
+def _get_model_dir(data_dir: str) -> str:
+    deepface_dir = os.path.expanduser("~/.deepface/weights")
+    if os.path.isdir(deepface_dir):
+        return deepface_dir
+    return data_dir
+
+
+def _download_model(url: str, dest: str) -> None:
+    logger.info("Downloading model from %s → %s", url, dest)
+    tmp = dest + ".tmp"
+    try:
+        urllib.request.urlretrieve(url, tmp)
+        os.replace(tmp, dest)
+        logger.info("Downloaded %s (%.1f MB)", os.path.basename(dest), os.path.getsize(dest) / 1e6)
+    except Exception:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        raise
 
 
 class FaceService:
     """Handles face detection, embedding generation, and recognition.
 
-    Uses DeepFace for generating face embeddings and a shared EmbeddingStore
-    for persisting and searching embeddings. Images are processed via direct
-    function calls (no HTTP).
+    Uses OpenCV DNN exclusively — no TensorFlow, no deepface at inference time.
+    YuNet detects and aligns faces; SFace generates 128-dimensional embeddings.
     """
 
-    def __init__(self, embedding_store: EmbeddingStore, model_name: str = "ArcFace", detector_backend: str = "ssd"):
-        """Initialize with shared embedding store.
-
-        Args:
-            embedding_store: The shared EmbeddingStore instance for storage/search.
-            model_name: DeepFace model to use for embedding generation.
-            detector_backend: DeepFace detector backend for face detection.
-        """
+    def __init__(
+        self,
+        embedding_store: EmbeddingStore,
+        model_name: str = "SFace",
+        detector_backend: str = "opencv",
+        data_dir: str = "data/",
+    ):
         self._embedding_store = embedding_store
-        self._model_name = model_name
-        self._detector_backend = detector_backend
+        self._data_dir = data_dir
+        self._detector = None
+        self._recognizer = None
+        self._models_ready = False
+        self._load_models()
+
+    def _load_models(self) -> None:
+        model_dir = _get_model_dir(self._data_dir)
+        os.makedirs(model_dir, exist_ok=True)
+
+        sface_path = os.path.join(model_dir, SFACE_FILENAME)
+        yunet_path = os.path.join(model_dir, YUNET_FILENAME)
+
+        try:
+            if not os.path.exists(sface_path):
+                _download_model(SFACE_URL, sface_path)
+            if not os.path.exists(yunet_path):
+                _download_model(YUNET_URL, yunet_path)
+
+            self._recognizer = cv2.FaceRecognizerSF.create(sface_path, "")
+            self._detector = cv2.FaceDetectorYN.create(
+                yunet_path, "", (320, 320), score_threshold=0.6, nms_threshold=0.3
+            )
+            self._models_ready = True
+            logger.info("Face models ready (OpenCV DNN — TensorFlow-free).")
+        except Exception as exc:
+            logger.error("Failed to load face models: %s", exc, exc_info=True)
+            self._models_ready = False
+
+    def _ensure_models(self) -> None:
+        if not self._models_ready:
+            self._load_models()
+        if not self._models_ready:
+            raise FaceProcessingError("Face recognition models not available")
+
+    def _get_embedding(self, image: np.ndarray) -> list[float]:
+        self._ensure_models()
+
+        h, w = image.shape[:2]
+        self._detector.setInputSize((w, h))
+        _, faces = self._detector.detect(image)
+
+        if faces is None or len(faces) == 0:
+            raise FaceProcessingError("no_face_in_image")
+
+        face = faces[0]
+
+        face_w = float(face[2])
+        face_h = float(face[3])
+        coverage = (face_w * face_h) / (w * h) if w and h else 0
+        if coverage < 0.03:
+            raise FaceProcessingError("no_face_in_image")
+
+        aligned = self._recognizer.alignCrop(image, face)
+        embedding = self._recognizer.feature(aligned)
+        return embedding.flatten().tolist()
+
+    def _decode_image(self, base64_str: str) -> np.ndarray | None:
+        try:
+            if "," in base64_str:
+                base64_str = base64_str.split(",")[1]
+            image_bytes = base64.b64decode(base64_str)
+            nparr = np.frombuffer(image_bytes, np.uint8)
+            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            if image is None:
+                return None
+            max_dim = 1280
+            h, w = image.shape[:2]
+            if max(h, w) > max_dim:
+                scale = max_dim / max(h, w)
+                image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+            return image.astype(np.uint8)
+        except Exception as exc:
+            logger.warning("Error decoding image: %s", exc)
+            return None
 
     def add_face(self, name: str, images: list[str]) -> tuple[str, str]:
-        """Process images, generate embeddings, store them.
-
-        Decodes base64 images, preprocesses them, generates face embeddings
-        using DeepFace, and stores them in the shared EmbeddingStore.
-
-        Args:
-            name: The name associated with the face.
-            images: List of base64-encoded image strings.
-
-        Returns:
-            A tuple of (face_id, name) on success.
-
-        Raises:
-            FaceProcessingError: If no valid images are provided or no faces
-                are detected in any of the images.
-        """
         if not images:
             raise FaceProcessingError("No images provided")
 
         face_id = str(uuid.uuid4())
-        processed_images = self._preprocess_batch(images)
-
-        if not processed_images:
-            raise FaceProcessingError("No valid images could be processed")
-
         embeddings = []
 
-        for i, processed_image in enumerate(processed_images):
-            temp_path = None
+        for i, b64 in enumerate(images):
+            image = self._decode_image(b64)
+            if image is None:
+                continue
             try:
-                # Write to a temporary file for DeepFace processing
-                temp_path = self._write_temp_image(processed_image)
-
-                from deepface import DeepFace  # lazy — keeps TF out of startup memory
-                result = DeepFace.represent(
-                    img_path=temp_path,
-                    model_name=self._model_name,
-                    detector_backend=self._detector_backend,
-                    enforce_detection=True,
-                    align=True,
-                )
-
-                if not result:
-                    logger.warning("Image %d: no face detected (empty result)", i + 1)
-                    continue
-
-                rep = result[0]
-                area = rep.get("facial_area", {})
-                w = area.get("w", 0)
-                h = area.get("h", 0)
-                img_w, img_h = processed_image.shape[1], processed_image.shape[0]
-                face_coverage = (w * h) / (img_w * img_h) if img_w and img_h else 0
-
-                if face_coverage < 0.03:
-                    logger.warning("Image %d: face area too small (%.2f%%), skipping", i + 1, face_coverage * 100)
-                    continue
-
-                embeddings.append(rep["embedding"])
-
-            except (ValueError, AttributeError) as e:
-                logger.warning("Image %d: no face detected — %s", i + 1, str(e))
-                continue
-            except Exception as e:
-                logger.warning("Error processing image %d: %s", i + 1, str(e))
-                continue
-            finally:
-                if temp_path and os.path.exists(temp_path):
-                    os.remove(temp_path)
+                embeddings.append(self._get_embedding(image))
+            except FaceProcessingError as exc:
+                logger.warning("Image %d: %s", i + 1, exc)
+            except Exception as exc:
+                logger.warning("Error processing image %d: %s", i + 1, exc)
 
         if not embeddings:
-            raise FaceProcessingError("Aucun visage détecté dans les images fournies. Veuillez vous assurer que votre visage est bien visible.")
+            raise FaceProcessingError(
+                "Aucun visage détecté dans les images fournies. "
+                "Veuillez vous assurer que votre visage est bien visible."
+            )
 
-        # Store embeddings via the shared EmbeddingStore
         self._embedding_store.add_embeddings(face_id, embeddings)
-
-        logger.info("Face added successfully: face_id=%s, name=%s, embeddings=%d", face_id, name, len(embeddings))
+        logger.info("Face added: face_id=%s, name=%s, embeddings=%d", face_id, name, len(embeddings))
         return (face_id, name)
 
     def recognize_best(self, images: list[str]) -> tuple[str, float]:
-        """Try multiple images and return the best match (lowest distance).
-
-        Iterates through all provided images, calls recognize() on each, and
-        returns the match with the smallest distance. Raises FaceProcessingError
-        if no face is found in any image, or FaceNotFoundError if no image
-        produces a match within the threshold.
-
-        Args:
-            images: List of base64-encoded image strings.
-
-        Returns:
-            (face_id, distance) for the best match found.
-
-        Raises:
-            FaceProcessingError: If no face is detected in any image.
-            FaceNotFoundError: If no matching face is found in any image.
-        """
         best_face_id = None
         best_distance = float("inf")
         no_face_count = 0
@@ -157,21 +182,17 @@ class FaceService:
                 if distance < best_distance:
                     best_distance = distance
                     best_face_id = face_id
-            except FaceProcessingError as e:
+            except FaceProcessingError:
                 no_face_count += 1
-                logger.debug("Frame %d: no face detected — %s", i + 1, str(e))
-            except FaceNotFoundError as e:
-                last_not_found_error = e
+                logger.debug("Frame %d: no face detected", i + 1)
+            except FaceNotFoundError as exc:
+                last_not_found_error = exc
                 logger.debug("Frame %d: face found but no match", i + 1)
 
         if best_face_id is not None:
-            logger.info(
-                "Best match across %d frames: face_id=%s, distance=%.4f",
-                len(images), best_face_id, best_distance,
-            )
+            logger.info("Best match across %d frames: face_id=%s, distance=%.4f", len(images), best_face_id, best_distance)
             return (best_face_id, best_distance)
 
-        # No frame produced a match — raise the most descriptive error
         if no_face_count == len(images):
             raise FaceProcessingError("no_face_in_image")
         if last_not_found_error:
@@ -179,140 +200,27 @@ class FaceService:
         raise FaceNotFoundError("No matching face found in any frame")
 
     def recognize(self, image: str) -> tuple[str, float]:
-        """Recognize a face from a base64 image.
-
-        Decodes the base64 image, generates an embedding using DeepFace,
-        and searches the EmbeddingStore for the closest match.
-
-        Args:
-            image: A base64-encoded image string.
-
-        Returns:
-            A tuple of (face_id, distance) on success.
-
-        Raises:
-            FaceProcessingError: If the image cannot be processed or no face
-                is detected.
-            FaceNotFoundError: If no matching face is found within the
-                distance threshold.
-        """
-        processed_image = self._preprocess_base64_image(image)
-        if processed_image is None:
+        decoded = self._decode_image(image)
+        if decoded is None:
             raise FaceProcessingError("Failed to process the provided image")
 
-        temp_path = None
         try:
-            temp_path = self._write_temp_image(processed_image)
-
-            from deepface import DeepFace  # lazy — keeps TF out of startup memory
-            representation = DeepFace.represent(
-                img_path=temp_path,
-                model_name=self._model_name,
-                detector_backend=self._detector_backend,
-                enforce_detection=True,
-                align=True,
-            )
-
-            if not representation:
-                raise FaceProcessingError("no_face_in_image")
-
-            rep = representation[0]
-            area = rep.get("facial_area", {})
-            w = area.get("w", 0)
-            h = area.get("h", 0)
-            img = cv2.imread(temp_path)
-            if img is not None:
-                img_w, img_h = img.shape[1], img.shape[0]
-                face_coverage = (w * h) / (img_w * img_h) if img_w and img_h else 1
-                if face_coverage < 0.03:
-                    raise FaceProcessingError("no_face_in_image")
-
-            captured_embedding = rep["embedding"]
-
+            embedding = self._get_embedding(decoded)
         except FaceProcessingError:
             raise
-        except (ValueError, AttributeError):
-            raise FaceProcessingError("no_face_in_image")
-        except Exception as e:
-            raise FaceProcessingError(f"Error generating embedding: {str(e)}")
-        finally:
-            if temp_path and os.path.exists(temp_path):
-                os.remove(temp_path)
+        except Exception as exc:
+            raise FaceProcessingError(f"Error generating embedding: {exc}")
 
-        # Search the embedding store
-        face_id, distance = self._embedding_store.search(captured_embedding)
-
+        face_id, distance = self._embedding_store.search(embedding)
         if face_id is None:
             raise FaceNotFoundError("No matching face found")
 
         logger.info("Face recognized: face_id=%s, distance=%.4f", face_id, distance)
         return (face_id, distance)
 
-    def _preprocess_base64_image(self, base64_str: str) -> np.ndarray | None:
-        """Decode a base64 image for DeepFace.
-
-        Returns the image at its original resolution so that the face detector
-        has enough pixels to locate the face. DeepFace handles internal
-        cropping and resizing after detection.
-
-        Args:
-            base64_str: Base64-encoded image string (may include data URI prefix).
-
-        Returns:
-            Decoded image as a numpy array, or None on failure.
-        """
+    def delete_face(self, face_id: str) -> None:
         try:
-            # Strip data URI prefix if present
-            if "," in base64_str:
-                base64_str = base64_str.split(",")[1]
-
-            image_bytes = base64.b64decode(base64_str)
-            nparr = np.frombuffer(image_bytes, np.uint8)
-            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-            if image is None:
-                return None
-
-            # Cap very large images to 1280px on the longest side to avoid
-            # memory issues, while keeping enough resolution for detection.
-            max_dim = 1280
-            h, w = image.shape[:2]
-            if max(h, w) > max_dim:
-                scale = max_dim / max(h, w)
-                image = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
-
-            return image.astype(np.uint8)
-
-        except Exception as e:
-            logger.warning("Error preprocessing base64 image: %s", str(e))
-            return None
-
-    def _preprocess_batch(self, images_base64: list[str]) -> list[np.ndarray]:
-        """Preprocess a batch of base64 images.
-
-        Args:
-            images_base64: List of base64-encoded image strings.
-
-        Returns:
-            List of successfully preprocessed images as numpy arrays.
-        """
-        processed = []
-        for b64 in images_base64:
-            img = self._preprocess_base64_image(b64)
-            if img is not None:
-                processed.append(img)
-        return processed
-
-    def _write_temp_image(self, image: np.ndarray) -> str:
-        """Write an image to a temporary file for DeepFace processing.
-
-        Args:
-            image: Image as a numpy array.
-
-        Returns:
-            Path to the temporary image file.
-        """
-        fd, temp_path = tempfile.mkstemp(suffix=".jpg")
-        os.close(fd)
-        cv2.imwrite(temp_path, image)
-        return temp_path
+            self._embedding_store.delete_embeddings(face_id)
+            logger.info("Face deleted: face_id=%s", face_id)
+        except Exception as exc:
+            logger.warning("Could not delete embeddings for face_id=%s: %s", face_id, exc)
