@@ -1,0 +1,20 @@
+Agis en tant qu'expert DevOps et développeur Python Senior spécialisé dans le déploiement d'applications de Machine Learning (reconnaissance faciale). 
+
+Je déploie actuellement mon API Flask/FastAPI sur Render (Web Service, instance CPU gratuite), mais l'application a été initialement générée sur Replit. Elle crash en boucle au démarrage à cause de timeouts de Gunicorn lors du chargement des modèles de vision par ordinateur (erreurs CPU/CUDA).
+
+Voici tes instructions strictes pour corriger le projet sans introduire de nouveaux bugs :
+
+1. COMMANDE DE DÉMARRAGE (Render Start Command) :
+Génère la commande exacte en utilisant le flag `--preload` et un `--timeout 300` pour éviter que Render ne tue le worker pendant le chargement initial des modèles d'IA. (Exemple de structure requis : gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300 --preload)
+
+2. CONFIGURATION DE L'APPLICATION (run.py / main.py) :
+- Assure-toi que les modèles de reconnaissance faciale ou de deep learning (dlib, face_recognition, mediapipe, tensorflow, etc.) sont chargés de manière globale ou paresseuse (lazy loading) afin qu'ils ne bloquent pas le cycle de démarrage de Gunicorn.
+- Ajoute ou vérifie la présence d'une route racine HTTP GET stricte sur "/" qui renvoie un code 200 (ex: {"status": "online"}) pour que le système de health check de Render valide immédiatement le déploiement.
+- Supprime toute logique, configuration ou package spécifique à Replit (comme l'utilisation de variables d'environnement via des modules propriétaires Replit ou l'écoute forcée sur le port 8080 en dur). L'application doit utiliser "os.environ.get('PORT', 10000)".
+
+3. FICHIER REQUIREMENTS.TXT :
+- Nettoie le fichier requirements.txt. Supprime les paquets inutiles ou liés à Replit.
+- Assure-toi que 'gunicorn' est explicitement listé avec une version stable.
+- Si des paquets lourds comme dlib ou opencv sont requis, assure-toi qu'ils sont listés sans version trop restrictive qui ferait échouer la compilation sur l'OS Ubuntu de Render.
+
+Ne me donne pas d'explications théoriques. Donne-moi directement le code corrigé des fichiers principaux (ex: run.py), le requirements.txt mis à jour, et la ligne exacte à coller dans la "Start Command" de Render.
