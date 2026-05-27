@@ -5,7 +5,7 @@ services:
     plan: free
     buildCommand: pip install -r backend/requirements.txt
     preDeployCommand: cd backend && python migrate.py
-    startCommand: gunicorn --chdir backend -c gunicorn.conf.py run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300 --preload
+    startCommand: gunicorn --chdir backend -c gunicorn.conf.py run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300 --preload --log-level info
     envVars:
       - key: FLASK_ENV
         value: production

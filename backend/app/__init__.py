@@ -298,10 +298,12 @@ def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
     # startup.  Render needs ~10-30 s to detect the open port and pass its
     # health check; loading TF/ArcFace in that window causes an OOM crash.
     import time
+    print("[warmup] DeepFace warmup thread started — sleeping 90 s before loading TF/model.", flush=True)
     time.sleep(90)
 
     with _warmup_lock:
         if _warmup_status["state"] != "pending":
+            print("[warmup] Warmup already ran in another thread — exiting.", flush=True)
             return
         _warmup_status["state"] = "warming"
 
@@ -322,7 +324,7 @@ def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
 
         from deepface import DeepFace
 
-        logger.info("DeepFace warmup started (model=%s, detector=%s)", model_name, detector_backend)
+        print(f"[warmup] DeepFace warmup started (model={model_name}, detector={detector_backend})", flush=True)
 
         dummy = np.zeros((112, 112, 3), dtype=np.uint8)
         fd, tmp = tempfile.mkstemp(suffix=".jpg")
@@ -339,13 +341,13 @@ def _warmup_deepface(model_name: str, detector_backend: str, logger) -> None:
 
         with _warmup_lock:
             _warmup_status["state"] = "ready"
-        logger.info("DeepFace warmup complete — model is hot and ready.")
+        print("[warmup] DeepFace warmup complete — model is hot and ready.", flush=True)
 
     except Exception as e:
         with _warmup_lock:
             _warmup_status["state"] = "failed"
             _warmup_status["error"] = str(e)
-        logger.warning("DeepFace warmup failed (model will load on first request): %s", e)
+        print(f"[warmup] DeepFace warmup FAILED — model will load on first request: {e}", flush=True)
 
 
 def _init_embedding_store(app: Flask) -> None:
