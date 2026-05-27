@@ -1,0 +1,44 @@
+==> Your service is live 🎉
+127.0.0.1 - - [27/May/2026:01:25:28 +0000] "GET / HTTP/1.1" 200 20 "-" "Go-http-client/2.0"
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://face-recognition-api-vlwk.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+10.219.27.159 - - [27/May/2026:01:25:32 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:25:36 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:25:37 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:25:42 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:25:47 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:25:52 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779845156.177671      72 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+10.219.27.159 - - [27/May/2026:01:25:57 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:26:02 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:26:07 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:26:07 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:26:12 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:26:17 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:26:22 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+127.0.0.1 - - [27/May/2026:01:26:23 +0000] "OPTIONS /api/register HTTP/1.1" 200 0 "https://face-recognition-lovat-eight.vercel.app/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0"
+26-05-27 01:26:28 - Directory /opt/render/.deepface has been created
+26-05-27 01:26:28 - Directory /opt/render/.deepface/weights has been created
+[warmup] DeepFace warmup started (model=ArcFace, detector=opencv)
+==> Running 'gunicorn --chdir backend run:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300'
+[warmup] DeepFace warmup thread started — sleeping 5 s before loading model.
+[2026-05-27 01:27:31 +0000] [56] [INFO] Starting gunicorn 26.0.0
+[2026-05-27 01:27:31 +0000] [56] [INFO] Listening at: http://0.0.0.0:10000 (56)
+[2026-05-27 01:27:31 +0000] [56] [INFO] Using worker: sync
+[2026-05-27 01:27:31 +0000] [73] [INFO] Booting worker with pid: 73
+127.0.0.1 - - [27/May/2026:01:27:32 +0000] "HEAD / HTTP/1.1" 200 0 "-" "Go-http-client/1.1"
+[2026-05-27 01:27:32 +0000] [56] [INFO] Control socket listening at /opt/render/.gunicorn/gunicorn.ctl
+10.219.27.159 - - [27/May/2026:01:27:36 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:27:37 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1779845259.889328      72 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+10.219.27.159 - - [27/May/2026:01:27:42 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:27:47 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:27:52 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:27:57 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
+10.219.27.159 - - [27/May/2026:01:28:02 +0000] "GET /api/health HTTP/1.1" 200 57 "-" "Render/1.0"
