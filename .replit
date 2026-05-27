@@ -32,7 +32,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd frontend && npm run dev -- --port 5000"
+args = "cd frontend && ./node_modules/.bin/vite --port 5000 --host 0.0.0.0"
 waitForPort = 5000
 
 [[workflows.workflow]]
@@ -44,16 +44,12 @@ outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "gunicorn --bind 0.0.0.0:8000 --reuse-port --reload main:app"
+args = "python main.py"
 waitForPort = 8000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5001
-externalPort = 3000
 
 [[ports]]
 localPort = 5173
