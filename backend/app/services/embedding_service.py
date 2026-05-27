@@ -15,8 +15,8 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-# Dimension of ArcFace embeddings
-EMBEDDING_DIM = 512
+# Dimension of SFace embeddings (128-dim, OpenCV DNN — no TensorFlow)
+EMBEDDING_DIM = 128
 
 
 class EmbeddingStore:
@@ -79,7 +79,17 @@ class EmbeddingStore:
         # Load FAISS index
         if os.path.exists(self._index_path):
             try:
-                self._index = faiss.read_index(self._index_path)
+                loaded = faiss.read_index(self._index_path)
+                if loaded.d != EMBEDDING_DIM:
+                    logger.warning(
+                        "Index dimension mismatch: got %d, expected %d. "
+                        "Resetting index (model changed).",
+                        loaded.d, EMBEDDING_DIM,
+                    )
+                    self._embeddings_map = {}
+                    self._index = faiss.IndexFlatL2(EMBEDDING_DIM)
+                else:
+                    self._index = loaded
             except Exception as e:
                 logger.warning("Failed to load embeddings.index: %s", e)
                 self._index = faiss.IndexFlatL2(EMBEDDING_DIM)
@@ -167,7 +177,7 @@ class EmbeddingStore:
             # Persist to disk (best effort)
             self._persist_internal()
 
-    def search(self, embedding: list[float], threshold: float = 3.5) -> tuple[str | None, float]:
+    def search(self, embedding: list[float], threshold: float = 1.0) -> tuple[str | None, float]:
         """Find closest face_id for an embedding. Thread-safe read.
 
         Does not acquire the lock since FAISS reads are safe concurrent

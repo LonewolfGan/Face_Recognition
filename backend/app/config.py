@@ -15,7 +15,7 @@ class BaseConfig:
     JWT_ACCESS_TOKEN_EXPIRES: int = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", "900"))
     JWT_REFRESH_TOKEN_EXPIRES: int = int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES", "604800"))
 
-    MODEL_NAME: str = os.getenv("MODEL_NAME", "ArcFace")
+    MODEL_NAME: str = os.getenv("MODEL_NAME", "SFace")
     DETECTOR_BACKEND: str = os.getenv("DETECTOR_BACKEND", "opencv")
 
     DATA_DIR: str = os.getenv("DATA_DIR", "data/")

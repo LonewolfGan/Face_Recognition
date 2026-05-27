@@ -20,7 +20,7 @@ services:
       - key: CORS_ORIGINS
         value: https://face-recognition-lovat-eight.vercel.app
       - key: MODEL_NAME
-        value: ArcFace
+        value: SFace
       - key: DETECTOR_BACKEND
         value: opencv
       - key: CUDA_VISIBLE_DEVICES
