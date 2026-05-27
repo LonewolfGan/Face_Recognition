@@ -7,6 +7,7 @@ the worker. post_fork() re-launches it in every worker process so the
 model is hot before the first real face-recognition request arrives.
 """
 
+import os
 import threading
 
 
@@ -18,8 +19,8 @@ def post_fork(server, worker):
         with _warmup_lock:
             _warmup_status["state"] = "pending"
 
-        model_name = flask_app.config.get("MODEL_NAME", "ArcFace")
-        detector = flask_app.config.get("DETECTOR_BACKEND", "opencv")
+        model_name = os.environ.get("MODEL_NAME", "SFace")
+        detector = os.environ.get("DETECTOR_BACKEND", "opencv")
 
         t = threading.Thread(
             target=_warmup_deepface,
