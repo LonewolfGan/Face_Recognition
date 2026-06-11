@@ -19,6 +19,30 @@ _warmup_status = {
 _warmup_lock = threading.Lock()
 
 
+def _validate_security_config(app: Flask) -> None:
+    """Validate that required security settings are configured."""
+    if app.config.get("FLASK_ENV") == "production":
+        # Require explicit secret keys in production
+        if not app.config.get("SECRET_KEY") or app.config["SECRET_KEY"] == "dev-secret-key-change-in-production":
+            raise RuntimeError(
+                "SECRET_KEY must be set to a strong, unique value in production. "
+                "Set the SECRET_KEY environment variable."
+            )
+        if not app.config.get("JWT_SECRET_KEY") or app.config["JWT_SECRET_KEY"] == "dev-jwt-secret-key-change-in-production":
+            raise RuntimeError(
+                "JWT_SECRET_KEY must be set to a strong, unique value in production. "
+                "Set the JWT_SECRET_KEY environment variable."
+            )
+
+        # Require explicit CORS origins in production
+        cors_origins = app.config.get("CORS_ORIGINS", [])
+        if not cors_origins or cors_origins == ["*"]:
+            raise RuntimeError(
+                "CORS_ORIGINS must be explicitly configured in production. "
+                "Set CORS_ORIGINS to your frontend URL(s), e.g.: https://your-app.vercel.app"
+            )
+
+
 def create_app(config_name: str | None = None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_ENV", "development")
@@ -38,6 +62,9 @@ def create_app(config_name: str | None = None) -> Flask:
         if key.isupper():
             app.config[key] = getattr(config_instance, key)
 
+    # Validate security configuration
+    _validate_security_config(app)
+
     # Ensure DATA_DIR exists
     data_dir = app.config.get("DATA_DIR", "backend/data/")
     os.makedirs(data_dir, exist_ok=True)
@@ -47,7 +74,9 @@ def create_app(config_name: str | None = None) -> Flask:
         app.config["DATABASE_PATH"] = os.path.join(data_dir, "users.db")
 
     _init_cors(app)
+    _init_csrf(app)
     _init_rate_limiter(app)
+    _init_security_headers(app)
     _init_database(app)
     _init_embedding_store(app)
     _register_blueprints(app)
@@ -55,6 +84,17 @@ def create_app(config_name: str | None = None) -> Flask:
     app.teardown_appcontext(_close_db)
 
     return app
+
+
+def _init_csrf(app: Flask) -> None:
+    """Initialize CSRF protection for the application."""
+    try:
+        from flask_wtf.csrf import CSRFProtect
+        csrf = CSRFProtect()
+        csrf.init_app(app)
+        app.logger.info("CSRF protection enabled")
+    except ImportError:
+        app.logger.warning("CSRF protection not available - flask-wtf not installed")
 
 
 def _init_cors(app: Flask) -> None:
@@ -80,6 +120,56 @@ def _init_rate_limiter(app: Flask) -> None:
         app.config["RATE_LIMITER"] = rate_limiter
     except ImportError:
         app.config["RATE_LIMITER"] = None
+
+
+def _init_security_headers(app: Flask) -> None:
+    """Configure security headers using Flask-Talisman."""
+    try:
+        from flask_talisman import Talisman
+
+        # Base security policy
+        talisman_config = {
+            'force_https': app.config.get('FLASK_ENV') == 'production',
+            'strict_transport_security': app.config.get('FLASK_ENV') == 'production',
+            'session_cookie_secure': app.config.get('FLASK_ENV') == 'production',
+            'content_security_policy': {
+                'default-src': "'self'",
+                'script-src': ["'self'", "'unsafe-inline'"],
+                'style-src': ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+                'img-src': ["'self'", "data:", "cdn.jsdelivr.net"],
+                'font-src': ["'self'", "fonts.gstatic.com"],
+                'object-src': "'none'",
+                'frame-ancestors': "'none'"
+            },
+            'feature_policy': {
+                'geolocation': "'none'",
+                'midi': "'none'",
+                'notifications': "'none'",
+                'push': "'none'",
+                'sync-xhr': "'none'",
+                'microphone': "'none'",
+                'camera': "'none'",
+                'magnetometer': "'none'",
+                'gyroscope': "'none'",
+                'speaker': "'none'",
+                'vibrate': "'none'",
+                'fullscreen': "'self'",
+                'payment': "'none'"
+            }
+        }
+
+        # Only apply CSP in production to avoid breaking development
+        if app.config.get('FLASK_ENV') == 'production':
+            Talisman(app, **talisman_config)
+        else:
+            # In development, only apply basic security headers
+            basic_talisman_config = talisman_config.copy()
+            basic_talisman_config['content_security_policy'] = None
+            Talisman(app, **basic_talisman_config)
+
+        app.logger.info("Security headers configured")
+    except ImportError:
+        app.logger.warning("Security headers not configured - flask-talisman not installed")
 
 
 def _init_database(app: Flask) -> None:
