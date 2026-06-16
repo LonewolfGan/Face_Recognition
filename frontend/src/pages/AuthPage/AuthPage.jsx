@@ -30,6 +30,7 @@ import { parseApiError } from "../../utils/errorHandler";
 import { Button } from "../../components/ui";
 import { cn } from "../../lib/utils";
 import { useTheme } from "../../theme";
+import { ContrastChecker } from "../../components/ContrastChecker/ContrastChecker";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -225,7 +226,7 @@ function BrandPanel({ isDarkMode }) {
 
   return (
     <div
-      className="hidden lg:flex flex-col justify-start gap-16 p-10 relative overflow-hidden h-full min-h-screen bg-subtle"
+      className="flex lg:justify-start lg:gap-16 p-4 lg:p-10 relative overflow-hidden h-full min-h-screen bg-subtle flex-col"
     >
 
       <div className="relative z-10">
@@ -235,12 +236,14 @@ function BrandPanel({ isDarkMode }) {
             alt=""
             style={{ height: 32, width: "auto" }}
           />
-          <span
-            className="text-[20px] font-bold tracking-[-0.02em]"
-            style={{ fontFamily: '"Syne", sans-serif', color: "var(--accent)" }}
-          >
-            PrivyNote
-          </span>
+          <ContrastChecker backgroundColor="var(--accent)" minRatio={4.5}>
+            <span
+              className="text-[20px] font-bold tracking-[-0.02em]"
+              style={{ fontFamily: '"Syne", sans-serif' }}
+            >
+              PrivyNote
+            </span>
+          </ContrastChecker>
         </a>
       </div>
 
@@ -454,14 +457,30 @@ export default function AuthPage() {
       if (err.response?.status === 401) {
         const errorCode = err.response?.data?.error || "";
         const msg = err.response?.data?.message || "";
+
+        // Messages d'erreur plus conviviaux
+        const userFriendlyMessages = {
+          no_face_detected: "Aucun visage détecté. Assurez-vous d'être bien face à la caméra dans un endroit bien éclairé.",
+          no_face_registered: "Aucun visage enregistré. Veuillez créer un compte pour enregistrer votre visage.",
+          face_not_recognized: "Visage non reconnu. Essayez de nouveau ou utilisez votre mot de passe.",
+          camera_permission_denied: "Accès à la caméra refusé. Veuillez autoriser l'accès dans les paramètres de votre navigateur.",
+          camera_not_found: "Aucune caméra détectée. Vérifiez que votre webcam est connectée et fonctionnelle.",
+          camera_in_use: "La caméra est déjà utilisée par une autre application. Fermez les autres applications et réessayez."
+        };
+
         if (errorCode === "no_face_detected") {
           setShowFaceFailModal(true);
-          setError("Aucun visage détecté. Placez votre visage face à la caméra.");
+          setError(userFriendlyMessages.no_face_detected);
         } else if (errorCode === "no_face_registered" || msg.toLowerCase().includes("aucun visage enregistré")) {
           setShowNoFacesModal(true);
-        } else {
+        } else if (errorCode === "face_not_recognized") {
           setShowFaceFailModal(true);
-          setError(msg || "Visage non reconnu");
+          setError(userFriendlyMessages.face_not_recognized);
+        } else {
+          // Utiliser le message personnalisé si disponible, sinon le message original
+          const friendlyMsg = userFriendlyMessages[errorCode] || userFriendlyMessages.face_not_recognized;
+          setShowFaceFailModal(true);
+          setError(friendlyMsg);
         }
       } else {
         setError(parseApiError(err));
@@ -552,10 +571,10 @@ export default function AuthPage() {
         const camMsg = err.name === "NotAllowedError"
           ? "Permission caméra refusée. Autorisez l'accès à la caméra dans les paramètres de votre navigateur."
           : err.name === "NotFoundError"
-          ? "Aucune caméra détectée. Vérifiez qu'une webcam est bien connectée."
+          ? "Aucune caméra détectée. Vérifiez qu'une webcam est bien connectée et fonctionnelle."
           : err.name === "NotReadableError"
-          ? "La caméra est déjà utilisée par une autre application."
-          : "Impossible d'accéder à la caméra. Vérifiez les permissions.";
+          ? "La caméra est déjà utilisée par une autre application. Fermez les autres applications et réessayez."
+          : "Impossible d'accéder à la caméra. Vérifiez les permissions et réessayez.";
         setCameraErrorMsg(camMsg);
         setShowCameraErrorModal(true);
         setShowCapture(false);
@@ -595,8 +614,8 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen w-full flex bg-page">
-      {/* Left brand panel — full height */}
-      <div className="w-[440px] shrink-0 self-stretch">
+      {/* Left brand panel — full height, visible on all screens */}
+      <div className="w-full lg:w-[440px] lg:shrink-0 self-stretch">
         <BrandPanel isDarkMode={isDarkMode} />
       </div>
 
@@ -918,8 +937,9 @@ function LoginForm({
                 type="button"
                 onClick={handleCancelLogin}
                 className="mt-1 inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-token hover:text-title transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(122,53,242,0.4)] rounded-lg px-3 py-1.5 border border-neutral hover:bg-section-alt"
+                aria-label="Annuler la détection faciale"
               >
-                <LuX className="w-3.5 h-3.5" /> Annuler
+                <LuX className="w-3.5 h-3.5" aria-hidden="true" /> Annuler
               </button>
             )}
           </motion.div>
@@ -944,10 +964,10 @@ function LoginForm({
               <motion.p
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-[13px] flex items-center gap-2 m-0 px-1"
+                className="text-[14px] flex items-center gap-2 m-0 px-1"
                 style={{ color: "#ef4444" }}
               >
-                <LuTriangleAlert className="w-3.5 h-3.5 shrink-0" />
+                <LuTriangleAlert className="w-4 h-4 shrink-0" aria-label="Erreur" />
                 {error}
               </motion.p>
             )}
@@ -1097,17 +1117,17 @@ function SignupForm({
               <motion.p
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-[13px] flex items-center gap-2 m-0 px-1"
+                className="text-[14px] flex items-center gap-2 m-0 px-1"
                 style={{ color: "#ef4444" }}
               >
-                <LuTriangleAlert className="w-3.5 h-3.5 shrink-0" />
+                <LuTriangleAlert className="w-4 h-4 shrink-0" aria-label="Erreur" />
                 {signupError}
               </motion.p>
             )}
             <Button
               variant="primary" size="lg" type="submit"
               disabled={loading}
-              className="w-full mt-1 rounded-xl! h-12! text-[15px]!"
+              className="w-full mt-1 rounded-xl! h-12! lg:h-12! text-[15px]! lg:text-[15px]!"
             >
               <LuCamera className="w-4 h-4" />
               Continuer avec la camera

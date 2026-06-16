@@ -25,6 +25,7 @@ import {
   LuLock,
 } from "react-icons/lu";
 import { useTheme } from "../../theme";
+import { ContrastChecker } from "../../components/ContrastChecker/ContrastChecker";
 import { Button, Card } from "../../components/ui";
 
 const EASE = [0.16, 1, 0.3, 1];
@@ -113,7 +114,7 @@ function Navbar({ onLogin, onSignup }) {
         <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-7 ml-auto">
           {links.map((l) => (
             <a key={l.href} href={l.href}
-              className="relative text-[14px] font-medium text-body hover:text-title transition-colors duration-200 pb-1
+              className="relative text-[14px] font-medium text-auto-contrast hover:text-title transition-colors duration-200 pb-1
                          after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
                          after:bg-tech-violet after:scale-x-0 after:origin-left after:transition-transform after:duration-200
                          hover:after:scale-x-100"
@@ -566,14 +567,16 @@ function FinalCTA({ onSignup }) {
         className="final-cta-radial-bg max-w-[800px] mx-auto rounded-2xl px-8 py-16 md:px-14 md:py-20 text-center flex flex-col items-center gap-5"
       >
         <motion.h2
-          initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="text-[clamp(1.875rem,4.2vw,2.75rem)] font-extrabold tracking-[-0.025em] leading-[1.12] m-0 text-balance text-zinc-50"
+          className="text-[clamp(1.875rem,4.2vw,2.75rem)] font-extrabold tracking-[-0.025em] leading-[1.12] m-0 text-balance"
           style={{ fontFamily: '"Syne", sans-serif' }}
         >
-          Vos notes méritent mieux qu'un mot de passe.
+          <ContrastChecker backgroundColor="var(--bg-accent)" minRatio={7}>
+            Vos notes méritent mieux qu'un mot de passe.
+          </ContrastChecker>
         </motion.h2>
 
         <motion.p
@@ -581,10 +584,12 @@ function FinalCTA({ onSignup }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-          className="text-[1.0625rem] leading-[1.75] m-0 max-w-[480px] text-zinc-50/75"
+          className="text-[1.0625rem] leading-[1.75] m-0 max-w-[480px]"
         >
-          Créez votre espace privé en moins de 30 secondes.
-          Votre visage est la seule clé dont vous aurez jamais besoin.
+          <ContrastChecker backgroundColor="var(--bg-accent)" minRatio={4.5}>
+            Créez votre espace privé en moins de 30 secondes.
+            Votre visage est la seule clé dont vous aurez jamais besoin.
+          </ContrastChecker>
         </motion.p>
 
         <motion.div
@@ -656,7 +661,7 @@ function Footer() {
               />
               <span
                 className="text-[18px] font-bold tracking-[-0.02em] leading-none"
-                style={{ fontFamily: '"Syne", sans-serif', color: "var(--fg)" }}
+                style={{ fontFamily: '"Syne", sans-serif', color: "var(--text-title)" }}
               >
                 PrivyNote
               </span>

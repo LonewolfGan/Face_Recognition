@@ -121,6 +121,20 @@
   --sidebar-active-bg: #7A35F2;
   --sidebar-active-fg: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.06);
+
+  /* Common background colors for contrast checking */
+  --bg-primary: #7A35F2;
+  --bg-secondary: #f7f7f5;
+  --bg-accent: #7A35F2;
+  --bg-light: #ffffff;
+  --bg-dark: #0c0b14;
+
+  /* Contrast-aware text colors */
+  --text-on-primary: #ffffff;
+  --text-on-secondary: #0a0a0a;
+  --text-on-accent: #ffffff;
+  --text-on-light: #0a0a0a;
+  --text-on-dark: #f0eeff;
 }
 
 /* ─── Dark mode ────────────────────────────────────────────────────────── */
@@ -142,6 +156,13 @@ body.dark {
   --nav-scrolled-border: rgba(155, 112, 229, 0.12);
   --connector-color:   rgba(155, 112, 229, 0.30);
   --color-spicy-paprika: #9B70E5;
+
+  /* Common background colors for contrast checking (dark) */
+  --bg-primary: #7A35F2;
+  --bg-secondary: #151222;
+  --bg-accent: #7A35F2;
+  --bg-light: #f0eeff;
+  --bg-dark: #0c0b14;
   --accent:       #7A35F2;
   --accent-dark:  #9B70E5;
   --accent-light: rgba(122, 53, 242, 0.12);
@@ -180,6 +201,13 @@ body.dark {
   --sidebar-active-bg: #7A35F2;
   --sidebar-active-fg: #ffffff;
   --sidebar-border: rgba(155, 112, 229, 0.10);
+
+  /* Contrast-aware text colors for dark mode */
+  --text-on-primary: #ffffff;
+  --text-on-secondary: #f0eeff;
+  --text-on-accent: #ffffff;
+  --text-on-light: #0a0a0a;
+  --text-on-dark: #f0eeff;
 }
 
 /* ─── Base ─────────────────────────────────────────────────────────────── */
@@ -244,6 +272,19 @@ body.dark {
     background: var(--border-strong);
     border-radius: 3px;
   }
+
+  /* Navbar scrolled state */
+  .nav-scrolled {
+    background-color: var(--nav-scrolled-bg);
+    border-color: var(--nav-scrolled-border);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Ensure text remains readable in scrolled navbar */
+  .nav-scrolled .text-body,
+  .nav-scrolled .text-title {
+    color: var(--text-title) !important;
+  }
 }
 
 /* ─── Utility classes ──────────────────────────────────────────────────── */
@@ -287,6 +328,14 @@ body.dark {
   /* Font utilities */
   .font-heading { font-family: var(--font-heading); }
   .font-mono    { font-family: var(--font-mono); }
+
+  /* Automatic contrast utilities */
+  .text-on-primary   { color: var(--text-on-primary) !important; }
+  .text-on-secondary { color: var(--text-on-secondary) !important; }
+  .text-on-accent    { color: var(--text-on-accent) !important; }
+  .text-on-light     { color: var(--text-on-light) !important; }
+  .text-on-dark      { color: var(--text-on-dark) !important; }
+  .text-auto-contrast { color: var(--text-on-primary) !important; }
 
   /* Quill editor custom width fix */
   .ql-container { font-family: var(--font-sans) !important; }
