@@ -158,10 +158,33 @@ function FormField({ icon: Icon, ...inputProps }) {
 }
 
 /* ─── CameraFrame ──────────────────────────────────────────────────── */
-function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
+function CameraFrame({ videoRef, canvasRef, success, scanning, size = 160 }) {
   const borderColor = success ? "rgba(122,53,242,0.9)" : "rgba(122,53,242,0.8)";
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      {/* Pulsing radar rings — premium scanning indicator */}
+      {scanning && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: size, height: size,
+                border: "1.5px solid rgba(122,53,242,0.35)",
+              }}
+              initial={{ opacity: 0.6, scale: 0.92 }}
+              animate={{ opacity: 0, scale: 1.5 }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                delay: i * 0.6,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+        </div>
+      )}
       <div
         className="relative overflow-hidden"
         style={{
@@ -895,7 +918,7 @@ function LoginForm({
             <CameraFrame
               videoRef={videoRef}
               canvasRef={canvasRef}
-              showScan={showCamera && !loginSuccess}
+              scanning={showCamera && !loginSuccess}
               success={loginSuccess}
               size={176}
             />
@@ -1030,7 +1053,7 @@ function SignupForm({
             <CameraFrame
               videoRef={videoRef}
               canvasRef={canvasRef}
-              showScan={!processingSignup && !success}
+              scanning={showCapture && !processingSignup && !success}
               success={success}
               size={176}
             />
