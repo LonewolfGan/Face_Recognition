@@ -23,9 +23,10 @@ import {
   LuLinkedin,
   LuShieldCheck,
   LuLock,
+  LuZap,
+  LuBookOpen,
 } from "react-icons/lu";
 import { useTheme } from "../../theme";
-import { ContrastChecker } from "../../components/ContrastChecker/ContrastChecker";
 import { Button, Card } from "../../components/ui";
 
 const EASE = [0.16, 1, 0.3, 1];
@@ -81,10 +82,10 @@ function Navbar({ onLogin, onSignup }) {
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
 
   const links = [
-    { href: "#features", label: "Fonctionnalités" },
-    { href: "#how",      label: "Comment ça marche" },
-    { href: "#testimonials", label: "Témoignages" },
-    { href: "#security", label: "Sécurité" },
+    { href: "#features", label: "Fonctionnalités", icon: LuZap },
+    { href: "#how",      label: "Comment ça marche", icon: LuBookOpen },
+    { href: "#testimonials", label: "Témoignages", icon: LuQuote },
+    { href: "#security", label: "Sécurité", icon: LuShieldCheck },
   ];
 
   return (
@@ -105,24 +106,24 @@ function Navbar({ onLogin, onSignup }) {
           />
           <span
             className="text-[17px] font-bold tracking-[-0.02em] leading-none"
-            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? "#f4f4f5" : "#7A35F2" }}
+            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? "var(--fg)" : "var(--accent)" }}
           >
             PrivyNote
           </span>
         </a>
 
-        <nav aria-label="Navigation principale" className="hidden md:flex items-center gap-7 ml-auto">
+        <nav aria-label="Navigation principale" className="hidden lg:flex items-center gap-5 xl:gap-7 ml-auto">
           {links.map((l) => (
             <a key={l.href} href={l.href}
-              className="relative text-[14px] font-medium text-auto-contrast hover:text-title transition-colors duration-200 pb-1
+              className="relative flex items-center gap-1.5 text-[14px] font-medium text-body hover:text-title transition-colors duration-200 pb-1
                          after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
                          after:bg-tech-violet after:scale-x-0 after:origin-left after:transition-transform after:duration-200
                          hover:after:scale-x-100"
-            >{l.label}</a>
+            ><l.icon className="w-3.5 h-3.5" />{l.label}</a>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-2 ml-auto md:ml-0">
+        <div className="hidden lg:flex items-center gap-2 ml-auto lg:ml-0">
           <ThemeToggle />
           <Button variant="ghost" size="sm" onClick={onLogin}>Se connecter</Button>
           <Button variant="primary" size="sm" onClick={onSignup} className="btn-shimmer">Commencer</Button>
@@ -133,7 +134,7 @@ function Navbar({ onLogin, onSignup }) {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={open}
-          className="md:hidden ml-auto w-9 h-9 inline-flex items-center justify-center rounded-md border border-neutral text-title cursor-pointer"
+          className="lg:hidden ml-auto w-9 h-9 inline-flex items-center justify-center rounded-md border border-neutral text-title cursor-pointer"
         >
           {open ? <LuX className="w-4 h-4" /> : <LuMenu className="w-4 h-4" />}
         </button>
@@ -144,12 +145,12 @@ function Navbar({ onLogin, onSignup }) {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="md:hidden mt-3 pt-4 border-t border-neutral flex flex-col gap-2"
+          className="lg:hidden mt-3 pt-4 border-t border-neutral flex flex-col gap-2"
         >
           {links.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}
-              className="text-[15px] font-medium text-body py-2.5 border-b border-neutral last:border-b-0"
-            >{l.label}</a>
+              className="flex items-center gap-2 text-[15px] font-medium text-body py-2.5 border-b border-neutral last:border-b-0"
+            ><l.icon className="w-4 h-4" />{l.label}</a>
           ))}
           <div className="flex items-center gap-2 pt-2">
             <ThemeToggle />
@@ -281,11 +282,11 @@ function WhyPrivyNote() {
           </h2>
         </motion.div>
 
-        {/* Header row */}
+        {/* Header row — hidden on mobile */}
         <motion.div
           {...sectionTitle}
           transition={{ ...sectionTitle.transition, delay: 0.08 }}
-          className="grid grid-cols-[1fr_1fr_1fr] gap-0 mb-1 px-4"
+          className="hidden md:grid md:grid-cols-[1fr_1fr_1fr] gap-0 mb-1 px-4"
         >
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-token" />
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-token text-center pb-2">
@@ -296,27 +297,27 @@ function WhyPrivyNote() {
           </span>
         </motion.div>
 
-        {/* Comparison rows */}
+        {/* Comparison rows — stack on mobile, 3 columns on desktop */}
         <div className="rounded-xl border border-neutral overflow-hidden" style={{ background: "var(--surface-card)" }}>
           {rows.map((row, i) => (
             <motion.div
               key={row.label}
               {...cardReveal(i)}
-              className={`grid grid-cols-[1fr_1fr_1fr] gap-0 ${i < rows.length - 1 ? "border-b border-neutral" : ""}`}
+              className={`grid md:grid-cols-[1fr_1fr_1fr] gap-0 ${i < rows.length - 1 ? "border-b border-neutral" : ""}`}
             >
               {/* Label */}
-              <div className="px-5 py-4 flex items-center border-r border-neutral">
-                <span className="text-[13px] font-medium text-title leading-[1.5]">{row.label}</span>
+              <div className="px-5 py-3 md:py-4 flex items-center md:border-r border-b md:border-b-0 border-neutral bg-section-alt md:bg-transparent">
+                <span className="text-[12px] md:text-[13px] font-semibold md:font-medium text-title leading-[1.5]">{row.label}</span>
               </div>
               {/* Before */}
-              <div className="px-5 py-4 flex items-center gap-2.5 border-r border-neutral">
+              <div className="px-5 py-3 md:py-4 flex items-center gap-2.5 md:border-r border-b md:border-b-0 border-neutral">
                 <span className="w-4 h-4 rounded-full border border-neutral inline-flex items-center justify-center shrink-0">
                   <span className="w-1.5 h-[1.5px] bg-muted-token block" />
                 </span>
                 <span className="text-[13px] text-muted-token leading-[1.5]">{row.before}</span>
               </div>
               {/* After */}
-              <div className="px-5 py-4 flex items-center gap-2.5 bg-tech-violet/[0.04] dark:bg-biometric-glow/[0.04]">
+              <div className="px-5 py-3 md:py-4 flex items-center gap-2.5 bg-tech-violet/[0.04] dark:bg-biometric-glow/[0.04]">
                 <span className="w-4 h-4 rounded-full bg-tech-violet/15 inline-flex items-center justify-center shrink-0">
                   <svg width="8" height="6" viewBox="0 0 8 6" fill="none" aria-hidden="true">
                     <path d="M1 3l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-tech-violet dark:text-biometric-glow" style={{color:"inherit"}}/>
@@ -558,63 +559,61 @@ function Testimonials() {
 /* ─── Final CTA ──────────────────────────────────────────────────────── */
 function FinalCTA({ onSignup }) {
   return (
-    <section className="px-6 py-24">
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
+    <motion.section
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.6, ease: EASE }}
+      className="final-cta-radial-bg px-6 py-20 md:py-28 text-center flex flex-col items-center gap-5"
+    >
+      <motion.h2
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.6, ease: EASE }}
-        className="final-cta-radial-bg max-w-[800px] mx-auto rounded-2xl px-8 py-16 md:px-14 md:py-20 text-center flex flex-col items-center gap-5"
+        transition={{ duration: 0.7, ease: EASE }}
+        className="text-[clamp(1.875rem,4.2vw,2.75rem)] font-extrabold tracking-[-0.025em] leading-[1.12] m-0 text-balance max-w-[700px]"
+        style={{ fontFamily: '"Syne", sans-serif' }}
       >
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="text-[clamp(1.875rem,4.2vw,2.75rem)] font-extrabold tracking-[-0.025em] leading-[1.12] m-0 text-balance"
-          style={{ fontFamily: '"Syne", sans-serif' }}
-        >
-          <ContrastChecker backgroundColor="var(--bg-accent)" minRatio={7}>
-            Vos notes méritent mieux qu'un mot de passe.
-          </ContrastChecker>
-        </motion.h2>
+        <span className="text-title">
+          Vos notes méritent mieux qu'un mot de passe.
+        </span>
+      </motion.h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-          className="text-[1.0625rem] leading-[1.75] m-0 max-w-[480px]"
-        >
-          <ContrastChecker backgroundColor="var(--bg-accent)" minRatio={4.5}>
-            Créez votre espace privé en moins de 30 secondes.
-            Votre visage est la seule clé dont vous aurez jamais besoin.
-          </ContrastChecker>
-        </motion.p>
+      <motion.p
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
+        className="text-[1.0625rem] leading-[1.75] m-0 max-w-[480px]"
+      >
+        <span className="text-body">
+          Créez votre espace privé en moins de 30 secondes.
+          Votre visage est la seule clé dont vous aurez jamais besoin.
+        </span>
+      </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}
-          className="mt-1"
-        >
-          <Button variant="primary" size="lg" onClick={onSignup} className="btn-shimmer">
-            Créer mon espace privé
-            <LuArrowRight className="w-4 h-4" />
-          </Button>
-        </motion.div>
-
-        <ul className="flex flex-wrap items-center justify-center gap-5 text-zinc-50/60 text-[13px] list-none m-0 p-0">
-          {["Gratuit pour commencer", "Open-source", "RGPD natif"].map((item) => (
-            <li key={item} className="inline-flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-biometric-glow shrink-0" />
-              {item}
-            </li>
-          ))}
-        </ul>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}
+        className="mt-1"
+      >
+        <Button variant="primary" size="lg" onClick={onSignup} className="btn-shimmer">
+          Créer mon espace privé
+          <LuArrowRight className="w-4 h-4" />
+        </Button>
       </motion.div>
-    </section>
+
+      <ul className="flex flex-wrap items-center justify-center gap-5 text-zinc-50/60 text-[13px] list-none m-0 p-0">
+        {["Gratuit pour commencer", "Open-source", "RGPD natif"].map((item) => (
+          <li key={item} className="inline-flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-biometric-glow shrink-0" />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </motion.section>
   );
 }
 
@@ -676,7 +675,7 @@ function Footer() {
           {/* Link columns */}
           {cols.map((c) => (
             <div key={c.title}>
-              <h4 className="text-[11px] uppercase tracking-[0.14em] font-semibold mb-4 m-0 text-subtle">
+              <h4 className="text-[12px] uppercase tracking-[0.14em] font-semibold mb-4 m-0 text-spicy-paprika">
                 {c.title}
               </h4>
               <ul className="list-none m-0 p-0 flex flex-col gap-3">

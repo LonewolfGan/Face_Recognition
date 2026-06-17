@@ -77,23 +77,22 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 2px 8px rgba(0,0,0,0.07);
   --shadow-lg: 0 4px 16px rgba(0,0,0,0.10);
-  /* ── Legacy color aliases ── */
-  --accent:       #7A35F2;
-  --accent-dark:  #6628d4;
-  --accent-light: rgba(122, 53, 242, 0.08);
-  --card:         #ffffff;
-  --bg:           #ffffff;
-  --hover:        #f5f3ff;
-  --error:        #dc2626;
-  --success:      #10b981;
-  --warning:      #f59e0b;
-  --info:         #3b82f6;
-  --text:         #0a0a0a;
-  --text-light:   #ffffff;
-  --border:       rgba(0, 0, 0, 0.10);
+
+  /* ── Semantic color tokens ── */
+  --accent:        #7A35F2;
+  --accent-hover:  #6628d4;
+  --accent-fg:     #ffffff;
+  --accent-muted:  rgba(122, 53, 242, 0.08);
+  --accent-border: rgba(122, 53, 242, 0.20);
+  --accent-light:  rgba(122, 53, 242, 0.08);
+  --accent-dark:   #6628d4;
+
   --bg:            #ffffff;
   --bg-subtle:     #f5f3ff;
   --bg-muted:      #ede9ff;
+  --card:          #ffffff;
+  --card-hover:    #f5f3ff;
+  --hover:         #f5f3ff;
 
   --fg:            #0a0a0a;
   --fg-muted:      #6b6b6b;
@@ -101,17 +100,17 @@
 
   --border:        rgba(0, 0, 0, 0.10);
   --border-strong: rgba(0, 0, 0, 0.20);
-
-  --accent:        #7A35F2;
-  --accent-hover:  #6628d4;
-  --accent-fg:     #ffffff;
-  --accent-muted:  rgba(122, 53, 242, 0.08);
-  --accent-border: rgba(122, 53, 242, 0.20);
-
-  --card:          #ffffff;
-  --card-hover:    #f5f3ff;
+  --fg-border:     rgba(10, 10, 10, 0.20);
 
   --ring:          rgba(122, 53, 242, 0.40);
+
+  --text:          #0a0a0a;
+  --text-light:    #ffffff;
+
+  --error:         #dc2626;
+  --success:       #10b981;
+  --warning:       #f59e0b;
+  --info:          #3b82f6;
 
   /* Sidebar */
   --sidebar-bg:    #0a0a0a;
@@ -157,24 +156,21 @@ body.dark {
   --connector-color:   rgba(155, 112, 229, 0.30);
   --color-spicy-paprika: #9B70E5;
 
-  /* Common background colors for contrast checking (dark) */
-  --bg-primary: #7A35F2;
-  --bg-secondary: #151222;
-  --bg-accent: #7A35F2;
-  --bg-light: #f0eeff;
-  --bg-dark: #0c0b14;
-  --accent:       #7A35F2;
-  --accent-dark:  #9B70E5;
-  --accent-light: rgba(122, 53, 242, 0.12);
-  --card:         #151222;
-  --bg:           #0c0b14;
-  --hover:        #1e1a2e;
-  --text:         #f0eeff;
-  --text-light:   #ffffff;
-  --border:       rgba(155, 112, 229, 0.12);
+  /* ── Semantic color tokens (dark) ── */
+  --accent:        #7A35F2;
+  --accent-hover:  #9B70E5;
+  --accent-fg:     #ffffff;
+  --accent-muted:  rgba(122, 53, 242, 0.14);
+  --accent-border: rgba(122, 53, 242, 0.28);
+  --accent-light:  rgba(122, 53, 242, 0.12);
+  --accent-dark:   #9B70E5;
+
   --bg:            #0c0b14;
   --bg-subtle:     #131120;
   --bg-muted:      #1a172a;
+  --card:          #151222;
+  --card-hover:    #1e1a2e;
+  --hover:         #1e1a2e;
 
   --fg:            #f0eeff;
   --fg-muted:      #7a7890;
@@ -182,17 +178,17 @@ body.dark {
 
   --border:        rgba(155, 112, 229, 0.12);
   --border-strong: rgba(155, 112, 229, 0.22);
-
-  --accent:        #7A35F2;
-  --accent-hover:  #9B70E5;
-  --accent-fg:     #ffffff;
-  --accent-muted:  rgba(122, 53, 242, 0.14);
-  --accent-border: rgba(122, 53, 242, 0.28);
-
-  --card:          #151222;
-  --card-hover:    #1e1a2e;
+  --fg-border:     rgba(240, 238, 255, 0.20);
 
   --ring:          rgba(122, 53, 242, 0.45);
+
+  --text:          #f0eeff;
+  --text-light:    #ffffff;
+
+  --error:         #dc2626;
+  --success:       #10b981;
+  --warning:       #f59e0b;
+  --info:          #3b82f6;
 
   --sidebar-bg:    #100e1c;
   --sidebar-fg:    rgba(240, 238, 255, 0.75);
@@ -201,6 +197,13 @@ body.dark {
   --sidebar-active-bg: #7A35F2;
   --sidebar-active-fg: #ffffff;
   --sidebar-border: rgba(155, 112, 229, 0.10);
+
+  /* Common background colors for contrast checking (dark) */
+  --bg-primary: #7A35F2;
+  --bg-secondary: #151222;
+  --bg-accent: #7A35F2;
+  --bg-light: #f0eeff;
+  --bg-dark: #0c0b14;
 
   /* Contrast-aware text colors for dark mode */
   --text-on-primary: #ffffff;
@@ -304,6 +307,7 @@ body.dark {
   /* Borders */
   .border-app   { border-color: var(--border); }
   .border-strong { border-color: var(--border-strong); }
+  .border-fg     { border-color: var(--fg-border); }
   .border-accent { border-color: var(--accent-border); }
 
   /* Accent surface */
@@ -335,10 +339,67 @@ body.dark {
   .text-on-accent    { color: var(--text-on-accent) !important; }
   .text-on-light     { color: var(--text-on-light) !important; }
   .text-on-dark      { color: var(--text-on-dark) !important; }
-  .text-auto-contrast { color: var(--text-on-primary) !important; }
+  .text-auto-contrast { color: var(--fg) !important; }
 
   /* Quill editor custom width fix */
   .ql-container { font-family: var(--font-sans) !important; }
+}
+
+/* ─── Hero mesh + gradient backgrounds ─────────────────────────────────── */
+.hero-radial-bg {
+  background: radial-gradient(ellipse at 50% 0%, var(--accent-muted) 0%, transparent 70%);
+}
+
+.hero-mesh {
+  background-image:
+    linear-gradient(var(--mesh-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mesh-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.final-cta-radial-bg {
+  background:
+    radial-gradient(ellipse at 50% 30%, var(--accent-muted) 0%, transparent 60%),
+    var(--bg);
+  color: var(--fg);
+}
+
+body.dark .final-cta-radial-bg {
+  background:
+    radial-gradient(ellipse at 50% 30%, var(--accent-muted) 0%, transparent 60%),
+    var(--bg-dark);
+  color: var(--text-on-dark);
+}
+
+/* ─── Shimmer effect for primary CTA buttons ──────────────────────────── */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Text balance utility ────────────────────────────────────────────── */
+.text-balance {
+  text-wrap: balance;
 }
 
 /* ─── Quill editor overrides ───────────────────────────────────────────── */
