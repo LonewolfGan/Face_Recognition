@@ -171,7 +171,7 @@ export default function FaceCaptureOverlay({ onCapture, onCancel, onError }) {
             width: FRAME_SIZE, height: FRAME_SIZE,
             borderRadius: '50%',
             border: `2.5px solid ${phase === 'done' ? 'rgba(122,53,242,1)' : 'rgba(122,53,242,0.75)'}`,
-            background: '#0a0513',
+            background: 'var(--sidebar-bg)',
             overflow: 'hidden',
             position: 'relative',
             boxShadow: '0 0 32px rgba(122,53,242,0.22)',
@@ -201,24 +201,11 @@ export default function FaceCaptureOverlay({ onCapture, onCancel, onError }) {
                 style={{
                   position: 'absolute', inset: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#7A35F2',
+                  color: 'var(--accent)',
                 }}
               >
                 <IoCheckmarkDoneCircleOutline size={Math.round(FRAME_SIZE * 0.52)} />
               </motion.div>
-            )}
-
-            {/* Scan line */}
-            {phase === 'scanning' && (
-              <motion.div
-                style={{
-                  position: 'absolute', left: 0, right: 0, height: 2,
-                  pointerEvents: 'none',
-                  background: 'linear-gradient(to right, transparent, rgba(122,53,242,0.75), transparent)',
-                }}
-                animate={{ top: ['10%', '90%', '10%'] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-              />
             )}
 
             {/* Corner brackets */}

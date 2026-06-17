@@ -185,30 +185,6 @@ function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
           </div>
         )}
         <canvas ref={canvasRef} width="320" height="240" className="hidden" />
-        {showScan && !success && (
-          <motion.div
-            className="absolute left-0 right-0 h-0.5 pointer-events-none"
-            style={{ background: "linear-gradient(to right, transparent, color-mix(in srgb, var(--accent) 70%, transparent), transparent)" }}
-            animate={{ top: ["10%", "90%", "10%"] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          />
-        )}
-        {showScan && !success && (
-          <>
-            {[
-              { top: 8, left: 8, rotate: 0 },
-              { top: 8, right: 8, rotate: 90 },
-              { bottom: 8, right: 8, rotate: 180 },
-              { bottom: 8, left: 8, rotate: 270 },
-            ].map((pos, i) => (
-              <div key={i} className="absolute" style={{ ...pos, width: 14, height: 14 }}>
-                <svg viewBox="0 0 14 14" fill="none" style={{ transform: `rotate(${pos.rotate}deg)` }}>
-                  <path d="M0 7V0H7" stroke="rgba(122,53,242,0.9)" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </div>
-            ))}
-          </>
-        )}
       </div>
     </div>
   );
