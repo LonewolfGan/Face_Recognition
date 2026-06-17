@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         const response = await axios.post(
           `${API_URL}/refresh-token`,
           {},
-          { withCredentials: true }
+          { withCredentials: true, timeout: 15000 }
         );
 
         if (response.data && response.data.access_token) {
@@ -106,6 +106,13 @@ export const AuthProvider = ({ children }) => {
     setUser(prev => prev ? { ...prev, ...patch } : prev);
   }, []);
 
+  // Dismiss the HTML splash screen once auth state is resolved
+  useEffect(() => {
+    if (!isLoading) {
+      window.__dismissSplash?.();
+    }
+  }, [isLoading]);
+
   // Valeur du contexte — expose `currentUser` as alias for backward compatibility
   const value = useMemo(() => ({
     user,
@@ -122,7 +129,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!isLoading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

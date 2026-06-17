@@ -512,7 +512,7 @@ export default function Notes() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,5,20,0.65)', backdropFilter: 'blur(8px)' }}>
           <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-neutral)', borderRadius: 16, padding: '28px 24px', maxWidth: 360, width: '100%', margin: '0 16px', boxShadow: '0 24px 60px rgba(0,0,0,0.28)', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <LuTriangleAlert size={18} style={{ color: '#ef4444', flexShrink: 0 }} />
+              <LuTriangleAlert size={18} style={{ color: 'var(--error)', flexShrink: 0 }} />
               <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-title)', fontFamily: 'var(--font-heading)' }}>Erreur lors de l'ajout du visage</h3>
             </div>
             <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>{faceErrorMsg}</p>
@@ -531,7 +531,7 @@ export default function Notes() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,5,20,0.65)', backdropFilter: 'blur(8px)' }}>
           <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-neutral)', borderRadius: 16, padding: '28px 24px', maxWidth: 360, width: '100%', margin: '0 16px', boxShadow: '0 24px 60px rgba(0,0,0,0.28)', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <LuShieldOff size={18} style={{ color: '#ef4444', flexShrink: 0 }} />
+              <LuShieldOff size={18} style={{ color: 'var(--error)', flexShrink: 0 }} />
               <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-title)', fontFamily: 'var(--font-heading)' }}>Accès refusé</h3>
             </div>
             <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>

@@ -34,6 +34,7 @@ export function createAuthFetch({ getAccessToken, setAccessToken, onAuthFailure 
   const instance = axios.create({
     baseURL: API_URL,
     withCredentials: true, // Send httpOnly cookies (refresh_token) with every request
+    timeout: 15000,       // Fail fast if backend is cold-starting or unreachable
   });
 
   // Request interceptor: attach Authorization header if token exists
@@ -82,7 +83,7 @@ export function createAuthFetch({ getAccessToken, setAccessToken, onAuthFailure 
           const refreshResponse = await axios.post(
             `${API_URL}/refresh-token`,
             {},
-            { withCredentials: true }
+            { withCredentials: true, timeout: 15000 }
           );
 
           const newAccessToken = refreshResponse.data.access_token;

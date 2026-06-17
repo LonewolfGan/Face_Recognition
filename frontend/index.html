@@ -3,31 +3,115 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/syne/v24/8vIH7w4qzmVxm2BL9A.woff2" as="font" type="font/woff2" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=block" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="PrivyNote — Sécurisez vos notes par reconnaissance faciale. Votre visage est la clé." />
-    <title>PrivyNote — Notes sécurisées par reconnaissance faciale</title>
+    <meta name="description" content="PrivyNote — Securisez vos notes par reconnaissance faciale." />
+    <title>PrivyNote — Notes securisees par reconnaissance faciale</title>
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://face-recognition-lovat-eight.vercel.app/" />
-    <meta property="og:title" content="PrivyNote — Notes sécurisées par reconnaissance faciale" />
-    <meta property="og:description" content="Sécurisez vos notes par reconnaissance faciale. Votre visage est la clé." />
+    <meta property="og:title" content="PrivyNote — Notes securisees par reconnaissance faciale" />
+    <meta property="og:description" content="Securisez vos notes par reconnaissance faciale." />
     <meta property="og:image" content="https://face-recognition-lovat-eight.vercel.app/logo.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="PrivyNote" />
     <meta property="og:locale" content="fr_FR" />
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://face-recognition-lovat-eight.vercel.app/" />
-    <meta name="twitter:title" content="PrivyNote — Notes sécurisées par reconnaissance faciale" />
-    <meta name="twitter:description" content="Sécurisez vos notes par reconnaissance faciale. Votre visage est la clé." />
+    <meta name="twitter:title" content="PrivyNote — Notes securisees par reconnaissance faciale" />
+    <meta name="twitter:description" content="Securisez vos notes par reconnaissance faciale." />
     <meta name="twitter:image" content="https://face-recognition-lovat-eight.vercel.app/logo.png" />
+
+    <style>
+      @keyframes pm-top { 0%{transform:rotate(0deg)} 50%{transform:rotate(-44deg)} }
+      @keyframes pm-bot { 0%{transform:rotate(0deg)} 50%{transform:rotate(44deg)} }
+      @keyframes pm-ball {
+        0%{transform:translate(0,-7px);opacity:1}
+        65%{opacity:.9}
+        100%{transform:translate(-112px,-7px);opacity:0}
+      }
+
+      #app-splash {
+        position:fixed; inset:0; z-index:999999;
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:36px;
+        background:#0c0b14; font-family:"Syne",system-ui,sans-serif;
+        opacity:1; transition:opacity .3s;
+      }
+      #app-splash[data-hidden] { opacity:0; pointer-events:none; }
+
+      .pacman {
+        position:relative; width:56px; height:56px;
+      }
+      /* Only pacman halves get the border technique */
+      .pacman .top, .pacman .bot {
+        width:0; height:0;
+        border-right:28px solid transparent;
+        border-radius:28px; position:absolute;
+      }
+      .pacman .top {
+        border-top:28px solid transparent;
+        border-left:28px solid #7A35F2;
+        border-bottom:28px solid #7A35F2;
+        animation:pm-top .8s infinite ease-in-out;
+      }
+      .pacman .bot {
+        border-top:28px solid #7A35F2;
+        border-left:28px solid #7A35F2;
+        border-bottom:28px solid transparent;
+        animation:pm-bot .8s infinite ease-in-out;
+      }
+      /* Balls — separate from pacman halves */
+      .pacman .ball {
+        width:9px; height:9px; border-radius:50%;
+        background:#7A35F2; margin:2px;
+        position:absolute; top:28px; left:112px;
+        transform:translate(0,-7px);
+        animation:pm-ball 1s infinite linear both;
+      }
+      .pacman .ball:nth-child(3){animation-delay:0s}
+      .pacman .ball:nth-child(4){animation-delay:.25s}
+      .pacman .ball:nth-child(5){animation-delay:.5s}
+      .pacman .ball:nth-child(6){animation-delay:.75s}
+
+      #app-splash .brand {
+        text-align:center;
+      }
+      #app-splash .brand h1 {
+        margin:0; font-size:28px; font-weight:800; letter-spacing:-.03em;
+        font-family:"Syne",system-ui,sans-serif;
+        color:#f0eeff;
+      }
+    </style>
   </head>
   <body>
+    <div id="app-splash">
+      <div class="pacman">
+        <div class="top"></div>
+        <div class="bot"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+      </div>
+      <div class="brand">
+        <h1>PrivyNote</h1>
+      </div>
+    </div>
     <div id="root"></div>
+
+    <script>
+      window.__dismissSplash = function() {
+        var el = document.getElementById('app-splash');
+        if (el) el.setAttribute('data-hidden', '');
+      };
+      /* Splash is dismissed by AuthContext when auth resolves.
+         Safety fallback only — long enough for JS + auth (>=30s on slow 3G). */
+      setTimeout(window.__dismissSplash, 60000);
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
