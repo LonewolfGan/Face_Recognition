@@ -30,7 +30,6 @@ import { parseApiError } from "../../utils/errorHandler";
 import { Button } from "../../components/ui";
 import { cn } from "../../lib/utils";
 import { useTheme } from "../../theme";
-import { ContrastChecker } from "../../components/ContrastChecker/ContrastChecker";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -181,7 +180,7 @@ function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
           className={cn("absolute inset-0 w-full h-full object-cover", success && "hidden")}
         />
         {success && (
-          <div className="absolute inset-0 flex items-center justify-center" style={{ color: "#7A35F2" }}>
+          <div className="absolute inset-0 flex items-center justify-center" style={{ color: "var(--accent)" }}>
             <IoCheckmarkDoneCircleOutline size={size * 0.52} />
           </div>
         )}
@@ -189,7 +188,7 @@ function CameraFrame({ videoRef, canvasRef, showScan, success, size = 160 }) {
         {showScan && !success && (
           <motion.div
             className="absolute left-0 right-0 h-0.5 pointer-events-none"
-            style={{ background: "linear-gradient(to right, transparent, rgba(122,53,242,0.7), transparent)" }}
+            style={{ background: "linear-gradient(to right, transparent, color-mix(in srgb, var(--accent) 70%, transparent), transparent)" }}
             animate={{ top: ["10%", "90%", "10%"] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -236,14 +235,12 @@ function BrandPanel({ isDarkMode }) {
             alt=""
             style={{ height: 32, width: "auto" }}
           />
-          <ContrastChecker backgroundColor="var(--accent)" minRatio={4.5}>
-            <span
-              className="text-[20px] font-bold tracking-[-0.02em]"
-              style={{ fontFamily: '"Syne", sans-serif' }}
-            >
-              PrivyNote
-            </span>
-          </ContrastChecker>
+          <span
+            className="text-[20px] font-bold tracking-[-0.02em]"
+            style={{ fontFamily: '"Syne", sans-serif', color: isDarkMode ? 'var(--text-title)' : 'var(--accent)' }}
+          >
+            PrivyNote
+          </span>
         </a>
       </div>
 
@@ -712,6 +709,7 @@ export default function AuthPage() {
                     setShowPasswordForm={setShowPasswordForm}
                     handleFaceLogin={handleFaceLogin}
                     handlePasswordLogin={handlePasswordLogin}
+                    handleCancelLogin={handleCancelLogin}
                     videoRef={videoRef}
                     canvasRef={canvasRef}
                     onSwitchToSignup={() => handleTabSwitch(false)}
@@ -895,7 +893,7 @@ function FormHeading({ title, subtitle }) {
 function LoginForm({
   isDarkMode, loading, showCamera, loginSuccess, showPasswordForm,
   password, setPassword, error, setError, setShowPasswordForm,
-  handleFaceLogin, handlePasswordLogin, videoRef, canvasRef, onSwitchToSignup,
+  handleFaceLogin, handlePasswordLogin, handleCancelLogin, videoRef, canvasRef, onSwitchToSignup,
 }) {
   const showCameraOverlay = showCamera || loginSuccess;
 
@@ -927,7 +925,7 @@ function LoginForm({
             />
             <p className="text-[13.5px] text-muted-token text-center m-0 font-medium">
               {loginSuccess ? (
-                <span className="flex items-center gap-1.5" style={{ color: "#7A35F2" }}>
+                <span className="flex items-center gap-1.5" style={{ color: "var(--accent)" }}>
                   <LuCheck className="w-4 h-4" /> Connexion reussie — redirection...
                 </span>
               ) : "Restez immobile, analyse en cours..."}
@@ -965,7 +963,7 @@ function LoginForm({
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-[14px] flex items-center gap-2 m-0 px-1"
-                style={{ color: "#ef4444" }}
+                style={{ color: "var(--error)" }}
               >
                 <LuTriangleAlert className="w-4 h-4 shrink-0" aria-label="Erreur" />
                 {error}
@@ -1073,7 +1071,7 @@ function SignupForm({
                 {processingSignup
                   ? <span className="inline-flex items-center gap-2"><Spinner /> Enregistrement en cours...</span>
                   : success
-                    ? <span style={{ color: "#7A35F2" }}>Terminé</span>
+                    ? <span style={{ color: "var(--accent)" }}>Terminé</span>
                     : "Restez face à la caméra"
                 }
               </p>
@@ -1118,7 +1116,7 @@ function SignupForm({
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-[14px] flex items-center gap-2 m-0 px-1"
-                style={{ color: "#ef4444" }}
+                style={{ color: "var(--error)" }}
               >
                 <LuTriangleAlert className="w-4 h-4 shrink-0" aria-label="Erreur" />
                 {signupError}
@@ -1154,7 +1152,7 @@ function AlreadySignedIn({ user, onGoToNotes, onLogout }) {
   return (
     <div className="surface-card border border-neutral rounded-2xl p-8 flex flex-col items-center gap-6 text-center">
       <div className="w-16 h-16 rounded-2xl inline-flex items-center justify-center"
-        style={{ background: "rgba(122,53,242,0.1)", color: "#7A35F2" }}>
+        style={{ background: "var(--accent-muted)", color: "var(--accent)" }}>
         <IoCheckmarkDoneCircleOutline className="w-8 h-8" />
       </div>
       <div>
