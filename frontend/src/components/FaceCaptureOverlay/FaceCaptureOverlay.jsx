@@ -1,7 +1,7 @@
 /**
  * FaceCaptureOverlay — high-quality face capture overlay.
- * Matches the AuthPage CameraFrame design: circular frame, scan-line,
- * corner brackets, violet glow, progress dots, cancel button.
+ * Circular camera frame with pulsing radar rings during scanning,
+ * progress dots, and cancel button.
  */
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
@@ -167,6 +167,34 @@ export default function FaceCaptureOverlay({ onCapture, onCancel, onError }) {
 
         {/* Camera frame */}
         <div style={{ position: 'relative', width: FRAME_SIZE, height: FRAME_SIZE, flexShrink: 0 }}>
+          {/* Pulsing radar rings — premium scanning indicator */}
+          {phase === 'scanning' && (
+            <div style={{
+              position: 'absolute', inset: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              pointerEvents: 'none', zIndex: -1,
+            }}>
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  style={{
+                    position: 'absolute',
+                    width: FRAME_SIZE, height: FRAME_SIZE,
+                    borderRadius: '50%',
+                    border: '1.5px solid rgba(122,53,242,0.35)',
+                  }}
+                  initial={{ opacity: 0.6, scale: 0.92 }}
+                  animate={{ opacity: 0, scale: 1.5 }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    delay: i * 0.6,
+                    ease: 'easeOut',
+                  }}
+                />
+              ))}
+            </div>
+          )}
           <div style={{
             width: FRAME_SIZE, height: FRAME_SIZE,
             borderRadius: '50%',
@@ -206,24 +234,6 @@ export default function FaceCaptureOverlay({ onCapture, onCancel, onError }) {
               >
                 <IoCheckmarkDoneCircleOutline size={Math.round(FRAME_SIZE * 0.52)} />
               </motion.div>
-            )}
-
-            {/* Corner brackets */}
-            {phase !== 'done' && (
-              <>
-                {[
-                  { top: 10, left: 10,  rotate: 0   },
-                  { top: 10, right: 10, rotate: 90  },
-                  { bottom: 10, right: 10, rotate: 180 },
-                  { bottom: 10, left: 10,  rotate: 270 },
-                ].map((pos, i) => (
-                  <div key={i} style={{ position: 'absolute', ...pos, width: 14, height: 14 }}>
-                    <svg viewBox="0 0 14 14" fill="none" style={{ transform: `rotate(${pos.rotate}deg)`, display: 'block' }}>
-                      <path d="M0 7V0H7" stroke="rgba(122,53,242,0.9)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                ))}
-              </>
             )}
           </div>
         </div>
